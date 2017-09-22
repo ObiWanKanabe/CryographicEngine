@@ -4,6 +4,8 @@ GameEngine* GameEngine::theInstance = nullptr;
 
 Window* GameEngine::window = nullptr;
 
+OpenGLRenderer* GameEngine::renderer = nullptr;
+
 GameEngine::GameEngine() {
 
 }
@@ -18,12 +20,14 @@ GameEngine& GameEngine::getInstance() {
 	}
 	return *theInstance;
 }
-bool GameEngine::onStart() {
-	window = new Window("DemoApp");
-	return true;
+
+void GameEngine::onStart() {
+	window = new Window("DemoApp", 1200, 900);
+	renderer = new OpenGLRenderer(window);
 }
 
 void GameEngine::onEnd() {
+
 }
 
 void GameEngine::preRender() {

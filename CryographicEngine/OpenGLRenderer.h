@@ -3,10 +3,12 @@
 
 #include "AbstractRenderer.h"
 
-class OpenGLRenderer {
+class OpenGLRenderer : public AbstractRenderer{
 public:
-	virtual void renderPrimitive(AbstractRenderer::primitiveType prim);
-
+	explicit OpenGLRenderer(Window *window);
+	virtual ~OpenGLRenderer();
+	virtual bool init(Window *window) override;
+	virtual void renderPrimitive();
 };
 #endif
 

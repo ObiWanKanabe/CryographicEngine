@@ -1,5 +1,6 @@
 #include "..\CryographicEngine\LogManager.h"
 #include "..\CryographicEngine\Timer.h"
+#include "..\CryographicEngine\GameInterface.h"
 #include "..\CryographicEngine\GameEngine.h"
 
 #include <iostream>
@@ -17,4 +18,6 @@ int main(int argc, char *argv[]) {
 		std::cout << Timer::getInstance().getSeconds() << std::endl;
 	}
 	return 0;
+
+	GameEngine::getInstance().onStart();
 }

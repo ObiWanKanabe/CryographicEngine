@@ -3,22 +3,26 @@
 
 #include "Window.h"
 #include "OpenGLRenderer.h"
+#include "GameInterface.h"
 
 class GameEngine {
 private:
 	GameEngine();
 	static GameEngine *theInstance;
 	static Window *window;
+	static OpenGLRenderer *renderer;
 public:
 	~GameEngine();
 	static GameEngine& getInstance();
 	inline static Window& getWindow() { return *window; };
-	bool onStart();
+	void onStart();
 	void onEnd();
 	void preRender();
 	void render();
 	void postRender();
 	void logMessage();
+
+	//GameInterface gameInterface;
 
 };
 

@@ -2,12 +2,17 @@
 #define ABSTRACTRENDERER_H
 
 #include "Window.h"
-#include "GameEngine.h"
 
 class AbstractRenderer {
 public:
-	enum primitiveType {};
-	virtual void renderPrimitive(primitiveType prim) = 0;
+	explicit AbstractRenderer() {};
+	virtual ~AbstractRenderer() {};
+
+	virtual bool init(Window *window) = 0;
+	virtual void renderPrimitive() = 0;
+
+protected:
+	bool _closed = false;
 };
 #endif
 

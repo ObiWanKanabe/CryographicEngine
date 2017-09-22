@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="AbstractRenderer.h" />
     <ClInclude Include="GameEngine.h" />
+    <ClInclude Include="GameInterface.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="OpenGLRenderer.h" />
     <ClInclude Include="Timer.h" />
@@ -151,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp" />
+    <ClCompile Include="GameInterface.cpp" />
     <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="OpenGLRenderer.cpp" />
     <ClCompile Include="Timer.cpp" />
