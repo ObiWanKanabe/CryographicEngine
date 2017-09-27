@@ -1,5 +1,6 @@
 #include "OpenGLRenderer.h"
 
+
 #include <iostream>
 
 OpenGLRenderer::OpenGLRenderer(Window *window){
@@ -12,68 +13,7 @@ OpenGLRenderer::~OpenGLRenderer() {
 
 bool OpenGLRenderer::init(Window *window) {
 
-
-	const GLchar* vertexShaderSource = "#version 330 core\n"
-		"layout (location = 0) in vec3 position;\n"
-		"void main()\n"
-		"{\n"
-		"gl_Position = vec4(position.x, position.y, position.z, 1.0);\n"
-		"}\0";
-	const GLchar* fragmentShaderSource = "#version 330 core\n"
-		"out vec4 color;\n"
-		"void main()\n"
-		"{\n"
-		"color = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-		"}\n\0";
-
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader);
-
-	
-	GLint success;
-	GLchar infoLog[512];
-
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cerr << "Shader Vertex Compilation failed.\n" << infoLog << std::endl;
-	}
-
-	
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
-
-	
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "Shader Fragment Compilation failed.\n" << infoLog << std::endl;
-	}
-
-	
-	GLuint shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-
-	if (!success)
-	{
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "Shader Program Linking Failed.\n" << infoLog << std::endl;
-	}
-
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
-
+	shader = new Shader("Shaders/vetexShaderSource.vs", "Shaders/fragmentShaderSource.fs");
 	
 	GLfloat vertices[] =
 	{
@@ -104,7 +44,7 @@ bool OpenGLRenderer::init(Window *window) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		
-		glUseProgram(shaderProgram);
+		glUseProgram(shader->ID);
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glBindVertexArray(0);

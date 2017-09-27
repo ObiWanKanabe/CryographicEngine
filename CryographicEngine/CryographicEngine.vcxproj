@@ -147,6 +147,7 @@
     <ClInclude Include="GameInterface.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="OpenGLRenderer.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

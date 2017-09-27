@@ -2,6 +2,7 @@
 #define OPENGLRENDERER_H
 
 #include "AbstractRenderer.h"
+#include "Shader.h"
 
 class OpenGLRenderer : public AbstractRenderer{
 public:
@@ -9,6 +10,8 @@ public:
 	virtual ~OpenGLRenderer();
 	virtual bool init(Window *window) override;
 	virtual void renderPrimitive();
+private:
+	Shader *shader;
 };
 #endif
 
