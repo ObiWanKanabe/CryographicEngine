@@ -26,6 +26,7 @@ void GameEngine::onStart() {
 		preRender();
 		render();
 		postRender();
+		SDL_Delay(1000.0f/144.0f);
 	}
 	onEnd();
 }
@@ -36,7 +37,7 @@ void GameEngine::onEnd() {
 }
 
 void GameEngine::preRender() {
-
+	renderer->clear();
 }
 
 void GameEngine::render() {

@@ -11,6 +11,7 @@ public:
 	virtual ~OpenGLRenderer();
 	virtual bool init() override;
 	virtual void renderPrimitive(Window *window) override;
+	virtual void clear() override;
 private:
 	GLuint VAO, VBO;
 	Shader *shader;

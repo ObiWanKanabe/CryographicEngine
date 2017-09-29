@@ -10,6 +10,7 @@ public:
 
 	virtual bool init() = 0;
 	virtual void renderPrimitive(Window *window) = 0;
+	virtual void clear() = 0;
 
 protected:
 	bool _closed = false;

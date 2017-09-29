@@ -11,6 +11,7 @@ public:
 	~Mesh();
 	void init();
 	void addComponent(VertexComponentDescriptor::VertexComponentType _type);
+	void generateBuffers();
 	void render();
 	VertexDescriptor getVertexDescriptor() { return *vertexDescriptor; }
 private:
