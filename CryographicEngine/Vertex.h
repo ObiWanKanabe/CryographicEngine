@@ -3,10 +3,6 @@
 
 #include <vector>
 
-struct VertexData {
-
-};
-
 class VertexComponentDescriptor {
 public:
 	enum VertexComponentType {
@@ -19,7 +15,8 @@ public:
 	};
 	VertexComponentType type;
 	int offset;
-	VertexComponentDescriptor() : type(VERTEX_NULL), offset(0) {};
+	VertexComponentDescriptor() = delete;
+	VertexComponentDescriptor(VertexComponentType _type, int _offset) : type(_type), offset(_offset) {};
 	int getSize();
 	int getNumFloats();
 };
@@ -27,7 +24,7 @@ public:
 class VertexDescriptor {
 public:
 	std::vector<VertexComponentDescriptor> componentList;
-	VertexDescriptor();
+	VertexDescriptor() { stride = 0; };
 	~VertexDescriptor() {};
 	void addComponent(VertexComponentDescriptor::VertexComponentType _type);
 	int getSize() { return componentList.size(); }

@@ -24,7 +24,6 @@ Mesh::~Mesh() {
 void Mesh::init() {
 	addComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 	addComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_COLOUR3);
-
 	generateBuffers();
 }
 

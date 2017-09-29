@@ -43,14 +43,8 @@ int VertexComponentDescriptor::getNumFloats() {
 	return result;
 }
 
-VertexDescriptor::VertexDescriptor() {
-	stride = 0;
-}
 void VertexDescriptor::addComponent(VertexComponentDescriptor::VertexComponentType _type) {
-	VertexComponentDescriptor comp;
-
-	comp.type = _type;
-	comp.offset = stride;
+	VertexComponentDescriptor comp(_type, stride);
 	stride += comp.getSize();
 	componentList.push_back(comp);
 }

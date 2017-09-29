@@ -26,7 +26,7 @@ void GameEngine::onStart() {
 		preRender();
 		render();
 		postRender();
-		SDL_Delay(1000.0f/144.0f);
+		SDL_Delay(1000.0f/240.0f);
 	}
 	onEnd();
 }
