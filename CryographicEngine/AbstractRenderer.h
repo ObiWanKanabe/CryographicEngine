@@ -8,8 +8,8 @@ public:
 	explicit AbstractRenderer() {};
 	virtual ~AbstractRenderer() {};
 
-	virtual bool init(Window *window) = 0;
-	virtual void renderPrimitive() = 0;
+	virtual bool init() = 0;
+	virtual void renderPrimitive(Window *window) = 0;
 
 protected:
 	bool _closed = false;

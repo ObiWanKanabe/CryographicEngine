@@ -11,6 +11,7 @@ private:
 	static GameEngine *theInstance;
 	static Window *window;
 	static OpenGLRenderer *renderer;
+	bool isRunning = true;
 public:
 	~GameEngine();
 	static GameEngine& getInstance();

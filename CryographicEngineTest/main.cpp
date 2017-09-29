@@ -14,10 +14,5 @@ int main(int argc, char *argv[]) {
 	LogManager::getInstance().info("I HAVE NO INFORMATION TO GIVE");
 	LogManager::getInstance().trace("THE CALVARY IS HERE");
 	GameEngine::getInstance().onStart();
-	while (true) {
-		std::cout << Timer::getInstance().getSeconds() << std::endl;
-	}
 	return 0;
-
-	GameEngine::getInstance().onStart();
 }
