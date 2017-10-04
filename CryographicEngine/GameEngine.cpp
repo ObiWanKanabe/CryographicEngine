@@ -9,7 +9,12 @@ GameEngine::GameEngine() {
 }
 
 GameEngine::~GameEngine() {
-
+	theInstance = nullptr;
+	window = nullptr;
+	renderer = nullptr;
+	delete theInstance;
+	delete window;
+	delete renderer;
 }
 
 GameEngine& GameEngine::getInstance() {
@@ -26,7 +31,7 @@ void GameEngine::onStart() {
 		preRender();
 		render();
 		postRender();
-		SDL_Delay(1000.0f/240.0f);
+		SDL_Delay(1000.0f/FPS);
 	}
 	onEnd();
 }
@@ -42,6 +47,7 @@ void GameEngine::preRender() {
 
 void GameEngine::render() {
 	renderer->renderPrimitive(window);
+	window->clear();
 }
 
 void GameEngine::postRender() {

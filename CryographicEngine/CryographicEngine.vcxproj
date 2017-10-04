@@ -145,6 +145,7 @@
     <ClInclude Include="AbstractRenderer.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameInterface.h" />
+    <ClInclude Include="Hashtable.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="OpenGLRenderer.h" />
@@ -160,7 +161,6 @@
     <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="OpenGLRenderer.cpp" />
-    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="Window.cpp" />

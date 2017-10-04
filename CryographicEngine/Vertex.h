@@ -13,24 +13,50 @@ public:
 		VERTEX_COLOUR4,
 		VERTEX_UV
 	};
+
+	// Component must have a specfic type and offset in the Vertex Descriptor list
 	VertexComponentType type;
 	int offset;
+
+	// Deleted default constructor
 	VertexComponentDescriptor() = delete;
+
+	// Constructor requires a type, and offset
 	VertexComponentDescriptor(VertexComponentType _type, int _offset) : type(_type), offset(_offset) {};
+
+	// Returns size of component in bytes
 	int getSize();
+
+	// Returns number of floats in the component
 	int getNumFloats();
 };
 
 class VertexDescriptor {
 public:
+
+	// List of all Vertex Component Descriptors
 	std::vector<VertexComponentDescriptor> componentList;
-	VertexDescriptor() { stride = 0; };
+
+	// Constructor initializes stride to 0
+	VertexDescriptor() : stride(0) {} ;
+
+	// Deconstructor
 	~VertexDescriptor() {};
+
+	// Adding component requires a type, creates a new Vertex Component Descriptor, sets stride and pushes it into the component list
 	void addComponent(VertexComponentDescriptor::VertexComponentType _type);
+
+	// Returns the size of the list in bytes
 	int getSize() { return componentList.size(); }
+
+	// Returns the stride of the list
 	int getStride() { return stride; }
+
+	// Returns the component list for use
 	std::vector<VertexComponentDescriptor> getComponentList() { return componentList; }
 private:
+
+	// Stride in bytes of all the components
 	int stride;
 };
 

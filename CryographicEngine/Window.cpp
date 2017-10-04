@@ -11,6 +11,8 @@ Window::~Window() {
 	SDL_Quit();
 	_window = nullptr;
 	_context = nullptr;
+	delete _window;
+	delete _context;
 }
 
 bool Window::init() {
@@ -71,5 +73,6 @@ void Window::setAttributes() {
 }
 
 void Window::clear() const {
-	
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 }

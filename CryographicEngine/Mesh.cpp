@@ -19,6 +19,8 @@ Mesh::Mesh() {
 Mesh::~Mesh() {
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
+	vertexDescriptor = nullptr;
+	delete vertexDescriptor;
 }
 
 void Mesh::init() {
