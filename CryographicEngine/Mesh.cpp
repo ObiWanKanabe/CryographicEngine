@@ -1,19 +1,8 @@
 #include "Mesh.h"
 
-GLfloat vertices[] =
-{
-	-0.5f, -0.5f, 0.0f,
-	1.0f, 0.4f, 0.0f,
-	0.5f, -0.5f, 0.0f,
-	1.0f, 0.6f, 0.3f,
-	0.0f,  0.5f, 0.0f,
-	1.0f, 0.8f, 0.6f,
-	
-};
-
 Mesh::Mesh() {
 	vertexDescriptor = new VertexDescriptor();
-	init();
+	Init();
 }
 
 Mesh::~Mesh() {
@@ -23,25 +12,22 @@ Mesh::~Mesh() {
 	delete vertexDescriptor;
 }
 
-void Mesh::init() {
-	addComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
-	addComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_COLOUR3);
-	generateBuffers();
+void Mesh::Init() {
 }
 
-void Mesh::addComponent(VertexComponentDescriptor::VertexComponentType _type) {
-	vertexDescriptor->addComponent(_type);
+void Mesh::AddComponent(VertexComponentDescriptor::VertexComponentType _type) {
+	vertexDescriptor->AddComponent(_type);
 }
 
-void Mesh::generateBuffers() {
+void Mesh::GenerateBuffers(std::vector<GLfloat> _vertices) {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(GLfloat), &_vertices[0], GL_STATIC_DRAW);
 
-	for (int i = 0; i < vertexDescriptor->getSize(); i++) {
-		glVertexAttribPointer(i, vertexDescriptor->componentList[i].getNumFloats(), GL_FLOAT, GL_FALSE, vertexDescriptor->getStride(), (void*)(vertexDescriptor->componentList[i].offset));
+	for (int i = 0; i < vertexDescriptor->GetSize(); i++) {
+		glVertexAttribPointer(i, vertexDescriptor->componentList[i].GetNumFloats(), GL_FLOAT, GL_FALSE, vertexDescriptor->GetStride(), (void*)(vertexDescriptor->componentList[i].offset));
 		glEnableVertexAttribArray(i);
 	}
 
@@ -49,7 +35,7 @@ void Mesh::generateBuffers() {
 	glBindVertexArray(0);
 }
 
-void Mesh::render() {
+void Mesh::Render() {
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glBindVertexArray(0);

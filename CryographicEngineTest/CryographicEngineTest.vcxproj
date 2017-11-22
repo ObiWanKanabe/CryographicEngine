@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;$(SolutionDir);C:\GameDev\GLM\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameDev\SDL2\Res\lib;C:\GameDev\OpenGL\Res\lib\GL;C:\GameDev\Year3\GameEngine\CryographicEngine\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;$(SolutionDir);C:\GameDev\GLM\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameDev\SDL2\Res\lib;C:\GameDev\OpenGL\Res\lib\GL;C:\GameDev\Year3\GameEngine\CryographicEngine\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

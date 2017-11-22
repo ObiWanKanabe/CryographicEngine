@@ -71,11 +71,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;C:\GameDev\GLM\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameDev\SDL2\Res\lib;C:\GameDev\OpenGL\Res\lib\GL;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;C:\GameDev\GLM\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameDev\SDL2\Res\lib;C:\GameDev\OpenGL\Res\lib\GL;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -145,23 +145,29 @@
     <ClInclude Include="AbstractRenderer.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameInterface.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Hashtable.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="OpenGLRenderer.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameInterface.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="OpenGLRenderer.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>

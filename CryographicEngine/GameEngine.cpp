@@ -17,40 +17,45 @@ GameEngine::~GameEngine() {
 	delete renderer;
 }
 
-GameEngine& GameEngine::getInstance() {
+GameEngine& GameEngine::GetInstance() {
 	if (theInstance == nullptr) {
 		theInstance = new GameEngine();
 	}
 	return *theInstance;
 }
 
-void GameEngine::onStart() {
+void GameEngine::OnStart() {
 	window = new Window("DemoApp", 1200, 900);
 	renderer = new OpenGLRenderer();
+	triangle = new Triangle();	
+	gameObjectManager = new ResourceManager<GameObject>;
+	gameObjectManager->Put(std::string("triangle"), triangle);
+	renderer->shaderManager->StoreShader(std::string("orangeish"), "Shaders/vertexShaderSource.vs", "Shaders/fragmentShaderSource.fs");
 	while (isRunning) {
-		preRender();
-		render();
-		postRender();
+		PreRender();
+		Render();
+		PostRender();
 		SDL_Delay(1000.0f/FPS);
 	}
-	onEnd();
+	OnEnd();
 }
 
-void GameEngine::onEnd() {
+void GameEngine::OnEnd() {
 	renderer->~OpenGLRenderer();
 	window->~Window();
 }
 
-void GameEngine::preRender() {
-	renderer->clear();
+void GameEngine::PreRender() {
+	renderer->Clear();
 }
 
-void GameEngine::render() {
-	renderer->renderPrimitive(window);
-	window->clear();
+void GameEngine::Render() {
+	gameObjectManager->Get(gameObjectManager->Get(std::string("triangle")))->Render();
+	renderer->RenderPrimitive(window);
+	window->Clear();
 }
 
-void GameEngine::postRender() {
+void GameEngine::PostRender() {
 	SDL_Event event;
 
 	while (SDL_PollEvent(&event)) {
@@ -70,6 +75,6 @@ void GameEngine::postRender() {
 	}
 }
 
-void GameEngine::logMessage() {
+void GameEngine::LogMessage() {
 
 }

@@ -1,6 +1,6 @@
 #include "Vertex.h"
 
-int VertexComponentDescriptor::getSize()
+int VertexComponentDescriptor::GetSize()
 {
 	int result = 0;
 
@@ -22,7 +22,7 @@ int VertexComponentDescriptor::getSize()
 	return result;
 }
 
-int VertexComponentDescriptor::getNumFloats() {
+int VertexComponentDescriptor::GetNumFloats() {
 	int result = 0;
 
 	switch (type)
@@ -43,8 +43,8 @@ int VertexComponentDescriptor::getNumFloats() {
 	return result;
 }
 
-void VertexDescriptor::addComponent(VertexComponentDescriptor::VertexComponentType _type) {
+void VertexDescriptor::AddComponent(VertexComponentDescriptor::VertexComponentType _type) {
 	VertexComponentDescriptor comp(_type, stride);
-	stride += comp.getSize();
+	stride += comp.GetSize();
 	componentList.push_back(comp);
 }

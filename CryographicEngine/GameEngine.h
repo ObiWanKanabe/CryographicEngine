@@ -4,6 +4,9 @@
 #include "Window.h"
 #include "OpenGLRenderer.h"
 #include "GameInterface.h"
+#include "Triangle.h"
+#include "ResourceManager.h"
+#include "ShaderManager.h"
 
 // Frames per second for the game
 #define FPS 240
@@ -23,34 +26,39 @@ private:
 
 	// Set the game loop to be running
 	bool isRunning = true;
+
+	// Testing in Engine
+	Triangle *triangle;
+	ResourceManager<GameObject> *gameObjectManager;
+	ResourceHandle<GameObject> triangleHandle;
 public:
 
 	// Default Deconstructor
 	~GameEngine();
 
 	// Returns the single instance of the Engine
-	static GameEngine& getInstance();
+	static GameEngine& GetInstance();
 
 	// Returns the Engine's window
-	inline static Window& getWindow() { return *window; };
+	inline static Window& GetWindow() { return *window; };
 
 	// Initialization of the engine done here
-	void onStart();
+	void OnStart();
 
 	// Called when the engine is destroyed
-	void onEnd();
+	void OnEnd();
 
 	// Called before the engine renders
-	void preRender();
+	void PreRender();
 
 	// Called while renderering
-	void render();
+	void Render();
 
 	// Called after the engine renders
-	void postRender();
+	void PostRender();
 
 	// Log a message for debug use
-	void logMessage();
+	void LogMessage();
 
 	//GameInterface gameInterface;
 

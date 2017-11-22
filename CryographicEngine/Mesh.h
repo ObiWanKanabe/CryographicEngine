@@ -14,19 +14,19 @@ public:
 	~Mesh();
 
 	// Initialization of the done here
-	void init();
+	void Init();
 
 	// Adding a component to the mesh requires a type
-	void addComponent(VertexComponentDescriptor::VertexComponentType _type);
+	void AddComponent(VertexComponentDescriptor::VertexComponentType _type);
 
 	// Generates the buffers for the mesh
-	void generateBuffers();
+	void GenerateBuffers(std::vector<GLfloat> _vertices);
 
 	// Renders the mesh on the screen
-	void render();
+	void Render();
 
 	// Returns the Vertex Descriptor of the mesh
-	VertexDescriptor getVertexDescriptor() { return *vertexDescriptor; }
+	VertexDescriptor GetVertexDescriptor() { return *vertexDescriptor; }
 private:
 	GLuint VAO, VBO;
 	VertexDescriptor *vertexDescriptor = nullptr;

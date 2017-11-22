@@ -3,15 +3,16 @@
 
 #include "Window.h"
 #include "ResourceManager.h"
+#include "ShaderManager.h"
 
 class AbstractRenderer {
 public:
 	explicit AbstractRenderer() {};
 	virtual ~AbstractRenderer() {};
 
-	virtual bool init() = 0;
-	virtual void renderPrimitive(Window *window) = 0;
-	virtual void clear() = 0;
+	virtual bool Init() = 0;
+	virtual void RenderPrimitive(Window *window) = 0;
+	virtual void Clear() = 0;
 
 protected:
 	bool _closed = false;

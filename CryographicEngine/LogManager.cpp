@@ -11,40 +11,40 @@ LogManager::LogManager() {
 }
 
 LogManager::~LogManager() {
-	close();
+	Close();
 }
 
 
-void LogManager::nameLogFile(std::string &fileName) {
-	close();
+void LogManager::NameLogFile(std::string &fileName) {
+	Close();
 	outStream = new std::ofstream(fileName.c_str());
 }
 
-LogManager& LogManager::getInstance() {
+LogManager& LogManager::GetInstance() {
 	if (theInstance == nullptr) {
 		theInstance = new LogManager();
 	}
 	return *theInstance;
 }
 
-void LogManager::log(LogType level, std::string msg) {
+void LogManager::Log(LogType level, std::string msg) {
 	if (level <= currentSeverity && currentSeverity > LOG_NONE && currentTarget == LOG_NONE) {
 		if (outStream == nullptr) {
-			nameLogFile(defaultLogFileName);
+			NameLogFile(defaultLogFileName);
 		}
 		(*outStream) << msg << "\n";
 		outStream->flush();
 	}
 	else if (currentTarget != LOG_NONE && currentTarget == level) {
 		if (outStream == nullptr) {
-			nameLogFile(defaultLogFileName);
+			NameLogFile(defaultLogFileName);
 		}
 		(*outStream) << msg << "\n";
 		outStream->flush();
 	}
 }
 
-void LogManager::close() {
+void LogManager::Close() {
 	if (outStream != nullptr) {
 		outStream->close();
 		delete outStream;

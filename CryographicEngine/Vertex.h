@@ -25,10 +25,10 @@ public:
 	VertexComponentDescriptor(VertexComponentType _type, int _offset) : type(_type), offset(_offset) {};
 
 	// Returns size of component in bytes
-	int getSize();
+	int GetSize();
 
 	// Returns number of floats in the component
-	int getNumFloats();
+	int GetNumFloats();
 };
 
 class VertexDescriptor {
@@ -44,16 +44,16 @@ public:
 	~VertexDescriptor() {};
 
 	// Adding component requires a type, creates a new Vertex Component Descriptor, sets stride and pushes it into the component list
-	void addComponent(VertexComponentDescriptor::VertexComponentType _type);
+	void AddComponent(VertexComponentDescriptor::VertexComponentType _type);
 
 	// Returns the size of the list in bytes
-	int getSize() { return componentList.size(); }
+	int GetSize() { return componentList.size(); }
 
 	// Returns the stride of the list
-	int getStride() { return stride; }
+	int GetStride() { return stride; }
 
 	// Returns the component list for use
-	std::vector<VertexComponentDescriptor> getComponentList() { return componentList; }
+	std::vector<VertexComponentDescriptor> GetComponentList() { return componentList; }
 private:
 
 	// Stride in bytes of all the components

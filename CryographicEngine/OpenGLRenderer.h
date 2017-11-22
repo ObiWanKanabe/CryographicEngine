@@ -2,8 +2,7 @@
 #define OPENGLRENDERER_H
 
 #include "AbstractRenderer.h"
-#include "Shader.h"
-#include "Mesh.h"
+#include "Triangle.h"
 
 class OpenGLRenderer : public AbstractRenderer{
 public:
@@ -15,20 +14,17 @@ public:
 	virtual ~OpenGLRenderer();
 
 	// Initialize all objects here
-	virtual bool init() override;
+	virtual bool Init() override;
 
 	// Renders meshes here
-	virtual void renderPrimitive(Window *window) override;
+	virtual void RenderPrimitive(Window *window) override;
 
 	// Clear renderer here
-	virtual void clear() override;
+	virtual void Clear() override;
 private:
-
-	GLuint VAO, VBO;
-	Shader *shader;
-	Mesh *mesh;
-	ResourceManager<Mesh> *meshManager;
-	ResourceHandle<Mesh> triangle;
+	ResourceHandle<Shader> orangeish;
+public:
+	ShaderManager<Shader> *shaderManager;
 };
 #endif
 

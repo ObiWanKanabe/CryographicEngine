@@ -2,7 +2,7 @@
 #include <iostream>
 
 Window::Window(const std::string &title, const int width, const int height) : _title(title), _width(width), _height(height) {
-	_closed = !init();
+	_closed = !Init();
 }
 
 Window::~Window() {
@@ -15,7 +15,7 @@ Window::~Window() {
 	delete _context;
 }
 
-bool Window::init() {
+bool Window::Init() {
 
 	// Initialize SDL and error check
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -47,19 +47,19 @@ bool Window::init() {
 	}
 
 	// Set attributes for SDL/OpenGL window
- 	setAttributes();
+ 	SetAttributes();
 
 	// Clear the window by default black
-	clear();
+	Clear();
 
 	return true;
 }
 
-void Window::doubleBuffer() {
+void Window::DoubleBuffer() {
 	SDL_GL_SwapWindow(_window);
 }
 
-void Window::setAttributes() {
+void Window::SetAttributes() {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
@@ -72,7 +72,7 @@ void Window::setAttributes() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void Window::clear() const {
+void Window::Clear() const {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 }

@@ -16,27 +16,27 @@ public:
 	~Window();
 
 	// Clear the window to black
-	void clear() const;
+	void Clear() const;
 
 	// Swap buffers
-	void doubleBuffer();
+	void DoubleBuffer();
 
 	// Set SDL/OpenGL window attributes
-	void setAttributes();
+	void SetAttributes();
 
 	// Returns if the window is closed
-	inline bool isClosed() const { return _closed; }
+	inline bool IsClosed() const { return _closed; }
 
 	// Returns width
-	inline int getWidth() const { return _width; }
+	inline int GetWidth() const { return _width; }
 
 	// Returns height
-	inline int getHeight() const { return _height; }
+	inline int GetHeight() const { return _height; }
 
 private:
 
 	// Initializes Window resources and attributes
-	bool init();
+	bool Init();
 
 private:
 

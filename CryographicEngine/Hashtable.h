@@ -341,10 +341,10 @@ public:
 	void realityCheck(std::string& msg)
 	{
 		if (tableSize < 0)
-			LogManager::getInstance().error(std::string("Hashtable.realityCheck: tableSize < 0, ") + msg);
+			LogManager::GetInstance().Error(std::string("Hashtable.realityCheck: tableSize < 0, ") + msg);
 
 		if (table != duplicateTable)
-			LogManager::getInstance().error(std::string("Hashtable.realityCheck: corrupt table, ") + msg);
+			LogManager::GetInstance().Error(std::string("Hashtable.realityCheck: corrupt table, ") + msg);
 	}
 
 
