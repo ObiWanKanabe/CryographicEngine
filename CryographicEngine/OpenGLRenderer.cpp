@@ -11,12 +11,11 @@ OpenGLRenderer::~OpenGLRenderer() {
 }
 
 bool OpenGLRenderer::Init() {
-	shaderManager = new ShaderManager<Shader>;
 	return true;
 }
 
 void OpenGLRenderer::RenderPrimitive(Window *window) {
-	shaderManager->Get(shaderManager->Get(std::string("orangeish")))->use();
+	ShaderManager::GetInstance()->GetShader(std::string("orangeish"))->use();
 	window->DoubleBuffer();
 }
 

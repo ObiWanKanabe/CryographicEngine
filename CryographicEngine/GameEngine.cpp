@@ -28,9 +28,7 @@ void GameEngine::OnStart() {
 	window = new Window("DemoApp", 1200, 900);
 	renderer = new OpenGLRenderer();
 	triangle = new Triangle();	
-	gameObjectManager = new ResourceManager<GameObject>;
-	gameObjectManager->Put(std::string("triangle"), triangle);
-	renderer->shaderManager->StoreShader(std::string("orangeish"), "Shaders/vertexShaderSource.vs", "Shaders/fragmentShaderSource.fs");
+	ShaderManager::GetInstance()->StoreShader(std::string("orangeish"), "Shaders/vertexShaderSource.vs", "Shaders/fragmentShaderSource.fs");
 	while (isRunning) {
 		PreRender();
 		Render();
@@ -50,7 +48,7 @@ void GameEngine::PreRender() {
 }
 
 void GameEngine::Render() {
-	gameObjectManager->Get(gameObjectManager->Get(std::string("triangle")))->Render();
+	triangle->Render();
 	renderer->RenderPrimitive(window);
 	window->Clear();
 }

@@ -8,6 +8,8 @@
 #include <sstream>
 #include <iostream>
 
+#include "LogManager.h"
+
 class Shader
 {
 public:

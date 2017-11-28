@@ -2,8 +2,6 @@
 #define ABSTRACTRENDERER_H
 
 #include "Window.h"
-#include "ResourceManager.h"
-#include "ShaderManager.h"
 
 class AbstractRenderer {
 public:

@@ -13,6 +13,7 @@ Mesh::~Mesh() {
 }
 
 void Mesh::Init() {
+
 }
 
 void Mesh::AddComponent(VertexComponentDescriptor::VertexComponentType _type) {
@@ -35,9 +36,10 @@ void Mesh::GenerateBuffers(std::vector<GLfloat> _vertices) {
 	glBindVertexArray(0);
 }
 
-void Mesh::Render() {
+void Mesh::Render(std::vector<GLfloat> _vertices) {
+	unsigned int size = _vertices.size();
 	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, size);
 	glBindVertexArray(0);
 }
 

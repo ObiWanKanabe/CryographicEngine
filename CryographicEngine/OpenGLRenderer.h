@@ -2,6 +2,7 @@
 #define OPENGLRENDERER_H
 
 #include "AbstractRenderer.h"
+#include "ShaderManager.h"
 #include "Triangle.h"
 
 class OpenGLRenderer : public AbstractRenderer{
@@ -24,7 +25,6 @@ public:
 private:
 	ResourceHandle<Shader> orangeish;
 public:
-	ShaderManager<Shader> *shaderManager;
 };
 #endif
 

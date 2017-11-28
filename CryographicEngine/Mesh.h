@@ -23,7 +23,7 @@ public:
 	void GenerateBuffers(std::vector<GLfloat> _vertices);
 
 	// Renders the mesh on the screen
-	void Render();
+	void Render(std::vector<GLfloat> _vertices);
 
 	// Returns the Vertex Descriptor of the mesh
 	VertexDescriptor GetVertexDescriptor() { return *vertexDescriptor; }

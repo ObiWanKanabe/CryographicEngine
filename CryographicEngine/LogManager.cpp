@@ -39,7 +39,7 @@ void LogManager::Log(LogType level, std::string msg) {
 		if (outStream == nullptr) {
 			NameLogFile(defaultLogFileName);
 		}
-		(*outStream) << msg << "\n";
+		(*outStream) << msg;
 		outStream->flush();
 	}
 }

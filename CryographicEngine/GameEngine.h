@@ -5,7 +5,7 @@
 #include "OpenGLRenderer.h"
 #include "GameInterface.h"
 #include "Triangle.h"
-#include "ResourceManager.h"
+#include "MeshManager.h"
 #include "ShaderManager.h"
 
 // Frames per second for the game
@@ -29,8 +29,6 @@ private:
 
 	// Testing in Engine
 	Triangle *triangle;
-	ResourceManager<GameObject> *gameObjectManager;
-	ResourceHandle<GameObject> triangleHandle;
 public:
 
 	// Default Deconstructor
