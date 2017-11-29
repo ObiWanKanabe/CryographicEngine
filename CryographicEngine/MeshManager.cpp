@@ -23,8 +23,7 @@ Mesh* MeshManager::GetMesh(MeshManager::HandleType &handle) {
 }
 
 Mesh* MeshManager::GetMesh(std::string &name) {
-	Mesh *output = nullptr;
 	MeshManager::HandleType handle = meshes.Get(name);
-	output = GetMesh(handle);
+	Mesh *output = GetMesh(handle);
 	return output;
 }

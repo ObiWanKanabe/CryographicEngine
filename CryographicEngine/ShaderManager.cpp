@@ -24,8 +24,7 @@ Shader* ShaderManager::GetShader(ShaderManager::HandleType &handle) {
 }
 
 Shader* ShaderManager::GetShader(std::string &name) {
-	Shader *output = nullptr;
 	ShaderManager::HandleType handle = shaders.Get(name);
-	output = GetShader(handle);
+	Shader *output = GetShader(handle);
 	return output;
 }

@@ -7,6 +7,7 @@
 #include "Triangle.h"
 #include "MeshManager.h"
 #include "ShaderManager.h"
+#include "ImageManager.h"
 
 // Frames per second for the game
 #define FPS 240

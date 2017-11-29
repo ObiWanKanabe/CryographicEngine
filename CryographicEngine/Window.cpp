@@ -8,6 +8,7 @@ Window::Window(const std::string &title, const int width, const int height) : _t
 Window::~Window() {
 	SDL_GL_DeleteContext(_context);
 	SDL_DestroyWindow(_window);
+	IMG_Quit();
 	SDL_Quit();
 	_window = nullptr;
 	_context = nullptr;
@@ -22,6 +23,15 @@ bool Window::Init() {
 		std::cerr << "Failed to initialize SDL.\n";
 		return false;
 	}
+
+	//Initialize SDL Image and error check
+	int imgFlags = IMG_INIT_PNG|IMG_INIT_JPG|IMG_INIT_TIF|IMG_INIT_WEBP;
+	if (!(IMG_Init(imgFlags) & imgFlags))
+	{
+		std::cerr << "Failed to initialize SDL_image.\n";
+		return false;
+	}
+
 
 	// Create the window and store it 
 	_window = SDL_CreateWindow(_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _width, _height, SDL_WINDOW_OPENGL);

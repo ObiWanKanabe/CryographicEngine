@@ -28,7 +28,8 @@ void GameEngine::OnStart() {
 	window = new Window("DemoApp", 1200, 900);
 	renderer = new OpenGLRenderer();
 	triangle = new Triangle();	
-	ShaderManager::GetInstance()->StoreShader(std::string("orangeish"), "Shaders/vertexShaderSource.vs", "Shaders/fragmentShaderSource.fs");
+	ShaderManager::GetInstance()->StoreShader(std::string("orangeish"), "../Shaders/vertexShaderSource.vs", "../Shaders/fragmentShaderSource.fs");
+	ImageManager::GetInstance()->StoreImage(std::string("derp"), "../Resources/oreos.png");
 	while (isRunning) {
 		PreRender();
 		Render();

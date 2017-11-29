@@ -1,4 +1,4 @@
-#ifndef MESHANAGER_H
+#ifndef MESHMANAGER_H
 #define MESHMANAGER_H
 
 #include "ResourceManager.h"
@@ -7,6 +7,7 @@
 class MeshManager {
 public:
 	typedef ResourceHandle<Mesh> HandleType;
+
 private:
 
 	ResourceManager<Mesh> meshes;
