@@ -1,6 +1,7 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 #include "Mesh.h"
+#include "Texture.h"
 
 class GameObject {
 public:

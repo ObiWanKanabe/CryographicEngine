@@ -59,7 +59,7 @@ bool Window::Init() {
 	// Set attributes for SDL/OpenGL window
  	SetAttributes();
 
-	// Clear the window by default black
+	// Clear the window by default black(dark green for testing)
 	Clear();
 
 	return true;

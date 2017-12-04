@@ -9,8 +9,11 @@ public:
 	void Update();
 	void Render();
 private:
-	Mesh mesh;
+	unsigned int textureID;
+	Texture* texture;
+	Mesh* mesh;
 	std::vector<GLfloat> vertices;
+	std::vector<unsigned int> indices;
 
 };
 #endif

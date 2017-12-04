@@ -152,6 +152,8 @@
     <ClInclude Include="DemoApp.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Shaders\imgFragmentShader.fs" />
+    <None Include="..\Shaders\imgVertexShader.vs" />
     <None Include="Shaders\fragmentShaderSource.fs" />
     <None Include="Shaders\vertexShaderSource.vs" />
   </ItemGroup>

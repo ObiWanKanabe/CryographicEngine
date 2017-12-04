@@ -15,7 +15,6 @@ bool OpenGLRenderer::Init() {
 }
 
 void OpenGLRenderer::RenderPrimitive(Window *window) {
-	ShaderManager::GetInstance()->GetShader(std::string("orangeish"))->use();
 	window->DoubleBuffer();
 }
 
