@@ -11,7 +11,7 @@ private:
 	Timer();
 
 	// Variables to store ticks per second and current number of ticks respectively 
-	LARGE_INTEGER frequency, time;
+	LARGE_INTEGER frequency, prevTime, currtime;
 
 	// Single instance of the Timer
 	static Timer *theInstance;
@@ -40,6 +40,11 @@ public:
 
 	// Returns the number of seconds since the computer has been turned on
 	double GetSeconds();
+
+	void Start();
+	void Update();
+
+	LARGE_INTEGER GetDeltaTime();
 
 
 };

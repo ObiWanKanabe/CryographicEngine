@@ -14,6 +14,7 @@ MeshManager::~MeshManager() {
 }
 
 MeshManager::HandleType MeshManager::StoreMesh(std::string &name, Mesh* mesh) {
+	mesh->SetName(name);
 	return meshes.Put(name, mesh);
 }
 

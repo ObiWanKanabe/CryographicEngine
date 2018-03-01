@@ -46,7 +46,7 @@ public:
 	// Adding component requires a type, creates a new Vertex Component Descriptor, sets stride and pushes it into the component list
 	void AddComponent(VertexComponentDescriptor::VertexComponentType _type);
 
-	// Returns the size of the list in bytes
+	// Returns the size of the list
 	int GetSize() { return componentList.size(); }
 
 	// Returns the stride of the list

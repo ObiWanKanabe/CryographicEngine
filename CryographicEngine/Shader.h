@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <glm.hpp>
 
 #include "LogManager.h"
 
@@ -26,6 +27,8 @@ public:
 
 	// Activate the shader
 	void use();
+
+	void SetName(std::string &_name);
 	
 	// Utility uniform functions
 	void SetBool(const std::string &name, bool value) const;
@@ -34,9 +37,17 @@ public:
 	
 	void SetFloat(const std::string &name, float value) const;
 
+	void SetVec3(const std::string &name, const glm::vec3 &vec) const;
+
+	void SetMat4(const std::string &name, const glm::mat4 &mat) const;
+
+	std::string GetName();
+
 private:
 	// Utility function for checking shader compilation/linking errors.
 
 	void CheckCompileErrors(unsigned int shader, std::string type);
+
+	std::string name;
 };
 #endif

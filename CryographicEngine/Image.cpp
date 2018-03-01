@@ -9,8 +9,8 @@ Image::Image(const char* fileName) {
 }
 
 Image::~Image() {
-	texture = nullptr;
 	delete texture;
+	texture = nullptr;
 }
 
 void Image::SetName(std::string &_name) {

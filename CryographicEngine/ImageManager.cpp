@@ -27,6 +27,6 @@ Image* ImageManager::GetImage(ImageManager::HandleType &handle) {
 Image* ImageManager::GetImage(std::string &name) {
 	Image *output = nullptr;
 	ImageManager::HandleType handle = images.Get(name);
-	output = GetImage(handle);
+	output = images.Get(handle);
 	return output;
 }

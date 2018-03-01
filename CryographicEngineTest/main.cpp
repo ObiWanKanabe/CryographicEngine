@@ -5,6 +5,6 @@
 
 int main(int argc, char *argv[]) {
 	LogManager::GetInstance().SetTarget(LogManager::LogType::LOG_ERROR);
-	GameEngine::GetInstance().OnStart();
+	GameEngine::GetInstance()->OnStart();
 	return 0;
 }

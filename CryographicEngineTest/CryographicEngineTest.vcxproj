@@ -72,16 +72,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;$(SolutionDir);C:\GameDev\GLM\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\GameDev\SDL2\Res\lib;C:\GameDev\OpenGL\Res\lib\GL;C:\GameDev\Year3\GameEngine\CryographicEngine\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;$(SolutionDir);C:\GameDev\GLM\Include;C:\GameDev\Assimp\Res\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\GameDev\SDL2\Res\lib;C:\GameDev\OpenGL\Res\lib\GL;C:\GameDev\Year3\GameEngine\CryographicEngine\Debug;C:\GameDev\Assimp\Res\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;$(SolutionDir);C:\GameDev\GLM\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\GameDev\SDL2\Res\lib;C:\GameDev\OpenGL\Res\lib\GL;C:\GameDev\Year3\GameEngine\CryographicEngine\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;$(SolutionDir);C:\GameDev\GLM\Include;C:\GameDev\Assimp\Res\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\GameDev\SDL2\Res\lib;C:\GameDev\OpenGL\Res\lib\GL;C:\GameDev\Year3\GameEngine\CryographicEngine\Debug;C:\GameDev\Assimp\Res\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -93,10 +93,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include;C:\GameDev\GLM\Include;C:\GameDev\Assimp\Res\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;opengl32.lib;glew32.lib;CryographicEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;opengl32.lib;glew32.lib;assimp-vc140-mt.lib;CryographicEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -120,12 +121,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include;C:\GameDev\GLM\Include;C:\GameDev\Assimp\Res\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;opengl32.lib;glew32.lib;CryographicEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;opengl32.lib;glew32.lib;assimp-vc140-mt.lib;CryographicEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -152,10 +154,14 @@
     <ClInclude Include="DemoApp.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Shaders\colourFragmentShader.fs" />
+    <None Include="..\Shaders\colourVertexShader.vs" />
+    <None Include="..\Shaders\cubemapFragmentShader.fs" />
+    <None Include="..\Shaders\cubemapVertexShader.vs" />
     <None Include="..\Shaders\imgFragmentShader.fs" />
     <None Include="..\Shaders\imgVertexShader.vs" />
-    <None Include="Shaders\fragmentShaderSource.fs" />
-    <None Include="Shaders\vertexShaderSource.vs" />
+    <None Include="..\Shaders\reflectFragmentShader.fs" />
+    <None Include="..\Shaders\reflectVertexShader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

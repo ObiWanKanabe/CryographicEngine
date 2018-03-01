@@ -4,13 +4,13 @@
 #include "Window.h"
 #include "OpenGLRenderer.h"
 #include "GameInterface.h"
-#include "Triangle.h"
-#include "MeshManager.h"
-#include "ShaderManager.h"
-#include "ImageManager.h"
+#include "Timer.h"
+#include "SceneGraph.h"
+#include "SceneNode.h"
+#include "GameObject.h"
 
 // Frames per second for the game
-#define FPS 240
+#define FPS 60
 
 class GameEngine {
 private:
@@ -28,18 +28,32 @@ private:
 	// Set the game loop to be running
 	bool isRunning = true;
 
+	// The scene graph of the engine
+	SceneGraph *sceneGraph;
+
+	// The frustum to be used when rendering objects on screen
+	Frustum *frustum;
+
 	// Testing in Engine
-	Triangle *triangle;
+	Camera *camera;
+	SDL_Event events;
+	CubeMap* skybox;
+
+	GameObject* wackBox;
+	GameObject* reflectiveBox;
+	GameObject* tealBox;
 public:
 
 	// Default Deconstructor
 	~GameEngine();
 
 	// Returns the single instance of the Engine
-	static GameEngine& GetInstance();
+	static GameEngine* GetInstance();
 
 	// Returns the Engine's window
 	inline static Window& GetWindow() { return *window; };
+
+	SceneNode* GetRootSceneNode();
 
 	// Initialization of the engine done here
 	void OnStart();
@@ -55,6 +69,9 @@ public:
 
 	// Called after the engine renders
 	void PostRender();
+
+	// Handle the input for the game
+	void HandleInput();
 
 	// Log a message for debug use
 	void LogMessage();

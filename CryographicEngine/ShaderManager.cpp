@@ -15,6 +15,7 @@ ShaderManager::~ShaderManager() {
 
 ShaderManager::HandleType ShaderManager::StoreShader(std::string &name, const char* vertexPath, const char* fragmentPath) {
 	Shader *shader = new Shader(vertexPath, fragmentPath);
+	shader->SetName(name);
 	return shaders.Put(name, shader);
 }
 

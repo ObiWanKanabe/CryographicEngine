@@ -28,16 +28,28 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\fragmentShaderSource.fs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\vertexShaderSource.vs">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="..\Shaders\imgFragmentShader.fs">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\Shaders\imgVertexShader.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\colourFragmentShader.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\colourVertexShader.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\cubemapFragmentShader.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\cubemapVertexShader.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\reflectFragmentShader.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\reflectVertexShader.vs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
