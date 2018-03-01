@@ -71,12 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;C:\GameDev\GLM\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\GameDev\SDL2\Res\lib;C:\GameDev\OpenGL\Res\lib\GL;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;C:\GameDev\GLM\Include;C:\GameDev\Assimp\Res\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\GameDev\SDL2\Res\lib;C:\GameDev\OpenGL\Res\lib\GL;C:\GameDev\Assimp\Res\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;C:\GameDev\GLM\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\GameDev\SDL2\Res\lib;C:\GameDev\OpenGL\Res\lib\GL;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include\GL;C:\GameDev\GLM\Include;C:\GameDev\Assimp\Res\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\GameDev\SDL2\Res\lib;C:\GameDev\OpenGL\Res\lib\GL;C:\GameDev\Assimp\Res\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -84,12 +84,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include;C:\GameDev\GLM\Include;C:\GameDev\Assimp\Res\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
     </Link>
     <Lib>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;opengl32.lib;glew32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\GameDev\OpenGL\Res\lib;C:\GameDev\SDL2\Res\lib;C:\GameDev\Assimp\Res\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -112,6 +114,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\GameDev\SDL2\Res\include;C:\GameDev\OpenGL\Res\include;C:\GameDev\GLM\Include;C:\GameDev\Assimp\Res\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -119,7 +122,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;opengl32.lib;glew32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\GameDev\OpenGL\Res\lib;C:\GameDev\SDL2\Res\lib;C:\GameDev\Assimp\Res\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -143,41 +147,66 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractRenderer.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="ContactData.h" />
+    <ClInclude Include="CubeMap.h" />
+    <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameInterface.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Hashtable.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImageManager.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="LogManager.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="MaterialManager.h" />
+    <ClInclude Include="MatrixStack.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshManager.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="OpenGLRenderer.h" />
+    <ClInclude Include="PhysicsEngine.h" />
+    <ClInclude Include="Plane.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="SceneGraph.h" />
+    <ClInclude Include="SceneNode.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderManager.h" />
-    <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="BoundingVolume.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CubeMap.cpp" />
+    <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameInterface.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="ImageManager.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="LogManager.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MaterialManager.cpp" />
+    <ClCompile Include="MatrixStack.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshManager.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="OpenGLRenderer.cpp" />
+    <ClCompile Include="PhysicsEngine.cpp" />
+    <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="SceneGraph.cpp" />
+    <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
-    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Vertex.cpp" />
+    <ClCompile Include="BoundingVolume.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
