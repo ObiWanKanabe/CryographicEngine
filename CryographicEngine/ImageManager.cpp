@@ -15,18 +15,31 @@ ImageManager::~ImageManager() {
 
 ImageManager::HandleType ImageManager::StoreImage(std::string &name, const char* filePath) {
 	Image *image = new Image(filePath);
+
+	ImageManager::HandleType output(-1);
+	output = images.Get(name);
+	if (!output.IsNull()) {
+		std::cerr << "ERROR : Image name: " << name << " is already in use." << std::endl;
+		return output;
+	}
+
 	image->SetName(name);
 	return images.Put(name, image);
 }
 
 Image* ImageManager::GetImage(ImageManager::HandleType &handle) {
 	Image *output = images.Get(handle);
+	if (output == nullptr) {
+		std::cerr << "ERROR : Image Handle is not in use." << std::endl;
+	}
 	return output;
 }
 
 Image* ImageManager::GetImage(std::string &name) {
-	Image *output = nullptr;
 	ImageManager::HandleType handle = images.Get(name);
-	output = images.Get(handle);
+	if (handle.IsNull()) {
+		std::cerr << "ERROR : Image name: " << name << " is not in use." << std::endl;
+	}
+	Image* output = images.Get(handle);
 	return output;
 }

@@ -32,17 +32,53 @@ Material::Material(MATERIAL_TYPE _type) {
 
 Material::Material(glm::vec3 colour, Shader *shader) {
 	ambientColour = colour;
+	if (shader->GetName() == "" && name == "") {
+		std::cerr << "Shader provided for coloured material is not in the shader manager and cannot be used" << std::endl;
+	}
+	else if (shader->GetName() == "") {
+		std::cerr << "Shader provided for material: " << name << " is not in the shader manager and cannot be used" << std::endl;
+	}
 	shaderName = shader->GetName();
 	type = MATERIAL_TYPE::COLOUR;
 }
 
 Material::Material(Image *image, Shader *shader) {
+	if (shader->GetName() == "" && name == "") {
+		std::cerr << "Shader provided for textured material is not in the shader manager and cannot be used" << std::endl;
+	}
+	else if (shader->GetName() == "") {
+		std::cerr << "Shader provided for: " << name << " is not in the shader manager and cannot be used" << std::endl;
+	}
+
+	if (image->GetName() == "" && name == "") {
+		std::cerr << "Image provided for model is not in the image manager and cannot be used" << std::endl;
+	}
+	else if (image->GetName() == "") {
+		std::cerr << "Image provided for: " << name << " is not in the image manager and cannot be used" << std::endl;
+	}
+
 	textureNames.push_back(image->GetName());
 	shaderName = shader->GetName();
 	type = MATERIAL_TYPE::TEXTURE;
 }
 
 Material::Material(std::vector<Image*> imageList, Shader *shader) {
+	if (shader->GetName() == "" && name == "") {
+		std::cerr << "Shader provided for textured material is not in the shader manager and cannot be used" << std::endl;
+	}
+	else if (shader->GetName() == "") {
+		std::cerr << "Shader provided for: " << name << " is not in the shader manager and cannot be used" << std::endl;
+	}
+
+	for (int i = 0; i < imageList.size(); i++) {
+		if (imageList[i]->GetName() == "" && name == "") {
+			std::cerr << "Images provided for texture material are not in the image manager and cannot be used" << std::endl;
+		}
+		else if (imageList[i]->GetName() == "") {
+			std::cerr << "Images provided for: " << name << " are not in the image manager and cannot be used" << std::endl;
+		}
+	}
+
 	for (int i = 0; i < imageList.size(); i++) {
 		textureNames.push_back(imageList[i]->GetName());
 	}
@@ -51,6 +87,13 @@ Material::Material(std::vector<Image*> imageList, Shader *shader) {
 }
 
 Material::Material(MATERIAL_TYPE _type, Shader *shader) {
+	if (shader->GetName() == "" && name == "") {
+		std::cerr << "Shader provided for material is not in the shader manager and cannot be used" << std::endl;
+	}
+	else if (shader->GetName() == "") {
+		std::cerr << "Shader provided for: " << name << " is not in the shader manager and cannot be used" << std::endl;
+	}
+
 	if (_type = MATERIAL_TYPE::REFLECTIVE) {
 		type = _type;
 		shaderName = shader->GetName();

@@ -2,6 +2,7 @@
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 	Init(vertexPath, fragmentPath);
+	name = "";
 }
 
 Shader::~Shader() {

@@ -24,15 +24,15 @@ void SceneGraph::RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, Abstrac
 		BoundingVolume* boundingVolume = mesh->GetBoundingVolume();
 		bool noVolume = boundingVolume->GetMaximumCorner() == boundingVolume->GetMinimumCorner();
 		bool canRender = noVolume || (!(Frustum::OUTSIDE == frustum.IsInside(*boundingVolume)));
-		if (!canRender) {
+		/*if (!canRender) {
 			std::cout << "Object Culled!" << std::endl;
 		}
-		else {
+		else {*/
 			skybox->BindTexture();
 			mesh->PreRender();
 			mesh->Render(camera, matStk.GetModelMatrix(), viewMatrix, projectionMatrix);
 			mesh->PostRender();
-		}
+		//}
 		it++;
 	}
 

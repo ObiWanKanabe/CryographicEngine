@@ -2,6 +2,7 @@
 #define GAMEOBJECT_H
 #include "Object.h"
 #include "MeshManager.h"
+#include "ModelManager.h"
 #include "SceneNode.h"
 #include "RigidBody.h"
 #include <map>
@@ -12,6 +13,7 @@ private:
 	std::string name;
 	SceneNode* sceneNode;
 	std::string meshName;
+	std::string modelName;
 	BoundingVolume* boundingVolume;
 	RigidBody* rigidBody;
 	static std::map<std::string, GameObject*> *nameIndex;
@@ -23,6 +25,8 @@ public:
 	GameObject(std::string& _name);
 	GameObject(std::string& _name, Mesh* mesh);
 	GameObject(std::string& _name, GameObject* parent, Mesh* mesh);
+	GameObject(std::string& _name, Model* model);
+	GameObject(std::string& _name, GameObject* parent, Model* model);
 
 	~GameObject();
 
@@ -55,6 +59,11 @@ public:
 	void DetachMesh();
 	bool HasMesh();
 	Mesh* GetAttachedMesh();
+
+	void AttachModel(Model* model);
+	void DetachModel();
+	bool HasModel();
+	Model* GetAttachedModel();
 
 	BoundingVolume* GetBoundingVolume();
 	RigidBody* GetRigidBody();

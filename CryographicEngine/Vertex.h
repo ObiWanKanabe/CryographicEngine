@@ -11,7 +11,9 @@ public:
 		VERTEX_NORMAL,
 		VERTEX_COLOUR3,
 		VERTEX_COLOUR4,
-		VERTEX_UV
+		VERTEX_UV,
+		VERTEX_TANGENT,
+		VERTEX_BITANGENT
 	};
 
 	// Component must have a specfic type and offset in the Vertex Descriptor list

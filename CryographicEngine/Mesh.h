@@ -1,15 +1,19 @@
 #ifndef MESH_H
 #define MESH_H
-#include "Vertex.h"
-#include "MaterialManager.h"
-#include "Camera.h"
+
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
-#include <SDL.h>
-#include <assimp\Importer.hpp>
-#include <assimp\scene.h>
-#include <assimp\postprocess.h>
+#include "ShaderManager.h"
+#include "MaterialManager.h"
+#include "Camera.h"
+
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <vector>
+
+#include "Vertex.h"
 
 // List of primitive types able to be created
 enum MESH_TYPE {
@@ -19,7 +23,6 @@ enum MESH_TYPE {
 	MODEL
 };
 
-// Textures from imported meshes
 struct Texture {
 	unsigned int ID;
 	std::string type;
@@ -67,6 +70,9 @@ public:
 	// Binds the uniforms of the shader
 	void BindUniforms(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
+	// Bind the uniform samplers for model meshes
+	void BindUniforms(Shader *shader);
+
 	// Function called before render
 	void PreRender();
 
@@ -77,7 +83,7 @@ public:
 	void PostRender();
 
 	// Returns the Vertex Descriptor of the mesh
-	VertexDescriptor GetVertexDescriptor() { return *vertexDescriptor; }
+	VertexDescriptor GetVertexDescriptor() { return vertexDescriptor; }
 
 	std::vector<GLfloat> GetVertices();
 private:
@@ -89,9 +95,8 @@ private:
 
 	// Name of the material in the manager
 	std::string materialName;
-
 	// VAOs , VBOs, and EBOs stored on the GPU
-	GLuint VAO, VBO, EBO;
+	unsigned int VAO, VBO, EBO;
 
 	// List of vertices used when creating the mesh
 	std::vector<GLfloat> vertices;
@@ -102,7 +107,9 @@ private:
 	// List of textures used on loaded meshes
 	std::vector<Texture> textures;
 
+private:
+
 	// Vertex descriptor describing how the vertices list is laid out for the GPU
-	VertexDescriptor *vertexDescriptor = nullptr;
+	VertexDescriptor vertexDescriptor;
 };
 #endif

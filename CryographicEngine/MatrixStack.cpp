@@ -85,6 +85,7 @@ void MatrixStack::Rotate(glm::quat q) {
 }
 
 void MatrixStack::Rotate(float angle, float x, float y, float z) {
+
 	modelMatrixStack.top() = modelMatrixStack.top() * glm::rotate(angle, glm::vec3(x, y, z));
 	modelMatrixStackDirty = true;
 }

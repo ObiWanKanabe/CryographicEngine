@@ -34,7 +34,11 @@ Uint8 Image::GetBitsPerPixel() {
 }
 
 GLenum Image::GetFormat() {
-	if (texture->format->BytesPerPixel == 4 || texture->format->BytesPerPixel == 8) {
+
+	if (texture->format->BytesPerPixel == 1) {
+		return GL_RED;
+	} 
+	else if (texture->format->BytesPerPixel == 4 || texture->format->BytesPerPixel == 8) {
 		return GL_RGBA;
 	}
 	else {

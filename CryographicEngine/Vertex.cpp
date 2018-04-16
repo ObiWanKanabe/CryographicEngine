@@ -12,6 +12,8 @@ int VertexComponentDescriptor::GetSize()
 	case VERTEX_POSITION:
 	case VERTEX_COLOUR3:
 	case VERTEX_NORMAL:
+	case VERTEX_TANGENT:
+	case VERTEX_BITANGENT:
 		result = 3 * sizeof(float);
 		break;
 	case VERTEX_COLOUR4:
@@ -33,6 +35,8 @@ int VertexComponentDescriptor::GetNumFloats() {
 	case VERTEX_POSITION:
 	case VERTEX_COLOUR3:
 	case VERTEX_NORMAL:
+	case VERTEX_TANGENT:
+	case VERTEX_BITANGENT:
 		result = 3;
 		break;
 	case VERTEX_COLOUR4:

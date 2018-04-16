@@ -49,6 +49,58 @@ BoundingVolume::BoundingVolume(BOUNDING_SHAPE _type, Mesh *mesh) {
 
 }
 
+BoundingVolume::BoundingVolume(BOUNDING_SHAPE _type, Model *model) {
+	type = _type;
+	glm::vec3 min, max;
+
+	/*for (int j = 0; j < model->GetMeshes().size(); j++) {
+		std::vector<GLfloat> vertexList = model->GetMeshes()[j].GetVertices();
+		int componentListSize = model->GetMeshes()[j].GetVertexDescriptor().GetSize();
+		for (int i = 0; i < componentListSize; i++) {
+			bool firstSet = true;
+			VertexComponentDescriptor vertexDesc = model->GetMeshes()[j].GetVertexDescriptor().GetComponentList()[i];
+			if (vertexDesc.type == VertexComponentDescriptor::VERTEX_POSITION) {
+				int offset = vertexDesc.offset / sizeof(float);
+				int inc = model->GetMeshes()[j].GetVertexDescriptor().GetStride() / sizeof(float);
+				int size = vertexList.size() / inc;
+				for (int j = 0; j < size; j++) {
+					if (firstSet) {
+						max[0] = vertexList[offset];
+						max[1] = vertexList[offset + 1];
+						max[2] = vertexList[offset + 2];
+						min[0] = vertexList[offset];
+						min[1] = vertexList[offset + 1];
+						min[2] = vertexList[offset + 2];
+						firstSet = false;
+					}
+					else {
+						if (vertexList[offset] > max[0]) max[0] = vertexList[offset];
+						if (vertexList[offset + 1] > max[1]) max[1] = vertexList[offset + 1];
+						if (vertexList[offset + 2] > max[2]) max[2] = vertexList[offset + 2];
+
+						if (vertexList[offset] < min[0]) min[0] = vertexList[offset];
+						if (vertexList[offset + 1] < min[1]) min[1] = vertexList[offset + 1];
+						if (vertexList[offset + 2] < min[2]) min[2] = vertexList[offset + 2];
+					}
+					offset += inc;
+				}
+			}
+		}
+	}*/
+	if (type == BOUNDING_SHAPE::AABB) {
+		BoundingAABB = new Box();
+	}
+	else if (type == BOUNDING_SHAPE::SPHERE) {
+		BoundingSphere = new Sphere();
+	}
+	else if (type == BOUNDING_SHAPE::OBB) {
+		// In Progress
+	}
+	SetCentreFromValues(min, max);
+	SetRadiiFromValues(min, max);
+
+}
+
 BoundingVolume::BoundingVolume() {
 
 

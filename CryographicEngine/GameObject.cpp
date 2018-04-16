@@ -38,6 +38,31 @@ GameObject::GameObject(std::string& _name, GameObject* parent, Mesh* mesh) {
 	AttachMesh(mesh);
 }
 
+GameObject::GameObject(std::string& _name, Model *model) {
+	name = _name;
+	sceneNode = new SceneNode();
+	sceneNode->AddObject(this);
+	boundingVolume = new BoundingVolume(BOUNDING_SHAPE::AABB, model);
+	AttachModel(model);
+	if (nameIndex == nullptr) {
+		nameIndex = new std::map<std::string, GameObject*>();
+	}
+	RegisterGameObject(_name, this);
+}
+
+GameObject::GameObject(std::string& _name, GameObject* parent, Model* model) {
+	name = _name;
+	if (nameIndex == nullptr)
+	{
+		nameIndex = new std::map<std::string, GameObject*>();
+	}
+	RegisterGameObject(name, this);
+
+	parent->AttachChild(this);
+	boundingVolume = new BoundingVolume(BOUNDING_SHAPE::AABB, model);
+	AttachModel(model);
+}
+
 GameObject::~GameObject() {
 	DetachFromSceneNode();
 	DeregisterGameObject(name);
@@ -157,6 +182,7 @@ glm::vec3 GameObject::GetScale() {
 
 void GameObject::AttachMesh(Mesh* mesh) {
 	meshName = mesh->GetName();
+	modelName == "";
 }
 
 void GameObject::DetachMesh() {
@@ -173,6 +199,25 @@ Mesh* GameObject::GetAttachedMesh() {
 	return mesh;
 }
 
+void GameObject::AttachModel(Model* model) {
+	modelName = model->GetName();
+	meshName == "";
+}
+
+void GameObject::DetachModel() {
+	modelName = "";
+}
+
+bool GameObject::HasModel() {
+	return modelName != "";
+}
+
+Model* GameObject::GetAttachedModel() {
+	Model* model;
+	model = ModelManager::GetInstance()->GetModel(modelName);
+	return model;
+}
+
 BoundingVolume* GameObject::GetBoundingVolume() {
 	return boundingVolume;
 }
@@ -182,23 +227,44 @@ RigidBody* GameObject::GetRigidBody() {
 }
 
 void GameObject::PreRender() {
-	Mesh* mesh;
-	mesh = MeshManager::GetInstance()->GetMesh(meshName);
-	mesh->PreRender();
+	if (meshName != "") {
+		Mesh* mesh;
+		mesh = MeshManager::GetInstance()->GetMesh(meshName);
+		mesh->PreRender();
+	}
+	else if (modelName != "") {
+		Model* model;
+		model = ModelManager::GetInstance()->GetModel(modelName);
+		model->PreRender();
+	}
 }
 
 void GameObject::Render(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
-	Mesh* mesh;
-	mesh = MeshManager::GetInstance()->GetMesh(meshName);
-	mesh->BindUniforms(camera, modelMatrix, viewMatrix, projectionMatrix);
-	mesh->Render();
-	std::cout << boundingVolume->GetBoundingBox()->c.x << std::endl;
+	if (meshName != "") {
+		Mesh* mesh;
+		mesh = MeshManager::GetInstance()->GetMesh(meshName);
+		mesh->BindUniforms(camera, modelMatrix, viewMatrix, projectionMatrix);
+		mesh->Render();
+	}
+	else if (modelName != "") {
+		Model* model;
+		model = ModelManager::GetInstance()->GetModel(modelName);
+		model->BindUniforms(camera, modelMatrix, viewMatrix, projectionMatrix);
+		model->Render();
+	}
 }
 
 void GameObject::PostRender() {
-	Mesh* mesh;
-	mesh = MeshManager::GetInstance()->GetMesh(meshName);
-	mesh->PostRender();
+	if (meshName != "") {
+		Mesh* mesh;
+		mesh = MeshManager::GetInstance()->GetMesh(meshName);
+		mesh->PostRender();
+	}
+	else if (modelName != "") {
+		Model* model;
+		model = ModelManager::GetInstance()->GetModel(modelName);
+		model->PostRender();
+	}
 }
 
 void GameObject::Update(float deltaTime) {

@@ -40,6 +40,7 @@ void GameEngine::OnStart() {
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultColour"), "../Shaders/colourVertexShader.vs", "../Shaders/colourFragmentShader.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultSkybox"), "../Shaders/cubemapVertexShader.vs", "../Shaders/cubemapFragmentShader.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultReflective"), "../Shaders/reflectVertexShader.vs", "../Shaders/reflectFragmentShader.fs");
+	ShaderManager::GetInstance()->StoreShader(std::string("defaultModel"), "../Shaders/model.vs", "../Shaders/model.fs");
 
 	// Skybox Images
 	ImageManager::GetInstance()->StoreImage(std::string("right"), "../Resources/right.jpg");
@@ -49,12 +50,12 @@ void GameEngine::OnStart() {
 	ImageManager::GetInstance()->StoreImage(std::string("back"), "../Resources/back.jpg");
 	ImageManager::GetInstance()->StoreImage(std::string("front"), "../Resources/front.jpg");
 
-	ImageManager::GetInstance()->StoreImage(std::string("right"), "../Resources/posx.jpg");
-	ImageManager::GetInstance()->StoreImage(std::string("left"), "../Resources/negx.jpg");
-	ImageManager::GetInstance()->StoreImage(std::string("top"), "../Resources/posy.jpg");
-	ImageManager::GetInstance()->StoreImage(std::string("bottom"), "../Resources/negy.jpg");
-	ImageManager::GetInstance()->StoreImage(std::string("back"), "../Resources/posz.jpg");
-	ImageManager::GetInstance()->StoreImage(std::string("front"), "../Resources/negz.jpg");
+	//ImageManager::GetInstance()->StoreImage(std::string("right"), "../Resources/posx.jpg");
+	//ImageManager::GetInstance()->StoreImage(std::string("left"), "../Resources/negx.jpg");
+	//ImageManager::GetInstance()->StoreImage(std::string("top"), "../Resources/posy.jpg");
+	//ImageManager::GetInstance()->StoreImage(std::string("bottom"), "../Resources/negy.jpg");
+	//ImageManager::GetInstance()->StoreImage(std::string("back"), "../Resources/posz.jpg");
+	//ImageManager::GetInstance()->StoreImage(std::string("front"), "../Resources/negz.jpg");
 
 	std::vector<Image*> skyboxImageList = {
 	ImageManager::GetInstance()->GetImage(std::string("right")),
@@ -66,57 +67,77 @@ void GameEngine::OnStart() {
 	};
 	
 	// Images
-	ImageManager::GetInstance()->StoreImage(std::string("wack"), "../Resources/wack.jpg");
+	ImageManager::GetInstance()->StoreImage(std::string("wack"), "../Resources/crate.jpg");
 
 	// Materials
-	Material *myMaterial = new Material(ImageManager::GetInstance()->GetImage(std::string("wack")), ShaderManager::GetInstance()->GetShader(std::string("defaultImage")));
+	/*Material *myMaterial = new Material(ImageManager::GetInstance()->GetImage(std::string("wack")), ShaderManager::GetInstance()->GetShader(std::string("defaultImage")));
 	Material *myMaterial2 = new Material(MATERIAL_TYPE::REFLECTIVE, ShaderManager::GetInstance()->GetShader(std::string("defaultReflective")));
 	Material *myMaterial3 = new Material(glm::vec3(0.0f, 1.0f, 1.0f), ShaderManager::GetInstance()->GetShader(std::string("defaultColour")));
 	MaterialManager::GetInstance()->StoreMaterial(std::string("material"), myMaterial);
 	MaterialManager::GetInstance()->StoreMaterial(std::string("material2"), myMaterial2);
-	MaterialManager::GetInstance()->StoreMaterial(std::string("material3"), myMaterial3);
+	MaterialManager::GetInstance()->StoreMaterial(std::string("material3"), myMaterial3);*/
 
 	// Skybox
 	skybox = new CubeMap(skyboxImageList);
 
 	// Meshes
-	Mesh *mesh = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material")));
+	/*Mesh *mesh = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material")));
 	Mesh *mesh2 = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material2")));
 	Mesh *mesh3 = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material3")));
 	MeshManager::GetInstance()->StoreMesh(std::string("mesh"), mesh);
 	MeshManager::GetInstance()->StoreMesh(std::string("mesh2"), mesh2);
-	MeshManager::GetInstance()->StoreMesh(std::string("mesh3"), mesh3);
+	MeshManager::GetInstance()->StoreMesh(std::string("mesh3"), mesh3);*/
 
-	wackBox = new GameObject(std::string("derp"), MeshManager::GetInstance()->GetMesh(std::string("mesh")));
+	// Models
+	Model *model = new Model(std::string("../Resources/nanosuit/nanosuit.obj"));
+	ModelManager::GetInstance()->StoreModel(std::string("nanosuit"), model);
+
+	wackBox = new GameObject(std::string("derp"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
 	wackBox->SetPosition(glm::vec3(3.0f, 0.0f, -7.0f));
-	wackBox->SetRotation(glm::vec3(0.0f, 0.0f, 15.0f));
+	//wackBox->SetRotation(glm::vec3(0.0f, 0.0f, 15.0f));
 	wackBox->SetScale(glm::vec3(2.0f, 2.0f, 2.0f));
 	GetRootSceneNode()->AttachChild(wackBox->GetSceneNode());
 
-	reflectiveBox = new GameObject(std::string("reflect"), MeshManager::GetInstance()->GetMesh(std::string("mesh2")));
+	reflectiveBox = new GameObject(std::string("reflect"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
 	reflectiveBox->SetPosition(glm::vec3(1.7f, -0.3f, -2.3f));
 	reflectiveBox->SetRotation(glm::vec3(90.0f, 0.0f, -25.0f));
 	reflectiveBox->SetScale(glm::vec3(0.05f, 1.0f, 1.0f));
 
 	wackBox->AttachChild(reflectiveBox);
 
-	tealBox = new GameObject(std::string("teal"), MeshManager::GetInstance()->GetMesh(std::string("mesh2")));
+	tealBox = new GameObject(std::string("teal"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
 	tealBox->SetPosition(glm::vec3(-2.0f, 1.0f, -2.5f));
 	tealBox->SetRotation(glm::vec3(35.0f, 35.0f, 0.0f));
+
+	crate1 = new GameObject(std::string("crate1"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
+	crate1->SetPosition(glm::vec3(2.0f, 3.0f, 1.5f));
+	crate1->SetRotation(glm::vec3(15.0f, 60.0f, 0.0f));
+
+	crate2 = new GameObject(std::string("crate2"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
+	crate2->SetPosition(glm::vec3(5.0f, -1.0f, 0.5f));
+	crate2->SetRotation(glm::vec3(50.0f, 0.0f, 0.0f));
+
+	crate3 = new GameObject(std::string("crate3"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
+	crate3->SetPosition(glm::vec3(-4.0f, 2.0f, -2.5f));
+	crate3->SetScale(glm::vec3(0.2f, 0.2f, 0.2f));
+
+	wackBox->AttachChild(crate1);
+	wackBox->AttachChild(crate2);
+	wackBox->AttachChild(crate3);
+
+
 
 	reflectiveBox->AttachChild(tealBox);
 
 	Timer::GetInstance().Start();
-
+	
 	while (isRunning) {
-		//reflectiveBox->SetRotation(glm::quat(reflectiveBox->GetRotation().w + 0.001f, glm::vec3(0.0f, 1.0f, 0.0f)));
-		wackBox->GetBoundingVolume()->SetPosition(wackBox->GetWorldPosition());
-		tealBox->GetBoundingVolume()->SetPosition(tealBox->GetWorldPosition());
-		reflectiveBox->GetBoundingVolume()->SetPosition(reflectiveBox->GetWorldPosition());
+		//wackBox->GetBoundingVolume()->SetPosition(wackBox->GetWorldPosition());
+		//tealBox->GetBoundingVolume()->SetPosition(tealBox->GetWorldPosition());
+		//reflectiveBox->GetBoundingVolume()->SetPosition(reflectiveBox->GetWorldPosition());
 		PreRender();
 		Render();
 		PostRender();
-		SDL_Delay(1000.0f/FPS);
 	}
 	OnEnd();
 }
@@ -135,7 +156,6 @@ void GameEngine::PreRender() {
 }
 
 void GameEngine::Render() {
-	//renderer->Render(window, camera, skybox);
 	sceneGraph->RenderSceneGraph(*frustum, *renderer, camera, skybox);
 	renderer->Render(window, camera, skybox);
 }
@@ -164,29 +184,42 @@ void GameEngine::HandleInput() {
 		}
 		if (state[SDL_SCANCODE_W]) {
 			camera->ProcessKeyboard(CAMERA_DIRECTION::FORWARD, 0.01f);
-			frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
+			//frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
 		}
 		if (state[SDL_SCANCODE_A]) {
 			camera->ProcessKeyboard(CAMERA_DIRECTION::LEFT, 0.01f);
-			frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
+			//frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
 		}
 		if (state[SDL_SCANCODE_S]) {
 			camera->ProcessKeyboard(CAMERA_DIRECTION::BACKWARD, 0.01f);
-			frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
+			//frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
 		}
 		if (state[SDL_SCANCODE_D]) {
 			camera->ProcessKeyboard(CAMERA_DIRECTION::RIGHT, 0.01f);
-			frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
+			//frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
+		}
+
+		if (state[SDL_SCANCODE_UP]) {
+			wackBox->SetPosition(glm::vec3(wackBox->GetPosition().x, wackBox->GetPosition().y + 0.05f, wackBox->GetPosition().z));
+		}
+		if (state[SDL_SCANCODE_DOWN]) {
+			wackBox->SetPosition(glm::vec3(wackBox->GetPosition().x, wackBox->GetPosition().y - 0.05f, wackBox->GetPosition().z));
+		}
+		if (state[SDL_SCANCODE_LEFT]) {
+			wackBox->SetPosition(glm::vec3(wackBox->GetPosition().x - 0.05f, wackBox->GetPosition().y, wackBox->GetPosition().z));
+		}
+		if (state[SDL_SCANCODE_RIGHT]) {
+			wackBox->SetPosition(glm::vec3(wackBox->GetPosition().x + 0.05f, wackBox->GetPosition().y, wackBox->GetPosition().z));
 		}
 
 		if (events.type == SDL_MOUSEMOTION) {
 			camera->ProcessMouseMovement((float)events.motion.x, (float)events.motion.y);
-			frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
+			//frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
 		}
 
 		if (events.type == SDL_MOUSEWHEEL) {
 			camera->ProcessMouseScroll((float)events.wheel.y);
-			frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
+			//frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
 		}
 	}
 }

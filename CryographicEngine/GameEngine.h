@@ -9,9 +9,6 @@
 #include "SceneNode.h"
 #include "GameObject.h"
 
-// Frames per second for the game
-#define FPS 60
-
 class GameEngine {
 private:
 
@@ -42,6 +39,10 @@ private:
 	GameObject* wackBox;
 	GameObject* reflectiveBox;
 	GameObject* tealBox;
+	GameObject* crate1;
+	GameObject* crate2;
+	GameObject* crate3;
+
 public:
 
 	// Default Deconstructor

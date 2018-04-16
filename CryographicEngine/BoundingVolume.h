@@ -3,6 +3,7 @@
 
 #include <glm.hpp>
 #include "MeshManager.h"
+#include "ModelManager.h"
 
 enum BOUNDING_SHAPE {
 	AABB,
@@ -27,6 +28,7 @@ private:
 	BOUNDING_SHAPE type;
 public:
 	BoundingVolume(BOUNDING_SHAPE _type, Mesh *mesh);
+	BoundingVolume(BOUNDING_SHAPE _type, Model* model);
 	BoundingVolume();
 
 	inline void SetCentreFromValues(glm::vec3& min, glm::vec3& max);
