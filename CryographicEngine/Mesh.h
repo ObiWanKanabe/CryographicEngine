@@ -23,19 +23,13 @@ enum MESH_TYPE {
 	MODEL
 };
 
-struct Texture {
-	unsigned int ID;
-	std::string type;
-	std::string path;
-};
-
 // Mesh class can be loaded meshes or created primitives with the desired colour & material
 class Mesh {
 
 public:
 
 	// Creates a mesh with the loaded vertices, indices, and textures from assimp
-	Mesh(std::vector<GLfloat> _vertices, std::vector<unsigned int> _indices, std::vector <Texture> _textures);
+	Mesh(std::vector<GLfloat> _vertices, std::vector<unsigned int> _indices, std::vector <Texture> _textures, glm::vec3 _position, std::string &_name);
 
 	// Creates a mesh with the default colour
 	Mesh(MESH_TYPE primType);
@@ -54,6 +48,9 @@ public:
 
 	// Gets the name of the mesh in the manager
 	std::string GetName();
+
+	// Gets the mesh's material name in the managaer
+	std::string GetMaterialName();
 
 	// Adding a component to the mesh requires a type
 	void AddComponent(VertexComponentDescriptor::VertexComponentType _type);
@@ -85,7 +82,12 @@ public:
 	// Returns the Vertex Descriptor of the mesh
 	VertexDescriptor GetVertexDescriptor() { return vertexDescriptor; }
 
+	// Returns the vertices of the mesh
 	std::vector<GLfloat> GetVertices();
+
+	// Returns the offset of the vertices of the mesh
+	glm::vec3 GetOffset();
+
 private:
 	// Name of the mesh in the manager
 	std::string name;
@@ -95,6 +97,7 @@ private:
 
 	// Name of the material in the manager
 	std::string materialName;
+
 	// VAOs , VBOs, and EBOs stored on the GPU
 	unsigned int VAO, VBO, EBO;
 
@@ -107,7 +110,8 @@ private:
 	// List of textures used on loaded meshes
 	std::vector<Texture> textures;
 
-private:
+	// The offset from the origin of the model meshes vertices
+	glm::vec3 offset;
 
 	// Vertex descriptor describing how the vertices list is laid out for the GPU
 	VertexDescriptor vertexDescriptor;

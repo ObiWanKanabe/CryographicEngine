@@ -25,8 +25,14 @@ public:
 	// Gets the name of the model in the manager
 	std::string GetName();
 
+	// Gets the models shader name in the manager
+	std::string GetShaderName();
+
 	// Gets the list of meshes in the model
-	std::vector<Mesh> GetMeshes();
+	std::vector<Mesh*> GetMeshes();
+
+	// Prints the names of the meshes loaded 
+	void PrintMeshNames();
 	
 	// Binds the uniforms of the shader
 	void BindUniforms(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
@@ -34,7 +40,7 @@ public:
 	// Function called before render
 	void PreRender();
 
-	// Renders the mesh on the screen
+	// Renders the model on the screen
 	void Render();
 
 	// Function called after render
@@ -42,24 +48,31 @@ public:
 
 private:
 
+	// Name of the model in the manager
 	std::string name;
 
-	// Name of the material in the manager
+	// Name of the model's shader in the manager
 	std::string shaderName;
 
 	// List of the meshes in the model
-	std::vector<Mesh> meshes;
+	std::vector<Mesh*> meshes;
 	
+	// Directory where the model is stored
 	std::string directory;
 
+	// List of the textures in the model
 	std::vector<Texture> loadedTextures;
 
+	// Initial model loading method
 	void LoadModel(std::string filePath);
 
+	// Processes the next node in the model, considering a parent-child relationship
 	void ProcessNode(aiNode *node, const aiScene *scene);
 	
-	Mesh ProcessMesh(aiMesh *mesh, const aiScene *scene);
+	// Returns a mesh with all the processed parameters from ASSIMP
+	Mesh* ProcessMesh(aiMesh *mesh, const aiScene *scene);
 
+	// Loads Textures for the model
 	std::vector<Texture> LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
 
 };

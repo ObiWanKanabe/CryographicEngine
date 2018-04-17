@@ -33,6 +33,8 @@ BoundingVolume::BoundingVolume(BOUNDING_SHAPE _type, Mesh *mesh) {
 				}
 				offset += inc;
 			}
+			min += mesh->GetOffset();
+			max += mesh->GetOffset();
 		}
 	}
 	if (type == BOUNDING_SHAPE::AABB) {
@@ -53,15 +55,15 @@ BoundingVolume::BoundingVolume(BOUNDING_SHAPE _type, Model *model) {
 	type = _type;
 	glm::vec3 min, max;
 
-	/*for (int j = 0; j < model->GetMeshes().size(); j++) {
-		std::vector<GLfloat> vertexList = model->GetMeshes()[j].GetVertices();
-		int componentListSize = model->GetMeshes()[j].GetVertexDescriptor().GetSize();
+	for (int j = 0; j < model->GetMeshes().size(); j++) {
+		std::vector<GLfloat> vertexList = model->GetMeshes()[j]->GetVertices();
+		int componentListSize = model->GetMeshes()[j]->GetVertexDescriptor().GetSize();
 		for (int i = 0; i < componentListSize; i++) {
 			bool firstSet = true;
-			VertexComponentDescriptor vertexDesc = model->GetMeshes()[j].GetVertexDescriptor().GetComponentList()[i];
+			VertexComponentDescriptor vertexDesc = model->GetMeshes()[j]->GetVertexDescriptor().GetComponentList()[i];
 			if (vertexDesc.type == VertexComponentDescriptor::VERTEX_POSITION) {
 				int offset = vertexDesc.offset / sizeof(float);
-				int inc = model->GetMeshes()[j].GetVertexDescriptor().GetStride() / sizeof(float);
+				int inc = model->GetMeshes()[j]->GetVertexDescriptor().GetStride() / sizeof(float);
 				int size = vertexList.size() / inc;
 				for (int j = 0; j < size; j++) {
 					if (firstSet) {
@@ -86,7 +88,7 @@ BoundingVolume::BoundingVolume(BOUNDING_SHAPE _type, Model *model) {
 				}
 			}
 		}
-	}*/
+	}
 	if (type == BOUNDING_SHAPE::AABB) {
 		BoundingAABB = new Box();
 	}

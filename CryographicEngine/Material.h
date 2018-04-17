@@ -9,7 +9,15 @@
 enum MATERIAL_TYPE {
 	COLOUR,
 	TEXTURE,
-	REFLECTIVE
+	MODEL_TEXTURE,
+	REFLECTIVE,
+
+};
+
+struct Texture {
+	unsigned int ID;
+	std::string type;
+	std::string path;
 };
 
 // Material class can have an ambient Colour and diffuse Texture (Right now)
@@ -23,7 +31,7 @@ private:
 	MATERIAL_TYPE type;
 
 	// ID of the texture in the GPU
-	GLuint textureID[6];
+	GLuint textureID[8];
 
 	// The ambient colour in floats
 	glm::vec3 ambientColour;
@@ -45,8 +53,14 @@ public:
 	Material(std::vector<Image*> imageList, Shader *shader);
 	Material(MATERIAL_TYPE _type, Shader *shader);
 
-	// Stores the name of the manager in the material
+	// Constructor for a material loaded by assimp
+	Material(std::vector<Texture> _texture, std::string &_name);
+
+	// Sets the name of the material in the manager
 	void SetName(std::string &_name);
+
+	// Sets the material's shader name in the manager
+	void SetShaderName(std::string &_name);
 
 	// Utility functions 
 	std::string GetName();
@@ -59,6 +73,9 @@ public:
 
 	// Binds the uniforms of the shader
 	void BindUniforms();
+
+	// Binds the uniform of the model's shader
+	void BindUniforms(Shader *shader);
 
 	// Function to be used on pre-render
 	void PreRender();

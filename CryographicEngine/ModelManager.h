@@ -1,7 +1,7 @@
 #ifndef MODELMANAGER_H
 #define MODELMANAGER_H
 
-#include "ResourceManager.h"
+#include "MeshManager.h"
 #include "Model.h"
 
 class ModelManager {

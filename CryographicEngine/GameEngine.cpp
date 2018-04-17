@@ -40,6 +40,7 @@ void GameEngine::OnStart() {
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultColour"), "../Shaders/colourVertexShader.vs", "../Shaders/colourFragmentShader.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultSkybox"), "../Shaders/cubemapVertexShader.vs", "../Shaders/cubemapFragmentShader.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultReflective"), "../Shaders/reflectVertexShader.vs", "../Shaders/reflectFragmentShader.fs");
+	ShaderManager::GetInstance()->StoreShader(std::string("defaultRefractive"), "../Shaders/refract.vs", "../Shaders/refract.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultModel"), "../Shaders/model.vs", "../Shaders/model.fs");
 
 	// Skybox Images
@@ -70,64 +71,56 @@ void GameEngine::OnStart() {
 	ImageManager::GetInstance()->StoreImage(std::string("wack"), "../Resources/crate.jpg");
 
 	// Materials
-	/*Material *myMaterial = new Material(ImageManager::GetInstance()->GetImage(std::string("wack")), ShaderManager::GetInstance()->GetShader(std::string("defaultImage")));
+	Material *myMaterial = new Material(ImageManager::GetInstance()->GetImage(std::string("wack")), ShaderManager::GetInstance()->GetShader(std::string("defaultImage")));
 	Material *myMaterial2 = new Material(MATERIAL_TYPE::REFLECTIVE, ShaderManager::GetInstance()->GetShader(std::string("defaultReflective")));
 	Material *myMaterial3 = new Material(glm::vec3(0.0f, 1.0f, 1.0f), ShaderManager::GetInstance()->GetShader(std::string("defaultColour")));
 	MaterialManager::GetInstance()->StoreMaterial(std::string("material"), myMaterial);
 	MaterialManager::GetInstance()->StoreMaterial(std::string("material2"), myMaterial2);
-	MaterialManager::GetInstance()->StoreMaterial(std::string("material3"), myMaterial3);*/
+	MaterialManager::GetInstance()->StoreMaterial(std::string("material3"), myMaterial3);
 
 	// Skybox
 	skybox = new CubeMap(skyboxImageList);
 
 	// Meshes
-	/*Mesh *mesh = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material")));
+	Mesh *mesh = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material")));
 	Mesh *mesh2 = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material2")));
 	Mesh *mesh3 = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material3")));
 	MeshManager::GetInstance()->StoreMesh(std::string("mesh"), mesh);
 	MeshManager::GetInstance()->StoreMesh(std::string("mesh2"), mesh2);
-	MeshManager::GetInstance()->StoreMesh(std::string("mesh3"), mesh3);*/
+	MeshManager::GetInstance()->StoreMesh(std::string("mesh3"), mesh3);
 
 	// Models
-	Model *model = new Model(std::string("../Resources/nanosuit/nanosuit.obj"));
+	Model *model = new Model(std::string("../Resources/nanosuit/nanosuit.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModel")));
 	ModelManager::GetInstance()->StoreModel(std::string("nanosuit"), model);
 
+	//MaterialManager::GetInstance()->GetMaterial(MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Body"))->GetMaterialName())->SetShaderName(std::string("defaultModel"));
+	//MaterialManager::GetInstance()->GetMaterial(MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Legs"))->GetMaterialName())->SetShaderName(std::string("defaultModel"));
+
 	wackBox = new GameObject(std::string("derp"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
-	wackBox->SetPosition(glm::vec3(3.0f, 0.0f, -7.0f));
-	//wackBox->SetRotation(glm::vec3(0.0f, 0.0f, 15.0f));
-	wackBox->SetScale(glm::vec3(2.0f, 2.0f, 2.0f));
+	wackBox->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+
+	reflectiveBox = new GameObject(std::string("reflect"), MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Body")));
+	reflectiveBox->SetPosition(glm::vec3(5.0f, 0.0f, 0.0f));
+
+	tealBox = new GameObject(std::string("teal"), MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Legs")));
+	tealBox->SetPosition(glm::vec3(10.0f, 0.0f, 0.0f));
+
+	crate1 = new GameObject(std::string("crate1"), MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Arms")));
+	crate1->SetPosition(glm::vec3(15.0f, 0.0f, 0.0f));
+
+	crate2 = new GameObject(std::string("crate2"), MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Helmet")));
+	crate2->SetPosition(glm::vec3(20.0f, 0.0f, 0.0f));
+
+	crate3 = new GameObject(std::string("crate3"), MeshManager::GetInstance()->GetMesh(std::string("nanosuit_hands")));
+	crate3->SetPosition(glm::vec3(25.0f, 0.0f, 0.0f));
+
+	// Scene Graph usage
 	GetRootSceneNode()->AttachChild(wackBox->GetSceneNode());
-
-	reflectiveBox = new GameObject(std::string("reflect"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
-	reflectiveBox->SetPosition(glm::vec3(1.7f, -0.3f, -2.3f));
-	reflectiveBox->SetRotation(glm::vec3(90.0f, 0.0f, -25.0f));
-	reflectiveBox->SetScale(glm::vec3(0.05f, 1.0f, 1.0f));
-
 	wackBox->AttachChild(reflectiveBox);
-
-	tealBox = new GameObject(std::string("teal"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
-	tealBox->SetPosition(glm::vec3(-2.0f, 1.0f, -2.5f));
-	tealBox->SetRotation(glm::vec3(35.0f, 35.0f, 0.0f));
-
-	crate1 = new GameObject(std::string("crate1"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
-	crate1->SetPosition(glm::vec3(2.0f, 3.0f, 1.5f));
-	crate1->SetRotation(glm::vec3(15.0f, 60.0f, 0.0f));
-
-	crate2 = new GameObject(std::string("crate2"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
-	crate2->SetPosition(glm::vec3(5.0f, -1.0f, 0.5f));
-	crate2->SetRotation(glm::vec3(50.0f, 0.0f, 0.0f));
-
-	crate3 = new GameObject(std::string("crate3"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
-	crate3->SetPosition(glm::vec3(-4.0f, 2.0f, -2.5f));
-	crate3->SetScale(glm::vec3(0.2f, 0.2f, 0.2f));
-
 	wackBox->AttachChild(crate1);
 	wackBox->AttachChild(crate2);
 	wackBox->AttachChild(crate3);
-
-
-
-	reflectiveBox->AttachChild(tealBox);
+	wackBox->AttachChild(tealBox);
 
 	Timer::GetInstance().Start();
 	

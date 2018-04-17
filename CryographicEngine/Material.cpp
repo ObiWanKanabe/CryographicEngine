@@ -103,8 +103,40 @@ Material::Material(MATERIAL_TYPE _type, Shader *shader) {
 	}
 }
 
+Material::Material(std::vector<Texture> _texture, std::string &_name) {
+	for (size_t i = 0; i < _texture.size(); i++) {
+		unsigned int diffuseNr = 1;
+		unsigned int specularNr = 1;
+		unsigned int normalNr = 1;
+		unsigned int heightNr = 1;
+		textureID[i] = _texture[i].ID;
+		type = MATERIAL_TYPE::MODEL_TEXTURE;
+		if (_texture[i].type == "texture_diffuse") {
+			textureNames.push_back("texture_diffuse" + std::to_string(diffuseNr++));
+		}
+		else if (_texture[i].type == "texture_specular") {
+			textureNames.push_back("texture_specular" + std::to_string(specularNr++));
+		}
+		else if (_texture[i].type == "texture_normal") {
+			textureNames.push_back("texture_normal" + std::to_string(normalNr++));
+		}
+		else if (_texture[i].type == "texture_height") {
+			textureNames.push_back("texture_height" + std::to_string(heightNr++));
+		}
+		else {
+
+		}
+	}
+
+	shaderName = "defaultModel";
+}
+
 void Material::SetName(std::string &_name) {
 	name = _name;
+}
+
+void Material::SetShaderName(std::string &_name) {
+	shaderName = _name;
 }
 
 std::string Material::GetName() {
@@ -118,6 +150,7 @@ Shader* Material::GetShader() {
 glm::vec3 Material::GetColour() {
 	return ambientColour;
 }
+
 MATERIAL_TYPE Material::GetType() {
 	return type;
 }
@@ -151,9 +184,39 @@ void Material::BindUniforms() {
 			shader->SetInt(std::string("uTexture"), i);
 		}
 	}
+	else if (type == MATERIAL_TYPE::MODEL_TEXTURE) {
+		for (unsigned int i = 0; i < textureNames.size(); i++)
+			{
+				glActiveTexture(GL_TEXTURE0 + i);
+
+				shader->SetInt(textureNames[i], i);
+			}
+
+		if (textureNames.size() == 1) {
+			shader->SetInt("texture_specular1", 0);
+			shader->SetInt("texture_normal1", 0);
+		}
+
+		shader->SetInt("skybox", 0);
+	}
 	else if (type == MATERIAL_TYPE::REFLECTIVE) {
 		shader->SetInt("skybox", 0);
 	}
+}
+
+void Material::BindUniforms(Shader *shader) {
+	shader->use();
+	for (unsigned int i = 0; i < textureNames.size(); i++)
+	{
+		glActiveTexture(GL_TEXTURE0 + i);
+
+		shader->SetInt(textureNames[i], i);
+	}
+	if (textureNames.size() == 1) {
+		shader->SetInt("texture_specular1", 0);
+		shader->SetInt("texture_normal1", 0);
+	}
+	shader->SetInt("skybox", 0);
 }
 
 void Material::PreRender() {
@@ -172,9 +235,9 @@ void Material::PreRender() {
 void Material::Render() {
 	Shader* shader = GetShader();
 	shader->use();
-	if (type == MATERIAL_TYPE::TEXTURE) {
+	if (type == MATERIAL_TYPE::TEXTURE || type == MATERIAL_TYPE::MODEL_TEXTURE) {
 		for (int i = 0; i < textureNames.size(); i++) {
-			glActiveTexture(GL_TEXTURE0);
+			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, textureID[i]);
 		}
 	}

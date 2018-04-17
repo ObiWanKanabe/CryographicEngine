@@ -21,6 +21,12 @@ ModelManager::HandleType ModelManager::StoreModel(std::string &name, Model* Mode
 		return output;
 	}
 	Model->SetName(name);
+	for (size_t i = 0; i < Model->GetMeshes().size(); i++) {
+		MeshManager::GetInstance()->StoreMesh(name + std::string("_") + Model->GetMeshes().at(i)->GetName(), Model->GetMeshes().at(i));
+		Material* material = MaterialManager::GetInstance()->GetMaterial(Model->GetMeshes().at(i)->GetMaterialName());
+		material->SetName(name + std::string("_") + material->GetName());
+		material->SetShaderName(Model->GetShaderName());
+	}
 	return models.Put(name, Model);
 }
 
