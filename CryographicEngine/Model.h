@@ -63,6 +63,9 @@ private:
 	// List of the textures in the model
 	std::vector<Texture> loadedTextures;
 
+	// Offset of the model from the drawing point
+	glm::vec3 offset;
+
 	// Initial model loading method
 	void LoadModel(std::string filePath);
 

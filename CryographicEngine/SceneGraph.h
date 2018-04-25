@@ -14,6 +14,7 @@ private:
 	MatrixStack matStk;
 
 	void RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, AbstractRenderer &renderer, Camera *camera, CubeMap* skybox);
+	std::vector<Light*> GetLights(SceneNode *sceneRoot);
 
 public:
 
@@ -21,9 +22,8 @@ public:
 	~SceneGraph();
 
 	SceneNode* GetRootSceneNode();
+	std::vector<Light*> GetSceneLights();
 	void RenderSceneGraph(Frustum &frustum, AbstractRenderer &renderer, Camera *camera, CubeMap* skybox);
-
-
 
 };
 #endif

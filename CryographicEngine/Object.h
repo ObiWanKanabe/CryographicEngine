@@ -2,12 +2,14 @@
 #define OBJECT_H
 
 #include "BoundingVolume.h"
+#include "Light.h"
 
 class Object {
 public:
 	Object() {};
 
 	virtual BoundingVolume* GetBoundingVolume() = 0;
+	virtual Light* GetLight() = 0;
 	virtual void PreRender() = 0;
 	virtual void Render(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) = 0;
 	virtual void PostRender() = 0;

@@ -120,8 +120,8 @@ Material::Material(std::vector<Texture> _texture, std::string &_name) {
 		else if (_texture[i].type == "texture_normal") {
 			textureNames.push_back("texture_normal" + std::to_string(normalNr++));
 		}
-		else if (_texture[i].type == "texture_height") {
-			textureNames.push_back("texture_height" + std::to_string(heightNr++));
+		else if (_texture[i].type == "texture_reflective") {
+			textureNames.push_back("texture_reflective" + std::to_string(heightNr++));
 		}
 		else {
 

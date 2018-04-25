@@ -42,9 +42,10 @@ void Model::PrintMeshNames() {
 void Model::BindUniforms(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
 	Shader* shader = ShaderManager::GetInstance()->GetShader(shaderName);
 	shader->use();
+	glm::mat4 model = glm::translate(modelMatrix, offset);
 	shader->SetMat4("projection", projectionMatrix);
 	shader->SetMat4("view", viewMatrix);
-	shader->SetMat4("model", modelMatrix);
+	shader->SetMat4("model", model);
 	shader->SetVec3("cameraPos", camera->GetPosition());
 }
 
@@ -174,6 +175,8 @@ Mesh* Model::ProcessMesh(aiMesh* _mesh, const aiScene *scene) {
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 		std::vector<Texture> normalMaps = LoadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal");
 		textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+		std::vector<Texture> reflectionMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_reflective");
+		textures.insert(textures.end(), reflectionMaps.begin(), reflectionMaps.end());
 	}
 
 	// Calculating the position of the mesh from the origin
@@ -182,7 +185,7 @@ Mesh* Model::ProcessMesh(aiMesh* _mesh, const aiScene *scene) {
 	// Create the mesh using our mesh class and pass in the imported values
 	Mesh *mesh = new Mesh(vertices, indices, textures, position, std::string(_mesh->mName.C_Str()));
 	return mesh;
-}
+}	
 
 std::vector<Texture> Model::LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName) {
 	std::vector<Texture> textures;

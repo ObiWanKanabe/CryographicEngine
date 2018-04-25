@@ -14,6 +14,7 @@ private:
 	SceneNode* sceneNode;
 	std::string meshName;
 	std::string modelName;
+	Light* light;
 	BoundingVolume* boundingVolume;
 	RigidBody* rigidBody;
 	static std::map<std::string, GameObject*> *nameIndex;
@@ -67,6 +68,7 @@ public:
 
 	BoundingVolume* GetBoundingVolume();
 	RigidBody* GetRigidBody();
+	Light* GetLight();
 
 	virtual void PreRender();
 	virtual void Render(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);

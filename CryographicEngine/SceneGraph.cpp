@@ -49,6 +49,34 @@ SceneNode* SceneGraph::GetRootSceneNode() {
 	return rootSceneNode;
 }
 
+std::vector<Light*> SceneGraph::GetLights(SceneNode *sceneRoot) {
+
+	std::vector<Light*> lightList;
+	SceneNode::objectIterator it = sceneRoot->ObjectBegin();
+
+	while (it != sceneRoot->ObjectEnd()) {
+		Object *lightObject = *it;
+		if (lightObject->GetLight() != nullptr) {
+			lightList.push_back(lightObject->GetLight());
+		}
+		it++;
+	}
+
+	SceneNode *child = sceneRoot->GetFirstChild();
+	while (child != nullptr) {
+		std::vector<Light*> childLights = GetLights(child);
+		lightList.insert(std::end(lightList), std::begin(childLights), std::end(childLights));
+		child = child->GetNextSibling();
+	}
+
+	return lightList;
+}
+
+std::vector<Light*> SceneGraph::GetSceneLights() {
+	return GetLights(rootSceneNode);
+}
+
 void SceneGraph::RenderSceneGraph(Frustum &frustum, AbstractRenderer &renderer, Camera *camera, CubeMap* skybox) {
 	RenderSceneNode(rootSceneNode, frustum, renderer, camera, skybox);
 }
+

@@ -95,6 +95,7 @@ void GameEngine::OnStart() {
 
 	//MaterialManager::GetInstance()->GetMaterial(MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Body"))->GetMaterialName())->SetShaderName(std::string("defaultModel"));
 	//MaterialManager::GetInstance()->GetMaterial(MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Legs"))->GetMaterialName())->SetShaderName(std::string("defaultModel"));
+	//MaterialManager::GetInstance()->GetMaterial(MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Arms"))->GetMaterialName())->SetShaderName(std::string("defaultModel"));
 
 	wackBox = new GameObject(std::string("derp"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
 	wackBox->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -150,6 +151,7 @@ void GameEngine::PreRender() {
 
 void GameEngine::Render() {
 	sceneGraph->RenderSceneGraph(*frustum, *renderer, camera, skybox);
+	sceneGraph->GetSceneLights();
 	renderer->Render(window, camera, skybox);
 }
 

@@ -8,7 +8,6 @@ out vec3 Position;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-uniform mat4 derp;
 
 void main()
 {

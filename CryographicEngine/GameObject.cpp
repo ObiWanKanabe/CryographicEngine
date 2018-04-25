@@ -226,6 +226,10 @@ RigidBody* GameObject::GetRigidBody() {
 	return rigidBody;
 }
 
+Light* GameObject::GetLight() {
+	return light;
+}
+
 void GameObject::PreRender() {
 	if (meshName != "") {
 		Mesh* mesh;

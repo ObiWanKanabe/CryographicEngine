@@ -499,6 +499,7 @@ void Mesh::SetVec3(const std::string &name, const glm::vec3 &vec) {
 void Mesh::BindUniforms(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 {
 	if (type == MESH_TYPE::MODEL) {
+		glDisable(GL_CULL_FACE);
 		if (materialName != "") {
 			Material* material = MaterialManager::GetInstance()->GetMaterial(materialName);
 			material->BindUniforms();
@@ -546,7 +547,7 @@ void Mesh::BindUniforms(Shader* shader) {
 
 void Mesh::PreRender() {
 	if (type == MESH_TYPE::MODEL) {
-		glDisable(GL_CULL_FACE);
+		
 	}
 	if (materialName != "") {
 		Material* material = MaterialManager::GetInstance()->GetMaterial(materialName);
