@@ -4,7 +4,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-Creation of the Crographic Engine was done during my 5th semester game engine class at Humber College. 
+Creation of the Cryographic Engine began during my 5th semester game engine class at Humber College. 
 
 Written in C++ and OpenGl, I've used the creation of this engine to help me advance my knowledge 
 of the OpenGL framework and 3D graphics programming as a whole.
