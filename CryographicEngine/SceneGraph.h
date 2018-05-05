@@ -12,6 +12,7 @@ class SceneGraph {
 private:
 	SceneNode *rootSceneNode;
 	MatrixStack matStk;
+	std::vector<Light*> lightList;
 
 	void RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, AbstractRenderer &renderer, Camera *camera, CubeMap* skybox);
 	std::vector<Light*> GetLights(SceneNode *sceneRoot);

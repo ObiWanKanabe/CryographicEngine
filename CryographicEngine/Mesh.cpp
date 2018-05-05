@@ -26,6 +26,7 @@ Mesh::Mesh(MESH_TYPE primType) {
 	case PLANE:
 		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_COLOUR3);
+		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
 		vertices = {
 			0.5f,  0.5f, 0.0f,  0.8f, 0.8f, 0.8f,
 			-0.5f, 0.5f, 0.0f,  0.8f, 0.8f, 0.8f,
@@ -38,6 +39,7 @@ Mesh::Mesh(MESH_TYPE primType) {
 	case TRIANGLE:
 		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_COLOUR3);
+		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
 		vertices = {
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.8f, 0.8f,
 			0.5f, -0.5f, 0.0f,  0.8f, 0.8f, 0.8f,
@@ -47,48 +49,49 @@ Mesh::Mesh(MESH_TYPE primType) {
 	case CUBE:
 		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_COLOUR3);
+		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
 		vertices = {
-			-0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.8f,
-			0.5f,  0.5f, -0.5f,   0.8f, 0.8f, 0.8f,
-			0.5f, -0.5f, -0.5f,   0.8f, 0.8f, 0.8f,
-			0.5f,  0.5f, -0.5f,   0.8f, 0.8f, 0.8f,
-			-0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.8f,
-			-0.5f,  0.5f, -0.5f,  0.8f, 0.8f, 0.8f,
-			
-			-0.5f, -0.5f,  0.5f,  0.8f, 0.8f, 0.8f,
-			0.5f, -0.5f,  0.5f,  0.8f, 0.8f, 0.8f,
-			0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,
-			0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,
-			-0.5f,  0.5f,  0.5f, 0.8f, 0.8f, 0.8f,
-			-0.5f, -0.5f,  0.5f, 0.8f, 0.8f, 0.8f,
+			-0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.8f,  0.0f,  0.0f, -1.0f,
+			0.5f,  0.5f, -0.5f,   0.8f, 0.8f, 0.8f,	0.0f,  0.0f, -1.0f,
+			0.5f, -0.5f, -0.5f,   0.8f, 0.8f, 0.8f,	0.0f,  0.0f, -1.0f,
+			0.5f,  0.5f, -0.5f,   0.8f, 0.8f, 0.8f,	0.0f,  0.0f, -1.0f,
+			-0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.8f,	 0.0f,  0.0f, -1.0f,
+			-0.5f,  0.5f, -0.5f,  0.8f, 0.8f, 0.8f,	 0.0f,  0.0f, -1.0f,
 
-			-0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,
-			-0.5f,  0.5f, -0.5f,  0.8f, 0.8f, 0.8f,
-			-0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.8f,
-			-0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.8f,
-			-0.5f, -0.5f,  0.5f,  0.8f, 0.8f, 0.8f,
-			-0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,
+			-0.5f, -0.5f,  0.5f,  0.8f, 0.8f, 0.8f,	 0.0f,  0.0f, 1.0f,
+			0.5f, -0.5f,  0.5f,  0.8f, 0.8f, 0.8f,	0.0f,  0.0f, 1.0f,
+			0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,	0.0f,  0.0f, 1.0f,
+			0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,	0.0f,  0.0f, 1.0f,
+			-0.5f,  0.5f,  0.5f, 0.8f, 0.8f, 0.8f,	 0.0f,  0.0f, 1.0f,
+			-0.5f, -0.5f,  0.5f, 0.8f, 0.8f, 0.8f,	 0.0f,  0.0f, 1.0f,
 
-			0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,
-			0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.8f,
-			0.5f,  0.5f, -0.5f,  0.8f, 0.8f, 0.8f,
-			0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.8f,
-			0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,
-			0.5f, -0.5f,  0.5f,  0.8f, 0.8f, 0.8f,
+			-0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,	-1.0f,  0.0f,  0.0f,
+			-0.5f,  0.5f, -0.5f,  0.8f, 0.8f, 0.8f,	-1.0f,  0.0f,  0.0f,
+			-0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.8f,	-1.0f,  0.0f,  0.0f,
+			-0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.8f,	-1.0f,  0.0f,  0.0f,
+			-0.5f, -0.5f,  0.5f,  0.8f, 0.8f, 0.8f,	-1.0f,  0.0f,  0.0f,
+			-0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,	-1.0f,  0.0f,  0.0f,
 
-			-0.5f, -0.5f, -0.5f, 0.8f, 0.8f, 0.8f,
-			0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.8f,
-			0.5f, -0.5f,  0.5f,  0.8f, 0.8f, 0.8f,
-			0.5f, -0.5f,  0.5f,  0.8f, 0.8f, 0.8f,
-			-0.5f, -0.5f,  0.5f, 0.8f, 0.8f, 0.8f,
-			-0.5f, -0.5f, -0.5f, 0.8f, 0.8f, 0.8f,
+			0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,	1.0f,  0.0f,  0.0f,
+			0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.8f,	1.0f,  0.0f,  0.0f,
+			0.5f,  0.5f, -0.5f,  0.8f, 0.8f, 0.8f,	1.0f,  0.0f,  0.0f,
+			0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.8f,	1.0f,  0.0f,  0.0f,
+			0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,	1.0f,  0.0f,  0.0f,
+			0.5f, -0.5f,  0.5f,  0.8f, 0.8f, 0.8f,	1.0f,  0.0f,  0.0f,
 
-			-0.5f,  0.5f, -0.5f, 0.8f, 0.8f, 0.8f,
-			0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,
-			0.5f,  0.5f, -0.5f,  0.8f, 0.8f, 0.8f,
-			0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,
-			-0.5f,  0.5f, -0.5f, 0.8f, 0.8f, 0.8f,
-			-0.5f,  0.5f,  0.5f, 0.8f, 0.8f, 0.8f
+			-0.5f, -0.5f, -0.5f, 0.8f, 0.8f, 0.8f,	 0.0f, -1.0f,  0.0f,
+			0.5f, -0.5f, -0.5f,  0.8f, 0.8f, 0.8f,	0.0f, -1.0f,  0.0f,
+			0.5f, -0.5f,  0.5f,  0.8f, 0.8f, 0.8f,	0.0f, -1.0f,  0.0f,
+			0.5f, -0.5f,  0.5f,  0.8f, 0.8f, 0.8f,	0.0f, -1.0f,  0.0f,
+			-0.5f, -0.5f,  0.5f, 0.8f, 0.8f, 0.8f,	 0.0f, -1.0f,  0.0f,
+			-0.5f, -0.5f, -0.5f, 0.8f, 0.8f, 0.8f,	 0.0f, -1.0f,  0.0f,
+
+			-0.5f,  0.5f, -0.5f, 0.8f, 0.8f, 0.8f,	 0.0f,  1.0f,  0.0f,
+			0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,	0.0f,  1.0f,  0.0f,
+			0.5f,  0.5f, -0.5f,  0.8f, 0.8f, 0.8f,	0.0f,  1.0f,  0.0f,
+			0.5f,  0.5f,  0.5f,  0.8f, 0.8f, 0.8f,	0.0f,  1.0f,  0.0f,
+			-0.5f,  0.5f, -0.5f, 0.8f, 0.8f, 0.8f,	 0.0f,  1.0f,  0.0f,
+			-0.5f,  0.5f,  0.5f, 0.8f, 0.8f, 0.8f,	 0.0f,  1.0f,  0.0f
 		};
 		break;
 	default:
@@ -106,6 +109,7 @@ Mesh::Mesh(MESH_TYPE primType, float r, float g, float b) {
 	case PLANE:
 		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_COLOUR3);
+		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
 		vertices = {
 			 0.5f, 0.5f, 0.0f,  r, g, b,
 			-0.5f, 0.5f, 0.0f,  r, g, b,
@@ -118,6 +122,7 @@ Mesh::Mesh(MESH_TYPE primType, float r, float g, float b) {
 	case TRIANGLE:
 		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_COLOUR3);
+		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
 		vertices = {
 			-0.5f, -0.5f, 0.0f, r, g, b,
 			0.5f, -0.5f, 0.0f,  r, g, b,
@@ -127,48 +132,49 @@ Mesh::Mesh(MESH_TYPE primType, float r, float g, float b) {
 	case CUBE:
 		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_COLOUR3);
+		vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
 		vertices = {
-			-0.5f, -0.5f, -0.5f,  r, g, b,
-			0.5f,  0.5f, -0.5f,   r, g, b,
-			0.5f, -0.5f, -0.5f,   r, g, b,
-			0.5f,  0.5f, -0.5f,   r, g, b,
-			-0.5f, -0.5f, -0.5f,  r, g, b,
-			-0.5f,  0.5f, -0.5f,  r, g, b,
+			-0.5f, -0.5f, -0.5f,  r, g, b,  0.0f,  0.0f, -1.0f,
+			0.5f,  0.5f, -0.5f,   r, g, b, 0.0f,  0.0f, -1.0f,
+			0.5f, -0.5f, -0.5f,   r, g, b, 0.0f,  0.0f, -1.0f,
+			0.5f,  0.5f, -0.5f,   r, g, b, 0.0f,  0.0f, -1.0f,
+			-0.5f, -0.5f, -0.5f,  r, g, b,  0.0f,  0.0f, -1.0f,
+			-0.5f,  0.5f, -0.5f,  r, g, b,  0.0f,  0.0f, -1.0f,
 
-			-0.5f, -0.5f,  0.5f,  r, g, b,
-			0.5f, -0.5f,  0.5f,  r, g, b,
-			0.5f,  0.5f,  0.5f,  r, g, b,
-			0.5f,  0.5f,  0.5f,  r, g, b,
-			-0.5f,  0.5f,  0.5f, r, g, b,
-			-0.5f, -0.5f,  0.5f, r, g, b,
+			-0.5f, -0.5f,  0.5f,  r, g, b,  0.0f,  0.0f, 1.0f,
+			0.5f, -0.5f,  0.5f,  r, g, b,  0.0f,  0.0f, 1.0f,
+			0.5f,  0.5f,  0.5f,  r, g, b,  0.0f,  0.0f, 1.0f,
+			0.5f,  0.5f,  0.5f,  r, g, b,  0.0f,  0.0f, 1.0f,
+			-0.5f,  0.5f,  0.5f, r, g, b,   0.0f,  0.0f, 1.0f,
+			-0.5f, -0.5f,  0.5f, r, g, b,   0.0f,  0.0f, 1.0f,
 
-			-0.5f,  0.5f,  0.5f,  r, g, b,
-			-0.5f,  0.5f, -0.5f,  r, g, b,
-			-0.5f, -0.5f, -0.5f,  r, g, b,
-			-0.5f, -0.5f, -0.5f,  r, g, b,
-			-0.5f, -0.5f,  0.5f,  r, g, b,
-			-0.5f,  0.5f,  0.5f,  r, g, b,
+			-0.5f,  0.5f,  0.5f,  r, g, b, -1.0f,  0.0f,  0.0f,
+			-0.5f,  0.5f, -0.5f,  r, g, b, -1.0f,  0.0f,  0.0f,
+			-0.5f, -0.5f, -0.5f,  r, g, b, -1.0f,  0.0f,  0.0f,
+			-0.5f, -0.5f, -0.5f,  r, g, b, -1.0f,  0.0f,  0.0f,
+			-0.5f, -0.5f,  0.5f,  r, g, b, -1.0f,  0.0f,  0.0f,
+			-0.5f,  0.5f,  0.5f,  r, g, b, -1.0f,  0.0f,  0.0f,
 
-			0.5f,  0.5f,  0.5f,  r, g, b,
-			0.5f, -0.5f, -0.5f,  r, g, b,
-			0.5f,  0.5f, -0.5f,  r, g, b,
-			0.5f, -0.5f, -0.5f,  r, g, b,
-			0.5f,  0.5f,  0.5f,  r, g, b,
-			0.5f, -0.5f,  0.5f,  r, g, b,
+			0.5f,  0.5f,  0.5f,  r, g, b,  1.0f,  0.0f,  0.0f,
+			0.5f, -0.5f, -0.5f,  r, g, b,  1.0f,  0.0f,  0.0f,
+			0.5f,  0.5f, -0.5f,  r, g, b,  1.0f,  0.0f,  0.0f,
+			0.5f, -0.5f, -0.5f,  r, g, b,  1.0f,  0.0f,  0.0f,
+			0.5f,  0.5f,  0.5f,  r, g, b,  1.0f,  0.0f,  0.0f,
+			0.5f, -0.5f,  0.5f,  r, g, b,  1.0f,  0.0f,  0.0f,
 
-			-0.5f, -0.5f, -0.5f, r, g, b,
-			0.5f, -0.5f, -0.5f,  r, g, b,
-			0.5f, -0.5f,  0.5f,  r, g, b,
-			0.5f, -0.5f,  0.5f,  r, g, b,
-			-0.5f, -0.5f,  0.5f, r, g, b,
-			-0.5f, -0.5f, -0.5f, r, g, b,
+			-0.5f, -0.5f, -0.5f, r, g, b,   0.0f, -1.0f,  0.0f,
+			0.5f, -0.5f, -0.5f,  r, g, b,  0.0f, -1.0f,  0.0f,
+			0.5f, -0.5f,  0.5f,  r, g, b,  0.0f, -1.0f,  0.0f,
+			0.5f, -0.5f,  0.5f,  r, g, b,  0.0f, -1.0f,  0.0f,
+			-0.5f, -0.5f,  0.5f, r, g, b,   0.0f, -1.0f,  0.0f,
+			-0.5f, -0.5f, -0.5f, r, g, b,   0.0f, -1.0f,  0.0f,
 
-			-0.5f,  0.5f, -0.5f, r, g, b,
-			0.5f,  0.5f,  0.5f,  r, g, b,
-			0.5f,  0.5f, -0.5f,  r, g, b,
-			0.5f,  0.5f,  0.5f,  r, g, b,
-			-0.5f,  0.5f, -0.5f, r, g, b,
-			-0.5f,  0.5f,  0.5f, r, g, b
+			-0.5f,  0.5f, -0.5f, r, g, b,   0.0f,  1.0f,  0.0f,
+			0.5f,  0.5f,  0.5f,  r, g, b,  0.0f,  1.0f,  0.0f,
+			0.5f,  0.5f, -0.5f,  r, g, b,  0.0f,  1.0f,  0.0f,
+			0.5f,  0.5f,  0.5f,  r, g, b,  0.0f,  1.0f,  0.0f,
+			-0.5f,  0.5f, -0.5f, r, g, b,   0.0f,  1.0f,  0.0f,
+			-0.5f,  0.5f,  0.5f, r, g, b,    0.0f,  1.0f,  0.0f
 		};
 		break;
 	default:
@@ -194,6 +200,7 @@ Mesh::Mesh(MESH_TYPE primType, Material* material) {
 		case PLANE:
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_UV);
+			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
 			vertices = {
 				0.5f,  0.5f, 0.0f,   1.0f, 0.0f,  
 				-0.5f, 0.5f, 0.0f,   0.0f, 0.0f,  
@@ -207,6 +214,7 @@ Mesh::Mesh(MESH_TYPE primType, Material* material) {
 		case TRIANGLE:
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_UV);
+			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
 			vertices = {
 				-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 
 				0.5f, -0.5f, 0.0f, 1.0f, 1.0f,  
@@ -216,48 +224,49 @@ Mesh::Mesh(MESH_TYPE primType, Material* material) {
 		case CUBE:
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_UV);
+			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
 			vertices = {
-				-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 
-				0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 
-				0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 
-				0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 
-				-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 
-				-0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 
-												  
-				-0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 
-				 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 
-				 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 
-				 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 
-				 -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-				 -0.5f, -0.5f,  0.5f,  0.0f, 1.0f,
-													
-				-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 
-				-0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 
-				-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 
-				-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 
-				-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 
-				-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 
-													
-				 0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 
-				 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 
-				 0.5f,  0.5f, -0.5f,  1.0f, 0.0f,  
-				 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 
-				 0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 
-				 0.5f, -0.5f,  0.5f,  0.0f, 1.0f,  
-													
-				 -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-				 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 
-				 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 
-				 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 
-				 -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-				 -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-													
-				 -0.5f,  0.5f, -0.5f,  0.0f, 0.0f,
-				 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 
-				 0.5f,  0.5f, -0.5f,  1.0f, 0.0f,  
-				 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 
-				 -0.5f,  0.5f, -0.5f,  0.0f, 0.0f,
-				 -0.5f,  0.5f,  0.5f,  0.0f, 1.0f  
+				-0.5f, -0.5f, -0.5f,  1.0f, 1.0f,  0.0f,  0.0f, -1.0f,
+				0.5f,  0.5f, -0.5f,  0.0f, 0.0f,  0.0f,  0.0f, -1.0f,
+				0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  0.0f,  0.0f, -1.0f,
+				0.5f,  0.5f, -0.5f,  0.0f, 0.0f,  0.0f,  0.0f, -1.0f,
+				-0.5f, -0.5f, -0.5f,  1.0f, 1.0f,  0.0f,  0.0f, -1.0f,
+				-0.5f,  0.5f, -0.5f,  1.0f, 0.0f,  0.0f,  0.0f, -1.0f,
+
+				-0.5f, -0.5f,  0.5f,  0.0f, 1.0f,  0.0f,  0.0f, 1.0f,
+				0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+				0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+				0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+				-0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+				-0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+
+				-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+				-0.5f,  0.5f, -0.5f,  0.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+				-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+				-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+				-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+				-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+
+				0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+				0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+				0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+				0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+				0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+				0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+
+				-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f,  0.0f,
+				0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f, -1.0f,  0.0f,
+				0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,
+				0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,
+				-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, -1.0f,  0.0f,
+				-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f,  0.0f,
+
+				-0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+				0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  1.0f,  0.0f,
+				0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+				0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  1.0f,  0.0f,
+				-0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+				-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,  0.0f,  1.0f,  0.0f
 			};
 
 			break;
@@ -271,6 +280,7 @@ Mesh::Mesh(MESH_TYPE primType, Material* material) {
 		case PLANE:
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_COLOUR3);
+			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
 			vertices = {
 				0.5f,  0.5f, 0.0f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
 				-0.5f, 0.5f, 0.0f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
@@ -283,6 +293,7 @@ Mesh::Mesh(MESH_TYPE primType, Material* material) {
 		case TRIANGLE:
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_COLOUR3);
+			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
 			vertices = {
 				-0.5f, -0.5f, 0.0f, material->GetColour().x, material->GetColour().y, material->GetColour().z,
 				0.5f, -0.5f, 0.0f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
@@ -292,48 +303,49 @@ Mesh::Mesh(MESH_TYPE primType, Material* material) {
 		case CUBE:
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_COLOUR3);
+			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
 			vertices = {
-				-0.5f, -0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f,  0.5f, -0.5f,   material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f, -0.5f, -0.5f,   material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f,  0.5f, -0.5f,   material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				-0.5f, -0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				-0.5f,  0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
+				-0.5f, -0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,  0.0f,  0.0f, -1.0f,
+				0.5f,  0.5f, -0.5f,   material->GetColour().x, material->GetColour().y, material->GetColour().z, 0.0f,  0.0f, -1.0f,
+				0.5f, -0.5f, -0.5f,   material->GetColour().x, material->GetColour().y, material->GetColour().z, 0.0f,  0.0f, -1.0f,
+				0.5f,  0.5f, -0.5f,   material->GetColour().x, material->GetColour().y, material->GetColour().z, 0.0f,  0.0f, -1.0f,
+				-0.5f, -0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,  0.0f,  0.0f, -1.0f,
+				-0.5f,  0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,  0.0f,  0.0f, -1.0f,
 
-				-0.5f, -0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f, -0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				-0.5f,  0.5f,  0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				-0.5f, -0.5f,  0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z,
+				-0.5f, -0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,  0.0f,  0.0f, 1.0f,
+				0.5f, -0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,	 0.0f,  0.0f, 1.0f,
+				0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,	 0.0f,  0.0f, 1.0f,
+				0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,	 0.0f,  0.0f, 1.0f,
+				-0.5f,  0.5f,  0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z,	  0.0f,  0.0f, 1.0f,
+				-0.5f, -0.5f,  0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z,	  0.0f,  0.0f, 1.0f,
 
-				-0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				-0.5f,  0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				-0.5f, -0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				-0.5f, -0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				-0.5f, -0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				-0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
+				-0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z, -1.0f,  0.0f,  0.0f,
+				-0.5f,  0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z, -1.0f,  0.0f,  0.0f,
+				-0.5f, -0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z, -1.0f,  0.0f,  0.0f,
+				-0.5f, -0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z, -1.0f,  0.0f,  0.0f,
+				-0.5f, -0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z, -1.0f,  0.0f,  0.0f,
+				-0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z, -1.0f,  0.0f,  0.0f,
 
-				0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f, -0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f,  0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f, -0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f, -0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
+				0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,	 1.0f,  0.0f,  0.0f,
+				0.5f, -0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,	 1.0f,  0.0f,  0.0f,
+				0.5f,  0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,	 1.0f,  0.0f,  0.0f,
+				0.5f, -0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,	 1.0f,  0.0f,  0.0f,
+				0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,	 1.0f,  0.0f,  0.0f,
+				0.5f, -0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,	 1.0f,  0.0f,  0.0f,
 
-				-0.5f, -0.5f, -0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f, -0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f, -0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f, -0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				-0.5f, -0.5f,  0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				-0.5f, -0.5f, -0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z,
+				-0.5f, -0.5f, -0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z,	  0.0f, -1.0f,  0.0f,
+				0.5f, -0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,	 0.0f, -1.0f,  0.0f,
+				0.5f, -0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,	 0.0f, -1.0f,  0.0f,
+				0.5f, -0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,	 0.0f, -1.0f,  0.0f,
+				-0.5f, -0.5f,  0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z,	  0.0f, -1.0f,  0.0f,
+				-0.5f, -0.5f, -0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z,	  0.0f, -1.0f,  0.0f,
 
-				-0.5f,  0.5f, -0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f,  0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				-0.5f,  0.5f, -0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z,
-				-0.5f,  0.5f,  0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z
+				-0.5f,  0.5f, -0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z,	  0.0f,  1.0f,  0.0f,
+				0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,	 0.0f,  1.0f,  0.0f,
+				0.5f,  0.5f, -0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,	 0.0f,  1.0f,  0.0f,
+				0.5f,  0.5f,  0.5f,  material->GetColour().x, material->GetColour().y, material->GetColour().z,	 0.0f,  1.0f,  0.0f,
+				-0.5f,  0.5f, -0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z,	  0.0f,  1.0f,  0.0f,
+				-0.5f,  0.5f,  0.5f, material->GetColour().x, material->GetColour().y, material->GetColour().z,	  0.0f,  1.0f,  0.0f
 			};
 			break;
 		default:
@@ -428,12 +440,21 @@ void Mesh::SetName(std::string& _name) {
 	name = _name;
 }
 
+void Mesh::SetShininess(float _shininess) {
+	GetMaterial()->SetShininess(_shininess);
+}
+
 std::string Mesh::GetName() {
 	return name;
 }
 
 std::string Mesh::GetMaterialName() {
 	return materialName;
+}
+
+Material* Mesh::GetMaterial() {
+	Material *material = MaterialManager::GetInstance()->GetMaterial(materialName);
+	return material;
 }
 
 void Mesh::AddComponent(VertexComponentDescriptor::VertexComponentType _type) {
@@ -478,25 +499,7 @@ void Mesh::GenerateBuffers() {
 	}
 }
 
-void Mesh::SetMat4(const std::string &name, const glm::mat4 &mat) {
-	if (MaterialManager::GetInstance()->GetMaterial(materialName) != nullptr) {
-		MaterialManager::GetInstance()->GetMaterial(materialName)->GetShader()->SetMat4(name, mat);
-	}
-	else {
-		ShaderManager::GetInstance()->GetShader(std::string("defaultColour"))->SetMat4(name, mat);
-	}
-}
-
-void Mesh::SetVec3(const std::string &name, const glm::vec3 &vec) {
-	if (MaterialManager::GetInstance()->GetMaterial(materialName) != nullptr) {
-		MaterialManager::GetInstance()->GetMaterial(materialName)->GetShader()->SetVec3(name, vec);
-	}
-	else {
-		ShaderManager::GetInstance()->GetShader(std::string("defaultColour"))->SetVec3(name, vec);
-	}
-}
-
-void Mesh::BindUniforms(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
+void Mesh::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 {
 	if (type == MESH_TYPE::MODEL) {
 		glDisable(GL_CULL_FACE);
@@ -504,10 +507,24 @@ void Mesh::BindUniforms(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMat
 			Material* material = MaterialManager::GetInstance()->GetMaterial(materialName);
 			material->BindUniforms();
 			glm::mat4 model = glm::translate(modelMatrix, offset);
-			SetMat4("model", model);
-			SetMat4("view", viewMatrix);
-			SetMat4("projection", projectionMatrix);
-			SetVec3("cameraPos", camera->GetPosition());
+			glm::mat4 normal = glm::transpose(glm::inverse(model));
+			Shader* shader = material->GetShader();
+			int pointNr = 0;
+			int spotNr = 0;
+			for (size_t i = 0; i < lights.size(); i++) {
+				lights[i]->BindUniforms(shader, pointNr, spotNr);
+				if (lights[i]->GetType() == LIGHT_TYPE::POINT_LIGHT) {
+					pointNr++;
+				}
+				else if (lights[i]->GetType() == LIGHT_TYPE::SPOT_LIGHT) {
+					spotNr++;
+				}
+			}
+			shader->SetMat4("model", model);
+			shader->SetMat4("view", viewMatrix);
+			shader->SetMat4("projection", projectionMatrix);
+			shader->SetMat4("normalMatrix", normal);
+			shader->SetVec3("cameraPos", camera->GetPosition());
 		}
 		else {
 			Shader *shader = ShaderManager::GetInstance()->GetShader(std::string("defaultModel"));
@@ -515,21 +532,66 @@ void Mesh::BindUniforms(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMat
 			shader->SetInt("texture_diffuse1", 0);
 			shader->SetInt("texture_specular1", 0);
 			shader->SetInt("texture_normal1", 0);
+			glm::mat4 model = glm::translate(modelMatrix, offset);
+			glm::mat4 normal = glm::transpose(glm::inverse(model));
+			int pointNr = 0;
+			int spotNr = 0;
+			for (size_t i = 0; i < lights.size(); i++) {
+				lights[i]->BindUniforms(shader, pointNr, spotNr);
+				if (lights[i]->GetType() == LIGHT_TYPE::POINT_LIGHT) {
+					pointNr++;
+				}
+				else if (lights[i]->GetType() == LIGHT_TYPE::SPOT_LIGHT) {
+					spotNr++;
+				}
+			}
+			shader->SetMat4("model", model);
+			shader->SetMat4("view", viewMatrix);
+			shader->SetMat4("projection", projectionMatrix);
+			shader->SetMat4("normalMatrix", normal);
+			shader->SetVec3("cameraPos", camera->GetPosition());
 		}
 	} else if (MaterialManager::GetInstance()->GetMaterial(materialName) != nullptr) {
 		Material* material = MaterialManager::GetInstance()->GetMaterial(materialName);
 		material->BindUniforms();
-		SetMat4("model", modelMatrix);
-		SetMat4("view", viewMatrix);
-		SetMat4("projection", projectionMatrix);
-		SetVec3("cameraPos", camera->GetPosition());
+		Shader* shader = material->GetShader();
+		glm::mat4 normal = glm::transpose(glm::inverse(modelMatrix));
+		int pointNr = 0;
+		int spotNr = 0;
+		for (size_t i = 0; i < lights.size(); i++) {
+			lights[i]->BindUniforms(shader, pointNr, spotNr);
+			if (lights[i]->GetType() == LIGHT_TYPE::POINT_LIGHT) {
+				pointNr++;
+			}
+			else if (lights[i]->GetType() == LIGHT_TYPE::SPOT_LIGHT) {
+				spotNr++;
+			}
+		}
+		shader->SetMat4("model", modelMatrix);
+		shader->SetMat4("view", viewMatrix);
+		shader->SetMat4("projection", projectionMatrix);
+		shader->SetMat4("normalMatrix", normal);
+		shader->SetVec3("cameraPos", camera->GetPosition());
 	}
 	else {
 		Shader* shader = ShaderManager::GetInstance()->GetShader(std::string("defaultColour"));
 		shader->use();
+		glm::mat4 normal = glm::transpose(glm::inverse(modelMatrix));
+		int pointNr = 0;
+		int spotNr = 0;
+		for (size_t i = 0; i < lights.size(); i++) {
+			lights[i]->BindUniforms(shader, pointNr, spotNr);
+			if (lights[i]->GetType() == LIGHT_TYPE::POINT_LIGHT) {
+				pointNr++;
+			}
+			else if (lights[i]->GetType() == LIGHT_TYPE::SPOT_LIGHT) {
+				spotNr++;
+			}
+		}
 		shader->SetMat4("model", modelMatrix);
 		shader->SetMat4("view", viewMatrix);
 		shader->SetMat4("projection", projectionMatrix);
+		shader->SetMat4("normalMatrix", normal);
 	}
 }
 
@@ -539,7 +601,7 @@ void Mesh::BindUniforms(Shader* shader) {
 		material->BindUniforms(shader);
 	}
 	else {
-		shader->SetInt("texture_diffuse1", 0);
+		shader->SetInt("material.diffuse1", 0);
 		shader->SetInt("texture_specular1", 0);
 		shader->SetInt("texture_normal1", 0);
 	}

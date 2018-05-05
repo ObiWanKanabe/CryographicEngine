@@ -11,6 +11,7 @@ GameObject::GameObject(std::string& _name) {
 		nameIndex = new std::map<std::string, GameObject*>();
 	}
 	RegisterGameObject(_name, this);
+	light = nullptr;
 }
 
 GameObject::GameObject(std::string& _name, Mesh *mesh) {
@@ -23,6 +24,7 @@ GameObject::GameObject(std::string& _name, Mesh *mesh) {
 		nameIndex = new std::map<std::string, GameObject*>();
 	}
 	RegisterGameObject(_name, this);
+	light = nullptr;
 }
 
 GameObject::GameObject(std::string& _name, GameObject* parent, Mesh* mesh) {
@@ -36,6 +38,7 @@ GameObject::GameObject(std::string& _name, GameObject* parent, Mesh* mesh) {
 	parent->AttachChild(this);
 	boundingVolume = new BoundingVolume(BOUNDING_SHAPE::AABB, mesh);
 	AttachMesh(mesh);
+	light = nullptr;
 }
 
 GameObject::GameObject(std::string& _name, Model *model) {
@@ -48,6 +51,7 @@ GameObject::GameObject(std::string& _name, Model *model) {
 		nameIndex = new std::map<std::string, GameObject*>();
 	}
 	RegisterGameObject(_name, this);
+	light = nullptr;
 }
 
 GameObject::GameObject(std::string& _name, GameObject* parent, Model* model) {
@@ -61,6 +65,30 @@ GameObject::GameObject(std::string& _name, GameObject* parent, Model* model) {
 	parent->AttachChild(this);
 	boundingVolume = new BoundingVolume(BOUNDING_SHAPE::AABB, model);
 	AttachModel(model);
+	light = nullptr;
+}
+
+GameObject::GameObject(std::string& _name, Light* light) {
+	name = _name;
+	sceneNode = new SceneNode();
+	sceneNode->AddObject(this);
+	AttachLight(light);
+	if (nameIndex == nullptr) {
+		nameIndex = new std::map<std::string, GameObject*>();
+	}
+	RegisterGameObject(_name, this);
+}
+
+GameObject::GameObject(std::string& _name, GameObject* parent, Light* light) {
+	name = _name;
+	if (nameIndex == nullptr)
+	{
+		nameIndex = new std::map<std::string, GameObject*>();
+	}
+	RegisterGameObject(name, this);
+
+	parent->AttachChild(this);
+	AttachLight(light);
 }
 
 GameObject::~GameObject() {
@@ -150,6 +178,9 @@ void GameObject::DetachChild(GameObject* child)
 
 void GameObject::SetPosition(glm::vec3 _position) {
 	sceneNode->SetPosition(_position);
+	if (light != nullptr) {
+		light->SetPosition(_position);
+	}
 }
 
 glm::vec3 GameObject::GetPosition() {
@@ -218,6 +249,19 @@ Model* GameObject::GetAttachedModel() {
 	return model;
 }
 
+void GameObject::AttachLight(Light* light) {
+	this->light = light;
+	this->light->SetPosition(sceneNode->GetPosition());
+}
+
+void GameObject::DetachLight() {
+	this->light = nullptr;
+}
+
+bool GameObject::HasLight() {
+	return light != nullptr;
+}
+
 BoundingVolume* GameObject::GetBoundingVolume() {
 	return boundingVolume;
 }
@@ -226,7 +270,7 @@ RigidBody* GameObject::GetRigidBody() {
 	return rigidBody;
 }
 
-Light* GameObject::GetLight() {
+Light* GameObject::GetAttachedLight() {
 	return light;
 }
 
@@ -243,17 +287,17 @@ void GameObject::PreRender() {
 	}
 }
 
-void GameObject::Render(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
+void GameObject::Render(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
 	if (meshName != "") {
 		Mesh* mesh;
 		mesh = MeshManager::GetInstance()->GetMesh(meshName);
-		mesh->BindUniforms(camera, modelMatrix, viewMatrix, projectionMatrix);
+		mesh->BindUniforms(camera, lights, modelMatrix, viewMatrix, projectionMatrix);
 		mesh->Render();
 	}
 	else if (modelName != "") {
 		Model* model;
 		model = ModelManager::GetInstance()->GetModel(modelName);
-		model->BindUniforms(camera, modelMatrix, viewMatrix, projectionMatrix);
+		model->BindUniforms(camera, lights, modelMatrix, viewMatrix, projectionMatrix);
 		model->Render();
 	}
 }

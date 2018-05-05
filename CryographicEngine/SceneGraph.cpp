@@ -21,18 +21,11 @@ void SceneGraph::RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, Abstrac
 	while (it != sceneRoot->ObjectEnd()) {
 		Object *mesh = *it;
 	
-		BoundingVolume* boundingVolume = mesh->GetBoundingVolume();
-		bool noVolume = boundingVolume->GetMaximumCorner() == boundingVolume->GetMinimumCorner();
-		bool canRender = noVolume || (!(Frustum::OUTSIDE == frustum.IsInside(*boundingVolume)));
-		/*if (!canRender) {
-			std::cout << "Object Culled!" << std::endl;
-		}
-		else {*/
-			skybox->BindTexture();
-			mesh->PreRender();
-			mesh->Render(camera, matStk.GetModelMatrix(), viewMatrix, projectionMatrix);
-			mesh->PostRender();
-		//}
+		skybox->BindTexture();
+		mesh->PreRender();
+		mesh->Render(camera, lightList, matStk.GetModelMatrix(), viewMatrix, projectionMatrix);
+		mesh->PostRender();
+		
 		it++;
 	}
 
@@ -56,8 +49,8 @@ std::vector<Light*> SceneGraph::GetLights(SceneNode *sceneRoot) {
 
 	while (it != sceneRoot->ObjectEnd()) {
 		Object *lightObject = *it;
-		if (lightObject->GetLight() != nullptr) {
-			lightList.push_back(lightObject->GetLight());
+		if (lightObject->GetAttachedLight() != nullptr) {
+			lightList.push_back(lightObject->GetAttachedLight());
 		}
 		it++;
 	}
@@ -77,6 +70,7 @@ std::vector<Light*> SceneGraph::GetSceneLights() {
 }
 
 void SceneGraph::RenderSceneGraph(Frustum &frustum, AbstractRenderer &renderer, Camera *camera, CubeMap* skybox) {
+	lightList = GetSceneLights();
 	RenderSceneNode(rootSceneNode, frustum, renderer, camera, skybox);
 }
 

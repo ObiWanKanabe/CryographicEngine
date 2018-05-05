@@ -21,6 +21,12 @@ void Model::SetName(std::string& _name) {
 	name = _name;
 }
 
+void Model::SetShininess(float _shininess) {
+	for (size_t i = 0; i < meshes.size(); i++) {
+		meshes[i]->GetMaterial()->SetShininess(_shininess);
+	}
+}
+
 std::string Model::GetName() {
 	return name;
 }
@@ -39,13 +45,26 @@ void Model::PrintMeshNames() {
 	}
 }
 
-void Model::BindUniforms(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
+void Model::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
 	Shader* shader = ShaderManager::GetInstance()->GetShader(shaderName);
 	shader->use();
 	glm::mat4 model = glm::translate(modelMatrix, offset);
-	shader->SetMat4("projection", projectionMatrix);
-	shader->SetMat4("view", viewMatrix);
+	glm::mat4 normal = glm::transpose(glm::inverse(model));
+	int pointNr = 0;
+	int spotNr = 0;
+	for (size_t i = 0; i < lights.size(); i++) {
+		lights[i]->BindUniforms(shader, pointNr, spotNr);
+		if (lights[i]->GetType() == LIGHT_TYPE::POINT_LIGHT) {
+			pointNr++;
+		}
+		else if (lights[i]->GetType() == LIGHT_TYPE::SPOT_LIGHT) {
+			spotNr++;
+		}
+	}
 	shader->SetMat4("model", model);
+	shader->SetMat4("view", viewMatrix);
+	shader->SetMat4("projection", projectionMatrix);
+	shader->SetMat4("normalMatrix", normal);
 	shader->SetVec3("cameraPos", camera->GetPosition());
 }
 

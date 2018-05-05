@@ -22,6 +22,10 @@ public:
 	// Sets the name of the model in the manager
 	void SetName(std::string &_name);
 
+	// Sets the shininess of the material
+	// Suggested max of 256.0f
+	void SetShininess(float _shininess);
+
 	// Gets the name of the model in the manager
 	std::string GetName();
 
@@ -35,7 +39,7 @@ public:
 	void PrintMeshNames();
 	
 	// Binds the uniforms of the shader
-	void BindUniforms(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
+	void BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
 	// Function called before render
 	void PreRender();

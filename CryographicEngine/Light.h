@@ -4,42 +4,98 @@
 #include "ShaderManager.h"
 #include "Vertex.h"
 
+enum LIGHT_TYPE {
+	DIRECTIONAL_LIGHT,
+	POINT_LIGHT,
+	SPOT_LIGHT
+};
+
 class Light {
 public:
 
-	// A Light can have a position and a colour
-	Light(glm::vec3 _pos, glm::vec3 colour);
+	// A Directional light has a colour and direction
+	Light(glm::vec3 _colour, glm::vec3 _direction);
 
-	// A Light can have a position and a colour
-	Light(float x, float y, float z, float r, float g, float b);
+	// A Point light has a colour, position, and attenuation values
+	Light(glm::vec3 _colour, glm::vec3 _position, float _linear, float _quadratic);
 
-	// Generates the buffers for the light mesh
-	void GenerateBuffers();
+	// A Spot Light has a colour, position, direction, attenuation values and inner and outer cutoff
+	Light(glm::vec3 _colour, glm::vec3 _position, glm::vec3 _direction, float _linear, float _quadratic, float _innerCutoff, float _outerCutoff);
 
-	// Utility function to be able to set matrices in the shader
-	void SetMat4(const std::string &name, const glm::mat4 &mat);
 
-	// Function called before render
-	void PreRender();
+	// NOTE: If you're changing the light all type specific values need to be set
+	// Failing to do so will yield unwanted results, such as lights being at origin, or simply not working
+	void SetType(LIGHT_TYPE _type);
+	LIGHT_TYPE GetType();
 
-	// Renders the mesh on the screen
-	void Render();
+	// Utility functions
+	void SetColour(glm::vec3 _colour);
+	void SetAmbientColour(glm::vec3 _ambient);
+	void SetDiffuseColour(glm::vec3 _diffuse);
+	void SetSpecularColour(glm::vec3 _specular);
+	void SetDirection(glm::vec3 _direction);
+	void SetPosition(glm::vec3 _posiition);
+	void SetLinear(float _linear);
+	void SetQuadratic(float _quadratic);
+	void SetInnerCutoff(float _innerCutoff);
+	void SetOuterCutoff(float _outerCutoff);
+	
+	const glm::vec3 GetColour();
+	const glm::vec3 GetAmbientColour();
+	const glm::vec3 GetDiffuseColour();
+	const glm::vec3 GetSpecularColour();
+	const glm::vec3 GetDirection();
+	const glm::vec3 GetPosition();
+	const float GetLinear();
+	const float GetQuadratic();
+	const float GetInnerCutoff();
+	const float GetOuterCutoff();
+	
 
-	// Function called after render
-	void PostRender();
+	// Binding the uniforms of the shader
+	virtual void BindUniforms(Shader* _shader, int pointIndex, int spotIndex);
 
-	// Returns the Vertex Descriptor of the light
-	VertexDescriptor GetVertexDescriptor() { return *vertexDescriptor; }
 private:
 
-	// VAOs and VBOs stored on the GPU
-	GLuint VAO, VBO;
+	// The type of light
+	LIGHT_TYPE type;
 
-	// List of vertices used when creating the mesh
-	std::vector<GLfloat> vertices;
+	// Ambient colour of the light
+	glm::vec3 ambient;
 
-	// Vertex descriptor describing how the vertices list is laid out for the GPU
-	VertexDescriptor *vertexDescriptor = nullptr;
+	// Main diffuse colour of the light
+	glm::vec3 diffuse;
+
+	// Shine colour of the light
+	glm::vec3 specular;
+
+	// Direction of the directional light and spotlight
+	// Measured in a unit vector
+	glm::vec3 direction;
+
+	// Position of the light in world space
+	glm::vec3 position;
+
+	// Constant of the point light to calculate attenuation
+	// Is set to 1.0 by default to ensure intensity acts normally
+	float constant;
+
+	// Linear of the point light to calculate attenuation
+	// Reduces the intensity in a linear way
+	float linear;
+
+	// Quadratic of the point light to calculate attenuation
+	// Reduces the intensity in a quadratric way
+	float quadratic;
+
+	// Inner Cutoff of the spotlight
+	// Measured in degrees out of the position and through the direction
+	float innerCutOff;
+
+	// Outer Cutoff of the spotlight
+	// Measured in degrees out of the position and through the direction
+	float outerCutOff;
+
 };
 
 #endif

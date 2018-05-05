@@ -6,6 +6,7 @@
 #include "ShaderManager.h"
 #include "MaterialManager.h"
 #include "Camera.h"
+#include "Light.h"
 
 #include <string>
 #include <fstream>
@@ -46,11 +47,18 @@ public:
 	// Sets the name of the mesh in the manager
 	void SetName(std::string &_name);
 
+	// Sets the shininess of the material
+	// Suggested max of 256.0f
+	void SetShininess(float _shininess);
+
 	// Gets the name of the mesh in the manager
 	std::string GetName();
 
 	// Gets the mesh's material name in the managaer
 	std::string GetMaterialName();
+
+	// Gets the material pointer
+	Material* GetMaterial();
 
 	// Adding a component to the mesh requires a type
 	void AddComponent(VertexComponentDescriptor::VertexComponentType _type);
@@ -58,14 +66,8 @@ public:
 	// Generates the buffers for the mesh
 	void GenerateBuffers();
 
-	// Utility function to be able to set matrices in the shader
-	void SetMat4(const std::string &name, const glm::mat4 &mat);
-
-	// Utility function to be able to set vectors in the shader
-	void SetVec3(const std::string &name, const glm::vec3 &vec);
-
 	// Binds the uniforms of the shader
-	void BindUniforms(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
+	void BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
 	// Bind the uniform samplers for model meshes
 	void BindUniforms(Shader *shader);

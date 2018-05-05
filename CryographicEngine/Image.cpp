@@ -6,6 +6,16 @@ Image::Image(const char* fileName) {
 	if (texture == NULL) {
 		std::cerr << "Unable to load: " << fileName << "\n";
 	}
+	type = MAP_TYPE::DEFAULT;
+}
+
+Image::Image(const char* fileName, MAP_TYPE _type) {
+	texture = new SDL_Surface();
+	texture = IMG_Load(fileName);
+	if (texture == NULL) {
+		std::cerr << "Unable to load: " << fileName << "\n";
+	}
+	type = _type;
 }
 
 Image::~Image() {
@@ -17,10 +27,17 @@ void Image::SetName(std::string &_name) {
 	name = _name;
 }
 
+void Image::SetMapType(MAP_TYPE _type) {
+	type = _type;
+}
+
 std::string Image::GetName() {
 	return name;
 }
 
+MAP_TYPE Image::GetMapType() {
+	return type;
+}
 int Image::GetWidth() {
 	return texture->w;
 }

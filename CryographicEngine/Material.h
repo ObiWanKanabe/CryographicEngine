@@ -33,8 +33,17 @@ private:
 	// ID of the texture in the GPU
 	GLuint textureID[8];
 
-	// The ambient colour in floats
-	glm::vec3 ambientColour;
+	// The ambient colour
+	glm::vec3 ambient;
+
+	// The diffuse colour
+	glm::vec3 diffuse;
+
+	// The specular colour
+	glm::vec3 specular;
+	
+	// The shininess of the material
+	float shininess;
 
 	// Name of the texture in the manager
 	std::vector<std::string> textureNames;
@@ -56,17 +65,35 @@ public:
 	// Constructor for a material loaded by assimp
 	Material(std::vector<Texture> _texture, std::string &_name);
 
+	void AddImage(Image* _image);
+
 	// Sets the name of the material in the manager
 	void SetName(std::string &_name);
 
 	// Sets the material's shader name in the manager
 	void SetShaderName(std::string &_name);
 
+	// Setting material colours
+	void SetColour(glm::vec3 _colour);
+	void SetAmbientColour(glm::vec3 _ambient);
+	void SetDiffuseColour(glm::vec3 _diffuse);
+	void SetSpecularColour(glm::vec3 _specular);
+
+	// The amount of shine the applied to the material
+	// Suggested max of 256.0f
+	void SetShininess(float _shininess);
+
 	// Utility functions 
 	std::string GetName();
 	Shader* GetShader();
-	glm::vec3 GetColour();
 	MATERIAL_TYPE GetType();
+
+	const glm::vec3 GetColour();
+	const glm::vec3 GetAmbientColour();
+	const glm::vec3 GetDiffuseColour();
+	const glm::vec3 GetSpecularColour();
+	const float GetShininess();
+
 
 	// Generation of the material(texture) on the GPU
 	void Setup();

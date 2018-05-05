@@ -36,12 +36,12 @@ private:
 	SDL_Event events;
 	CubeMap* skybox;
 
-	GameObject* wackBox;
-	GameObject* reflectiveBox;
-	GameObject* tealBox;
-	GameObject* crate1;
-	GameObject* crate2;
-	GameObject* crate3;
+	GameObject* box1;
+	GameObject* box2;
+	GameObject* box3;
+	GameObject* nanosuitModel;
+	GameObject* nanosuitHelmet;
+	GameObject* nanosuitVisor;
 
 public:
 

@@ -28,6 +28,8 @@ public:
 	GameObject(std::string& _name, GameObject* parent, Mesh* mesh);
 	GameObject(std::string& _name, Model* model);
 	GameObject(std::string& _name, GameObject* parent, Model* model);
+	GameObject(std::string& _name, Light* light);
+	GameObject(std::string& _name, GameObject* parent, Light* light);
 
 	~GameObject();
 
@@ -66,12 +68,16 @@ public:
 	bool HasModel();
 	Model* GetAttachedModel();
 
+	void AttachLight(Light* light);
+	void DetachLight();
+	bool HasLight();
+
 	BoundingVolume* GetBoundingVolume();
 	RigidBody* GetRigidBody();
-	Light* GetLight();
+	Light* GetAttachedLight();
 
 	virtual void PreRender();
-	virtual void Render(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
+	virtual void Render(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 	virtual void PostRender();
 	virtual void Update(float deltaTime);
 };
