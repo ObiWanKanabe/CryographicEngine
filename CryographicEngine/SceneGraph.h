@@ -13,9 +13,11 @@ private:
 	SceneNode *rootSceneNode;
 	MatrixStack matStk;
 	std::vector<Light*> lightList;
+	std::vector<Object*> objectList;
 
 	void RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, AbstractRenderer &renderer, Camera *camera, CubeMap* skybox);
 	std::vector<Light*> GetLights(SceneNode *sceneRoot);
+	std::vector<Object*> GetObjects(SceneNode *sceneRoot);
 
 public:
 
@@ -24,7 +26,9 @@ public:
 
 	SceneNode* GetRootSceneNode();
 	std::vector<Light*> GetSceneLights();
+	std::vector<Object*> GetSceneObjects();
 	void RenderSceneGraph(Frustum &frustum, AbstractRenderer &renderer, Camera *camera, CubeMap* skybox);
+	void Render(Frustum &frustum, AbstractRenderer &renderer, Camera *camera, CubeMap* skybox);
 
 };
 #endif

@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "MeshManager.h"
 #include "ModelManager.h"
+#include "ShaderManager.h"
 #include "SceneNode.h"
 #include "RigidBody.h"
 #include <map>
@@ -14,6 +15,7 @@ private:
 	SceneNode* sceneNode;
 	std::string meshName;
 	std::string modelName;
+	glm::mat4 modelMatrix;
 	Light* light;
 	BoundingVolume* boundingVolume;
 	RigidBody* rigidBody;
@@ -75,9 +77,12 @@ public:
 	BoundingVolume* GetBoundingVolume();
 	RigidBody* GetRigidBody();
 	Light* GetAttachedLight();
+	void SetModelMatrix(glm::mat4 _model);
+	glm::mat4 GetModelMatrix();
 
 	virtual void PreRender();
 	virtual void Render(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
+	virtual void Render(Shader *shader);
 	virtual void PostRender();
 	virtual void Update(float deltaTime);
 };

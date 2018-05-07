@@ -51,6 +51,9 @@ public:
 	// Suggested max of 256.0f
 	void SetShininess(float _shininess);
 
+	// Can repeat or stretch the UV coordinates of the texture
+	void SetTextureScale(float _x, float _y);
+
 	// Gets the name of the mesh in the manager
 	std::string GetName();
 

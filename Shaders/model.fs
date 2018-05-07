@@ -73,7 +73,7 @@ vec3 norm = normalize(Normal);
 vec3 viewDir = normalize(cameraPos - FragPos);
 
 // The reflection of the normal along the view direction
-vec3 refl = reflect(viewDir, norm);
+vec3 refl = reflect(-viewDir, norm);
 
 // Calculate the one directional light allowed in the world
 result += CalcDirLight(directionalLight, norm, viewDir);

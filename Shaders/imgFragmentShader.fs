@@ -4,6 +4,7 @@ out vec4 FragColor;
 in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
+in vec4 FragPosLightSpace;
 
 // The Material of the fragment
 struct Material {
@@ -50,8 +51,10 @@ uniform DirectionalLight directionalLight;
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform SpotLight spotLights[NR_SPOT_LIGHTS];
 uniform vec3 cameraPos;
+uniform sampler2D shadowMap;
 
 // Functions 
+float ShadowCalculation(vec4 fragPosLightSpace);
 vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
@@ -69,7 +72,6 @@ vec3 viewDir = normalize(cameraPos - FragPos);
 // Calculate the one directional light allowed in the world
 result += CalcDirLight(directionalLight, norm, viewDir);
 
-
 // Calculate all the point lights in the world
 for (int i = 0; i < NR_POINT_LIGHTS; i++) {
 result += CalcPointLight(pointLights[i], norm, FragPos, viewDir); 
@@ -80,8 +82,26 @@ for (int i = 0; i < NR_SPOT_LIGHTS; i++) {
 result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir);
 }
 
+// Shadow Map Testing
+//float depthValue = texture(shadowMap, TexCoords).r;
+
 // The final result fragment colour
 FragColor = vec4(result, 1.0f);
+//FragColor = vec4(vec3(depthValue), 1.0);
+}
+
+float ShadowCalculation(vec4 fragPosLightSpace) {
+	vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+
+	projCoords = projCoords * 0.5 + 0.5;
+
+	float closestDepth = texture(shadowMap, projCoords.xy).r;  
+
+	float currentDepth = projCoords.z;   
+
+	float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;  
+
+	return shadow;
 }
 
 // Directional Lights need the normal vector and view direction
@@ -95,6 +115,7 @@ float diff = max(dot(normal, lightDir), 0.0);
 
 // Specular shading
 vec3 reflectDir = reflect(-lightDir, normal);
+
 float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
 
 // Combine the results
@@ -102,6 +123,10 @@ vec3 ambient  = light.ambient  * vec3(texture(material.diffuse1, TexCoords)) * 0
 vec3 diffuse  = light.diffuse  * diff * vec3(texture(material.diffuse1, TexCoords));
 vec3 specular = light.specular * spec * vec3(texture(material.specular1, TexCoords));
 
+float shadow = ShadowCalculation(FragPosLightSpace);       
+vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular));
+
+//return lighting;
 return (ambient + diffuse + specular);
 }
 

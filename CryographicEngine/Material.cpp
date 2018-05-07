@@ -307,7 +307,7 @@ void Material::BindUniforms(Shader *shader) {
 
 void Material::PreRender() {
 	Shader* shader = GetShader();
-	shader->use();
+	//shader->use();
 	if (type == MATERIAL_TYPE::TEXTURE) {
 		for (int i = 0; i < textureNames.size(); i++) {
 			
@@ -319,8 +319,6 @@ void Material::PreRender() {
 }
 
 void Material::Render() {
-	Shader* shader = GetShader();
-	shader->use();
 	if (type == MATERIAL_TYPE::TEXTURE || type == MATERIAL_TYPE::MODEL_TEXTURE) {
 		for (int i = 0; i < textureNames.size(); i++) {
 			glActiveTexture(GL_TEXTURE0 + i);

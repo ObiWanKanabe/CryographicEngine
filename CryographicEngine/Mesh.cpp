@@ -444,6 +444,24 @@ void Mesh::SetShininess(float _shininess) {
 	GetMaterial()->SetShininess(_shininess);
 }
 
+void Mesh::SetTextureScale(float _x, float _y) {
+	bool firstSet = true;
+	for (int i = 0; i < vertexDescriptor.GetComponentList().size(); i++) {
+		VertexComponentDescriptor vertexDesc = vertexDescriptor.GetComponentList()[i];
+		if (vertexDesc.type == VertexComponentDescriptor::VERTEX_UV) {
+			int offset = vertexDesc.offset / sizeof(float);
+			int inc = vertexDescriptor.GetStride() / sizeof(float);
+			int size = vertices.size() / inc;
+			for (int j = 0; j < size; j++) {
+				vertices[offset] *= _x;
+				vertices[offset+1] *= _y;
+				offset += inc;
+			}
+		}
+	}
+	GenerateBuffers();
+}
+
 std::string Mesh::GetName() {
 	return name;
 }
@@ -501,6 +519,7 @@ void Mesh::GenerateBuffers() {
 
 void Mesh::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 {
+
 	if (type == MESH_TYPE::MODEL) {
 		glDisable(GL_CULL_FACE);
 		if (materialName != "") {
@@ -592,6 +611,7 @@ void Mesh::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 mo
 		shader->SetMat4("view", viewMatrix);
 		shader->SetMat4("projection", projectionMatrix);
 		shader->SetMat4("normalMatrix", normal);
+		shader->SetVec3("cameraPos", camera->GetPosition());
 	}
 }
 
@@ -626,6 +646,7 @@ void Mesh::Render() {
 		material->Render();
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 	}
 	else {
 		if (materialName != "") {
@@ -637,6 +658,7 @@ void Mesh::Render() {
 		}
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+		glBindVertexArray(0);
 	}
 }
 

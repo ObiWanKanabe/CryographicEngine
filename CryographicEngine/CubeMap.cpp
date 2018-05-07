@@ -157,7 +157,7 @@ void CubeMap::BindUniforms(glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
 }
 
 void CubeMap::PreRender() {
-	glDepthFunc(GL_LEQUAL);
+	 glDepthFunc(GL_LEQUAL);
 }
 
 void CubeMap::Render() {

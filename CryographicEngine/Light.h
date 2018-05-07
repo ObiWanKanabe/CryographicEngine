@@ -3,6 +3,7 @@
 
 #include "ShaderManager.h"
 #include "Vertex.h"
+#include <gtc/matrix_transform.hpp>
 
 enum LIGHT_TYPE {
 	DIRECTIONAL_LIGHT,
@@ -27,6 +28,8 @@ public:
 	// Failing to do so will yield unwanted results, such as lights being at origin, or simply not working
 	void SetType(LIGHT_TYPE _type);
 	LIGHT_TYPE GetType();
+
+	Shader* GetShader();
 
 	// Utility functions
 	void SetColour(glm::vec3 _colour);
@@ -53,9 +56,25 @@ public:
 	
 
 	// Binding the uniforms of the shader
-	virtual void BindUniforms(Shader* _shader, int pointIndex, int spotIndex);
+	void BindUniforms(Shader* _shader, int pointIndex, int spotIndex);
+
+	void BindSpaceMatrix();
+
+	void ShadowSetup();
+	
+	void CalculateShadows(glm::mat4 _model);
 
 private:
+
+	std::string shaderName;
+
+	unsigned int depthMapFBO;
+
+	const unsigned int shadowWidth = 1024, shadowHeight = 1024;
+
+	unsigned int depthMap;
+
+	float near_plane = 1.0f, far_plane = 7.5f;
 
 	// The type of light
 	LIGHT_TYPE type;

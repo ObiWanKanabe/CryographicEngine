@@ -47,6 +47,9 @@ public:
 	// Renders the model on the screen
 	void Render();
 
+	// Draws the vertices of the model and its meshes on the GPU
+	void Draw();
+
 	// Function called after render
 	void PostRender();
 

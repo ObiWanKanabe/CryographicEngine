@@ -274,6 +274,14 @@ Light* GameObject::GetAttachedLight() {
 	return light;
 }
 
+void GameObject::SetModelMatrix(glm::mat4 _model) {
+	modelMatrix = _model;
+}
+
+glm::mat4 GameObject::GetModelMatrix() {
+	return modelMatrix;
+}
+
 void GameObject::PreRender() {
 	if (meshName != "") {
 		Mesh* mesh;
@@ -299,6 +307,23 @@ void GameObject::Render(Camera *camera, std::vector<Light*> lights, glm::mat4 mo
 		model = ModelManager::GetInstance()->GetModel(modelName);
 		model->BindUniforms(camera, lights, modelMatrix, viewMatrix, projectionMatrix);
 		model->Render();
+	}
+}
+
+void GameObject::Render(Shader *shader) {
+	if (meshName != "") {
+		Mesh* mesh;
+		mesh = MeshManager::GetInstance()->GetMesh(meshName);
+		shader->use();
+		shader->SetMat4("model", modelMatrix);
+		mesh->Render();
+	}
+	else if (modelName != "") {
+		Model* model;
+		model = ModelManager::GetInstance()->GetModel(modelName);
+		shader->use();
+		shader->SetMat4("model", modelMatrix);
+		model->Draw();
 	}
 }
 

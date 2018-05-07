@@ -83,6 +83,12 @@ void Model::Render() {
 	}
 }
 
+void Model::Draw() {
+	for (unsigned int i = 0; i < meshes.size(); i++) {
+		meshes[i]->Render();
+	}
+}
+
 void Model::PostRender() {
 	for (unsigned int i = 0; i < meshes.size(); i++) {
 		meshes[i]->PostRender();
