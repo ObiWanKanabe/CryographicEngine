@@ -115,6 +115,7 @@ void GameEngine::OnStart() {
 
 	// Models
 	Model *model = new Model(std::string("../Resources/nanosuit/nanosuit.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModel")));
+	model->SetShininess(256.0f);
 	ModelManager::GetInstance()->StoreModel(std::string("nanosuit"), model);
 
 	// Lights
@@ -131,14 +132,16 @@ void GameEngine::OnStart() {
 
 	GameObject *spotGameObject = new GameObject(std::string("spotLight"), spotLight1);
 
-	GameObject *floor = new GameObject(std::string("derp"), MeshManager::GetInstance()->GetMesh(std::string("mesh4")));
-	floor->SetPosition(glm::vec3(0.0f, -1.0f, 0.0f));
+	//GameObject *floor = new GameObject(std::string("derp"), MeshManager::GetInstance()->GetMesh(std::string("mesh4")));
+	//floor->SetPosition(glm::vec3(0.0f, -1.0f, 0.0f));
 	//floor->SetScale(glm::vec3(50.0f));
 
 	box1 = new GameObject(std::string("derp"), MeshManager::GetInstance()->GetMesh(std::string("mesh")));
 	box1->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	box1->GetAttachedMesh()->SetShininess(256.0f);
 
 	box2 = new GameObject(std::string("reflect"), MeshManager::GetInstance()->GetMesh(std::string("mesh")));
+	box2->AttachLight(spotLight1);
 	box2->SetPosition(glm::vec3(0.0f, 5.0f, 0.0f));
 
 	box3 = new GameObject(std::string("teal"), MeshManager::GetInstance()->GetMesh(std::string("mesh")));
@@ -157,7 +160,7 @@ void GameEngine::OnStart() {
 
 	// Scene Graph usage
 	GetRootSceneNode()->AttachChild(box1->GetSceneNode());
-	box1->AttachChild(floor);
+	//box1->AttachChild(floor);
 	box1->AttachChild(spotGameObject);
 	box1->AttachChild(box2);
 	box1->AttachChild(nanosuitModel);
@@ -170,8 +173,6 @@ void GameEngine::OnStart() {
 	
 	while (isRunning) {
 		PreRender();
-		spotGameObject->SetPosition(camera->GetPosition());
-		spotGameObject->GetAttachedLight()->SetDirection(camera->GetFront());
 		Render();
 		PostRender();
 	}

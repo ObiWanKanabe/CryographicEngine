@@ -528,6 +528,7 @@ void Mesh::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 mo
 			glm::mat4 model = glm::translate(modelMatrix, offset);
 			glm::mat4 normal = glm::transpose(glm::inverse(model));
 			Shader* shader = material->GetShader();
+			shader->use();
 			int pointNr = 0;
 			int spotNr = 0;
 			for (size_t i = 0; i < lights.size(); i++) {

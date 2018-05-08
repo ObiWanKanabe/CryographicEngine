@@ -240,6 +240,8 @@ void Material::BindUniforms() {
 	Shader* shader = GetShader();
 	shader->use();
 	if (type == MATERIAL_TYPE::TEXTURE) {
+		//shader->SetInt("material.diffuse" + std::to_string(1), 0);
+		//shader->SetInt("material.specular" + std::to_string(1), 0);
 		for (int i = 0; i < textureNames.size(); i++) {
 			unsigned int diffuseNr = 1;
 			unsigned int specularNr = 1;
@@ -265,7 +267,7 @@ void Material::BindUniforms() {
 	else if (type == MATERIAL_TYPE::MODEL_TEXTURE) {
 		for (unsigned int i = 0; i < textureNames.size(); i++)
 			{
-				glActiveTexture(GL_TEXTURE0 + i);
+				//glActiveTexture(GL_TEXTURE0 + i);
 
 				shader->SetInt(textureNames[i], i);
 			}
@@ -280,9 +282,11 @@ void Material::BindUniforms() {
 	else if (type == MATERIAL_TYPE::REFLECTIVE) {
 		shader->SetInt("skybox", 0);
 	}
-	shader->SetVec3("material.ambient", ambient);
-	shader->SetVec3("material.diffuse", diffuse);
-	shader->SetVec3("material.specular", specular);
+	else {
+		shader->SetVec3("material.ambient", ambient);
+		shader->SetVec3("material.diffuse", diffuse);
+		shader->SetVec3("material.specular", specular);
+	}
 	shader->SetFloat("material.shininess", shininess);
 }
 
@@ -290,7 +294,7 @@ void Material::BindUniforms(Shader *shader) {
 	shader->use();
 	for (unsigned int i = 0; i < textureNames.size(); i++)
 	{
-		glActiveTexture(GL_TEXTURE0 + i);
+		//glActiveTexture(GL_TEXTURE0 + i);
 
 		shader->SetInt(textureNames[i], i);
 	}
@@ -307,7 +311,7 @@ void Material::BindUniforms(Shader *shader) {
 
 void Material::PreRender() {
 	Shader* shader = GetShader();
-	//shader->use();
+	shader->use();
 	if (type == MATERIAL_TYPE::TEXTURE) {
 		for (int i = 0; i < textureNames.size(); i++) {
 			
