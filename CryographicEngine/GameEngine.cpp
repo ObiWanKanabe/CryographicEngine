@@ -11,8 +11,16 @@ GameEngine::GameEngine() {
 GameEngine::~GameEngine() {
 	delete window;
 	delete renderer;
+	delete sceneGraph;
+	delete frustum;
+	delete camera;
+	delete theInstance;
 	window = nullptr;
 	renderer = nullptr;
+	sceneGraph = nullptr;
+	frustum = nullptr;
+	camera = nullptr;
+	theInstance = nullptr;
 }
 
 GameEngine* GameEngine::GetInstance() {
@@ -32,7 +40,7 @@ void GameEngine::OnStart() {
 	sceneGraph = new SceneGraph();
 	frustum = new Frustum();
 	camera = new Camera();
-	frustum->WindowResize(camera->GetFOV(), 1200.0f / 900.0f, 0.1f, 100.0f);
+	frustum->WindowResize(camera->GetFOV(), static_cast<float>(window->GetWidth() / window->GetHeight()), 0.1f, 100.0f);
 	frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
 	
 	//Shaders
@@ -199,6 +207,9 @@ void GameEngine::OnStart() {
 void GameEngine::OnEnd() {
 	renderer->~OpenGLRenderer();
 	window->~Window();
+	sceneGraph->~SceneGraph();
+	frustum->~Frustum();
+	camera->~Camera();
 }
 
 void GameEngine::PreRender() {
@@ -210,8 +221,8 @@ void GameEngine::PreRender() {
 }
 
 void GameEngine::Render() {
-	//sceneGraph->RenderSceneGraph(*frustum, *renderer, camera, skybox);
-	sceneGraph->Render(*frustum, *renderer, camera, skybox);
+	sceneGraph->RenderSceneGraph(*frustum, *renderer, camera, skybox);
+	//sceneGraph->Render(*frustum, *renderer, camera, skybox);
 	renderer->Render(window, camera, skybox);
 }
 

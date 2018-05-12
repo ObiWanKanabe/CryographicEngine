@@ -94,6 +94,12 @@ GameObject::GameObject(std::string& _name, GameObject* parent, Light* light) {
 GameObject::~GameObject() {
 	DetachFromSceneNode();
 	DeregisterGameObject(name);
+	delete light;
+	delete boundingVolume;
+	delete rigidBody;
+	light = nullptr;
+	boundingVolume = nullptr;
+	rigidBody = nullptr;
 }
 
 void GameObject::RegisterGameObject(std::string& _name, GameObject* object) {

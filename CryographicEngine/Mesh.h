@@ -29,6 +29,8 @@ class Mesh {
 
 public:
 
+	Mesh() = delete;
+
 	// Creates a mesh with the loaded vertices, indices, and textures from assimp
 	Mesh(std::vector<GLfloat> _vertices, std::vector<unsigned int> _indices, std::vector <Texture> _textures, glm::vec3 _position, std::string &_name);
 
@@ -43,8 +45,6 @@ public:
 
 	// Default Deconstructor
 	~Mesh();
-
-	
 
 	// Sets the name of the mesh in the manager
 	void SetName(std::string &_name);

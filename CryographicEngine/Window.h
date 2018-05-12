@@ -6,9 +6,14 @@
 #include <SDL_image.h>
 #include <glew.h>
 
+#define SCREEN_WDITH 1200.0f
+#define SCREEN_HEIGHT 900.0f
+
 class Window {
 
 public:
+
+	Window() = delete;
 	
 	// Constructor takes a title, width & height
 	Window(const std::string &title, const int width, const int height);

@@ -6,6 +6,8 @@
 #include <iostream>
 #include "LogManager.h"
 
+// Taught in Game Engine Design Class @ Humber College
+
 // uncomment this to enable debugging
 //#define HTABLE_DEBUG 1
 

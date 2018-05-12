@@ -55,6 +55,8 @@ private:
 	std::string shaderName;
 public:
 
+	Material() = delete;
+
 	// Constructors can supply the basic pre-written engine shaders or you can supply your own
 	Material(glm::vec3 colour);
 	Material(Image *image);

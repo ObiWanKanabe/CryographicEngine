@@ -6,6 +6,7 @@
 #include "Hashtable.h"
 #include <iostream>
 
+// Taught in Game Engine Design Class @ Humber College
 
 template<class ResourceType>
 

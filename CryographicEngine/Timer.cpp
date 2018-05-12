@@ -7,7 +7,8 @@ Timer::Timer() {
 }
 
 Timer::~Timer() {
-
+	delete theInstance;
+	theInstance = nullptr;
 }
 
 Timer& Timer::GetInstance() {
@@ -20,7 +21,7 @@ Timer& Timer::GetInstance() {
 double Timer::GetSeconds() {
 	frequency = GetTicksPerSecond();
 	currtime = GetTicks();
-	double seconds = currtime.QuadPart / frequency.QuadPart;
+	double seconds = static_cast<double>(currtime.QuadPart / frequency.QuadPart);
 
 	return seconds;
 }

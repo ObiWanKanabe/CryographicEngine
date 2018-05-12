@@ -3,6 +3,8 @@
 
 #include <vector>
 
+// Taught in Game Engine Design Class @ Humber College
+
 class VertexComponentDescriptor {
 public:
 	enum VertexComponentType {

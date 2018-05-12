@@ -16,7 +16,7 @@ public:
 	virtual ~OpenGLRenderer();
 
 	// Initialize all objects here
-	virtual bool Init() override;\
+	virtual bool Init() override;
 
 	// Pre render here
 	virtual void PreRender(Window *window, Camera *camera, CubeMap *skybox) override;

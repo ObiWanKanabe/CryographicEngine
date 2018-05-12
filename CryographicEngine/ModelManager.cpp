@@ -11,6 +11,8 @@ ModelManager* ModelManager::GetInstance() {
 
 ModelManager::~ModelManager() {
 	models.clearKeysAndValues();
+	delete theInstance;
+	theInstance = nullptr;
 }
 
 ModelManager::HandleType ModelManager::StoreModel(std::string &name, Model* Model) {

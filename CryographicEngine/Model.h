@@ -10,8 +10,12 @@
 #include "assimp\scene.h"
 #include "assimp\postprocess.h"
 
+// Learning material used @ learnopengl.com
+
 class Model {
 public:
+
+	Model() = delete;
 
 	// Creates a model from the file path
 	Model(std::string filePath);

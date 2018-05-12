@@ -11,6 +11,8 @@ ImageManager* ImageManager::GetInstance() {
 
 ImageManager::~ImageManager() {
 	images.clearKeysAndValues();
+	delete theInstance;
+	theInstance = nullptr;
 }
 
 ImageManager::HandleType ImageManager::StoreImage(std::string &name, const char* filePath) {

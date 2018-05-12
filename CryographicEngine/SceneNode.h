@@ -6,6 +6,8 @@
 #include <gtc/quaternion.hpp>
 #include "Object.h"
 
+// Taught in Game Engine Design Class @ Humber College
+
 class SceneNode {
 private:
 	glm::vec3 position;

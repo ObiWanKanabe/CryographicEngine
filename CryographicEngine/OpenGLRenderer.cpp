@@ -20,7 +20,7 @@ void OpenGLRenderer::PreRender(Window *window, Camera *camera, CubeMap *skybox) 
 
 void OpenGLRenderer::Render(Window *window, Camera *camera, CubeMap *skybox) {
 	glm::mat4 viewMatrix = glm::mat4(camera->GetViewMatrix());
-	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), 1200.0f / 900.0f, 0.1f, 100.0f);
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), static_cast<float>(window->GetWidth() / window->GetHeight()), 0.1f, 100.0f);
 
 	skybox->BindUniforms(viewMatrix, projectionMatrix);
 	skybox->Render();

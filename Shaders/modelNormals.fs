@@ -64,10 +64,10 @@ void main()
 {
 
 // All calculations of lighting will be added to this
-vec3 result = vec3(0.0);
+vec3 result = vec3(0,0,0);
 
 // Reflection result will be added as well
-vec3 reflect_result;
+vec3 reflect_result = vec3(0,0,0);
 
 // Getting the normal from our bump map
 vec3 norm = texture(material.normal1, TexCoords).rgb;
@@ -101,7 +101,7 @@ if(reflect_intensity > 0.1)
     reflect_result = material.reflectiveness * vec3(texture(skybox, refl)) * reflect_intensity;
 
 // The final result fragment colour
-FragColor = vec4(result, 1.0f) + vec4(reflect_result, 1.0f);
+FragColor = vec4(result, 1.0) + vec4(reflect_result, 1.0);
 }
 
 // Directional Lights need the normal vector and view direction

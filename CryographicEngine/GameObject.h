@@ -8,6 +8,7 @@
 #include "RigidBody.h"
 #include <map>
 
+// Taught in Game Engine Design Class @ Humber College
 
 class GameObject : public Object {
 private:

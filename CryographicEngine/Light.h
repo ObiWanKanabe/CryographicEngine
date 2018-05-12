@@ -14,6 +14,8 @@ enum LIGHT_TYPE {
 class Light {
 public:
 
+	Light() = delete;
+
 	// A Directional light has a colour and direction
 	Light(glm::vec3 _colour, glm::vec3 _direction);
 
