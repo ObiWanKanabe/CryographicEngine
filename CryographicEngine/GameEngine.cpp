@@ -37,11 +37,13 @@ void GameEngine::OnStart() {
 	
 	//Shaders
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultImage"), "../Shaders/imgVertexShader.vs", "../Shaders/imgFragmentShader.fs");
+	ShaderManager::GetInstance()->StoreShader(std::string("defaultImageNormals"), "../Shaders/defaultImageNormals.vs", "../Shaders/defaultImageNormals.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultColour"), "../Shaders/colourVertexShader.vs", "../Shaders/colourFragmentShader.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultSkybox"), "../Shaders/cubemapVertexShader.vs", "../Shaders/cubemapFragmentShader.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultReflective"), "../Shaders/reflectVertexShader.vs", "../Shaders/reflectFragmentShader.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultRefractive"), "../Shaders/refract.vs", "../Shaders/refract.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultModel"), "../Shaders/model.vs", "../Shaders/model.fs");
+	ShaderManager::GetInstance()->StoreShader(std::string("defaultModelNormals"), "../Shaders/modelNormals.vs", "../Shaders/modelNormals.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultShadowDepth"), "../Shaders/defaultShadow.vs", "../Shaders/defaultShadow.fs");
 
 	// Skybox Images
@@ -88,16 +90,26 @@ void GameEngine::OnStart() {
 
 	ImageManager::GetInstance()->StoreImage(std::string("wood"), "../Resources/wood.png");
 
+	ImageManager::GetInstance()->StoreImage(std::string("brickwall"), "../Resources/brickwall.jpg");
+	ImageManager::GetInstance()->GetImage(std::string("brickwall"))->SetMapType(MAP_TYPE::DIFFUSE);
+
+	ImageManager::GetInstance()->StoreImage(std::string("brickwall_norm"), "../Resources/brickwall_normal.jpg");
+	ImageManager::GetInstance()->GetImage(std::string("brickwall_norm"))->SetMapType(MAP_TYPE::NORMAL);
+
+
 	// Materials
 	Material *myMaterial = new Material(ImageManager::GetInstance()->GetImage(std::string("wack")), ShaderManager::GetInstance()->GetShader(std::string("defaultImage")));
 	myMaterial->AddImage(ImageManager::GetInstance()->GetImage(std::string("wood_spec")));
 	Material *myMaterial2 = new Material(MATERIAL_TYPE::REFLECTIVE, ShaderManager::GetInstance()->GetShader(std::string("defaultReflective")));
 	Material *myMaterial3 = new Material(glm::vec3(1.0f, 1.0f, 1.0f), ShaderManager::GetInstance()->GetShader(std::string("defaultColour")));
 	Material *myMaterial4 = new Material(ImageManager::GetInstance()->GetImage(std::string("wood")));
+	Material *myMaterial5 = new Material(ImageManager::GetInstance()->GetImage(std::string("brickwall")));
+	myMaterial5->AddImage(ImageManager::GetInstance()->GetImage(std::string("brickwall_norm")));
 	MaterialManager::GetInstance()->StoreMaterial(std::string("material"), myMaterial);
 	MaterialManager::GetInstance()->StoreMaterial(std::string("material2"), myMaterial2);
 	MaterialManager::GetInstance()->StoreMaterial(std::string("material3"), myMaterial3);
 	MaterialManager::GetInstance()->StoreMaterial(std::string("material4"), myMaterial4);
+	MaterialManager::GetInstance()->StoreMaterial(std::string("material5"), myMaterial5);
 
 	// Skybox
 	skybox = new CubeMap(skyboxImageList);
@@ -106,21 +118,27 @@ void GameEngine::OnStart() {
 	Mesh *mesh = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material")));
 	Mesh *mesh2 = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material2")));
 	Mesh *mesh3 = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material3")));
-	Mesh *mesh4 = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material4")));
-	mesh4->SetTextureScale(5.0f, 5.0f);
+	Mesh *mesh4 = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material5")));
+	mesh4->SetTextureScale(7.0f, 7.0f);
 	MeshManager::GetInstance()->StoreMesh(std::string("mesh"), mesh);
 	MeshManager::GetInstance()->StoreMesh(std::string("mesh2"), mesh2);
 	MeshManager::GetInstance()->StoreMesh(std::string("mesh3"), mesh3);
 	MeshManager::GetInstance()->StoreMesh(std::string("mesh4"), mesh4);
 
 	// Models
-	Model *model = new Model(std::string("../Resources/nanosuit/nanosuit.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModel")));
+	Model *model = new Model(std::string("../Resources/nanosuit/nanosuit.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModelNormals")));
 	ModelManager::GetInstance()->StoreModel(std::string("nanosuit"), model);
+	model->SetShininess(256.0f);
+	model->SetReflectiveness(1.0f);
+
+	Model *model2 = new Model(std::string("../Resources/cyborg/cyborg.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModelNormals")));
+	ModelManager::GetInstance()->StoreModel(std::string("cyborg"), model2);
+	
 
 	// Lights
-	Light *spotLight1 = new Light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-0.0f, -1.0f, -0.0f), 0.09f, 0.032f, 15.0f, 17.5f);
+	Light *spotLight1 = new Light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-0.0f, -1.0f, -0.0f), 0.09f, 0.032f, 12.5f, 17.5f);
 	Light *pointLight = new Light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f, -0.0f), 0.09f, 0.032f, 12.5f, 17.5f);
-	Light *dirLight = new Light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	Light *dirLight = new Light(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.8f, 0.0f, -1.0f));
 
 	//MaterialManager::GetInstance()->GetMaterial(MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Body"))->GetMaterialName())->SetShaderName(std::string("defaultModel"));
 	//MaterialManager::GetInstance()->GetMaterial(MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Legs"))->GetMaterialName())->SetShaderName(std::string("defaultModel"));
@@ -133,31 +151,31 @@ void GameEngine::OnStart() {
 
 	GameObject *floor = new GameObject(std::string("derp"), MeshManager::GetInstance()->GetMesh(std::string("mesh4")));
 	floor->SetPosition(glm::vec3(0.0f, -1.0f, 0.0f));
-	//floor->SetScale(glm::vec3(50.0f));
+	floor->SetScale(glm::vec3(100.0f, 1.0f, 100.0f));
 
 	box1 = new GameObject(std::string("derp"), MeshManager::GetInstance()->GetMesh(std::string("mesh")));
 	box1->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	box2 = new GameObject(std::string("reflect"), MeshManager::GetInstance()->GetMesh(std::string("mesh")));
+	box2->AttachLight(spotLight1);
 	box2->SetPosition(glm::vec3(0.0f, 5.0f, 0.0f));
 
 	box3 = new GameObject(std::string("teal"), MeshManager::GetInstance()->GetMesh(std::string("mesh")));
 	box3->AttachLight(pointLight);
 	box3->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
 
-	nanosuitModel = new GameObject(std::string("crate1"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
-	nanosuitModel->GetAttachedModel()->SetShininess(12.0f);
+	nanosuitModel = new GameObject(std::string("crate1"), ModelManager::GetInstance()->GetModel(std::string("cyborg")));
 	nanosuitModel->SetPosition(glm::vec3(15.0f, 0.0f, 0.0f));
 
-	nanosuitHelmet = new GameObject(std::string("crate2"), MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Helmet")));
+	nanosuitHelmet = new GameObject(std::string("crate2"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
 	nanosuitHelmet->SetPosition(glm::vec3(20.0f, 0.0f, 0.0f));
 
-	nanosuitVisor = new GameObject(std::string("crate3"), MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Visor")));
+	nanosuitVisor = new GameObject(std::string("crate3"), MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Helmet")));
 	nanosuitVisor->SetPosition(glm::vec3(25.0f, 0.0f, 0.0f));
 
 	// Scene Graph usage
 	GetRootSceneNode()->AttachChild(box1->GetSceneNode());
-	box1->AttachChild(floor);
+	//box1->AttachChild(floor);
 	box1->AttachChild(spotGameObject);
 	box1->AttachChild(box2);
 	box1->AttachChild(nanosuitModel);

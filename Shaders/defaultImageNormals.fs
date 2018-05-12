@@ -10,6 +10,7 @@ in vec4 FragPosLightSpace;
 struct Material {
 sampler2D diffuse1;
 sampler2D specular1;
+sampler2D normal1;
 float shininess;
 };
 
@@ -66,8 +67,10 @@ void main()
 vec3 result = vec3(0.0);
 
 // The normal and view direction on the fragment, being used for lighting calculations
-vec3 norm = normalize(Normal);
+vec3 normal = texture(material.normal1, TexCoords).rgb;
+vec3 norm = normalize(normal * 2.0 - 1.0);
 vec3 viewDir = normalize(cameraPos - FragPos);
+
 
 // Calculate the one directional light allowed in the world
 result += CalcDirLight(directionalLight, norm, viewDir);
@@ -201,4 +204,4 @@ diffuse   *= attenuation;
 specular *= attenuation;   
         
 return (ambient + diffuse + specular);
-} 
+}

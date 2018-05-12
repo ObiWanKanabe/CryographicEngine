@@ -44,12 +44,18 @@ public:
 	// Default Deconstructor
 	~Mesh();
 
+	
+
 	// Sets the name of the mesh in the manager
 	void SetName(std::string &_name);
 
 	// Sets the shininess of the material
 	// Suggested max of 256.0f
 	void SetShininess(float _shininess);
+
+	// The opacity of the reflection on the material
+	// Between 0.0f and 1.0f
+	void SetReflectiveness(float _reflectiveness);
 
 	// Can repeat or stretch the UV coordinates of the texture
 	void SetTextureScale(float _x, float _y);

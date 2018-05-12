@@ -12,6 +12,7 @@ sampler2D specular1;
 sampler2D normal1;
 sampler2D reflective1;
 float shininess;
+float reflectiveness;
 };
 
 // Three Light types available
@@ -93,7 +94,7 @@ float reflect_intensity = texture(material.reflective1, TexCoords).r;
 
 // If reflection map is present, reflect the skybox texture
 if(reflect_intensity > 0.1)
-    reflect_result = vec3(texture(skybox, refl)) * reflect_intensity;
+    reflect_result = material.reflectiveness * vec3(texture(skybox, refl)) * reflect_intensity;
 
 // The final result fragment colour
 FragColor = vec4(result, 1.0f) + vec4(reflect_result, 1.0f);

@@ -225,6 +225,7 @@ Mesh::Mesh(MESH_TYPE primType, Material* material) {
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_UV);
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
+
 			vertices = {
 				-0.5f, -0.5f, -0.5f,  1.0f, 1.0f,  0.0f,  0.0f, -1.0f,
 				0.5f,  0.5f, -0.5f,  0.0f, 0.0f,  0.0f,  0.0f, -1.0f,
@@ -442,6 +443,10 @@ void Mesh::SetName(std::string& _name) {
 
 void Mesh::SetShininess(float _shininess) {
 	GetMaterial()->SetShininess(_shininess);
+}
+
+void Mesh::SetReflectiveness(float _reflectiveness) {
+	GetMaterial()->SetReflectiveness(_reflectiveness);
 }
 
 void Mesh::SetTextureScale(float _x, float _y) {

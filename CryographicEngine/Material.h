@@ -45,6 +45,9 @@ private:
 	// The shininess of the material
 	float shininess;
 
+	// The reflectiveness of the material
+	float reflectiveness;
+
 	// Name of the texture in the manager
 	std::vector<std::string> textureNames;
 
@@ -83,6 +86,10 @@ public:
 	// Suggested max of 256.0f
 	void SetShininess(float _shininess);
 
+	// The opacity of the reflection on the material
+	// Between 0.0f and 1.0f
+	void SetReflectiveness(float _reflectiveness);
+
 	// Utility functions 
 	std::string GetName();
 	Shader* GetShader();
@@ -93,6 +100,7 @@ public:
 	const glm::vec3 GetDiffuseColour();
 	const glm::vec3 GetSpecularColour();
 	const float GetShininess();
+	const float GetReflectiveness();
 
 
 	// Generation of the material(texture) on the GPU

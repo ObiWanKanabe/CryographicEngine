@@ -26,6 +26,10 @@ public:
 	// Suggested max of 256.0f
 	void SetShininess(float _shininess);
 
+	// The opacity of the reflection on the material
+	// Between 0.0f and 1.0f
+	void SetReflectiveness(float _reflectiveness);
+
 	// Gets the name of the model in the manager
 	std::string GetName();
 
