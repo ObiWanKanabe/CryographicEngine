@@ -16,6 +16,12 @@ of the OpenGL framework and 3D graphics programming as a whole. For personal use
 
 Other notes:
 
+Point light toggle with: SPACE BAR
+
+Spot light toggle with: UP ARROW
+
+Directional light toggle with: DOWN ARROW
+
 Made in Visual Studio 2017, using learning materials and resources from Rob Robson (Humber College), 
 Scott Fielder (Humber College) and Joey de Vries (learnopengl.com).
 
