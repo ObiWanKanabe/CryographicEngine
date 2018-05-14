@@ -36,7 +36,9 @@ private:
 	SDL_Event events;
 	CubeMap* skybox;
 
-	Light* spotLight1;
+	Light* spotLight;
+	Light *dirLight;
+	Light *pointLight;
 
 public:
 

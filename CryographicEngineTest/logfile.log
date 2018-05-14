@@ -1,2 +1,4 @@
+Failed to read shader file.
+Failed to compile vertex shader.
 Failed to compile fragment shader.
 Failed to link program.

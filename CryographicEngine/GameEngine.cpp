@@ -55,6 +55,7 @@ void GameEngine::OnStart() {
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultShadowDepth"), "../Shaders/defaultShadow.vs", "../Shaders/defaultShadow.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("clay"), "../Shaders/clay.vs", "../Shaders/clay.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("terrain"), "../Shaders/terrain.vs", "../Shaders/terrain.fs");
+	ShaderManager::GetInstance()->StoreShader(std::string("plainColour"), "../Shaders/colourNoLight.vs", "../Shaders/colourNoLight.fs");
 
 	// Skybox Images
 
@@ -111,7 +112,7 @@ void GameEngine::OnStart() {
 	Material *woodBoxMat = new Material(ImageManager::GetInstance()->GetImage(std::string("wood_diff")), ShaderManager::GetInstance()->GetShader(std::string("defaultImage")));
 	woodBoxMat->AddImage(ImageManager::GetInstance()->GetImage(std::string("wood_spec")));
 	Material *reflectiveMat = new Material(MATERIAL_TYPE::REFLECTIVE, ShaderManager::GetInstance()->GetShader(std::string("defaultReflective")));
-	Material *whiteMat = new Material(glm::vec3(1.0f, 1.0f, 1.0f), ShaderManager::GetInstance()->GetShader(std::string("defaultColour")));
+	Material *whiteMat = new Material(glm::vec3(1.0f, 1.0f, 1.0f), ShaderManager::GetInstance()->GetShader(std::string("plainColour")));
 	Material *woodPlankMat = new Material(ImageManager::GetInstance()->GetImage(std::string("wood")));
 	Material *brickMat = new Material(ImageManager::GetInstance()->GetImage(std::string("brickwall")));
 	brickMat->AddImage(ImageManager::GetInstance()->GetImage(std::string("brickwall_norm")));
@@ -130,7 +131,7 @@ void GameEngine::OnStart() {
 	Mesh *whiteBox = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("white")));
 	Mesh *brickBox = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("brick")));
 	brickBox->SetTextureScale(7.0f, 7.0f);
-	MeshManager::GetInstance()->StoreMesh(std::string("woodbox"), woodBox);
+	MeshManager::GetInstance()->StoreMesh(std::string("woodBox"), woodBox);
 	MeshManager::GetInstance()->StoreMesh(std::string("reflectiveBox"), reflectiveBox);
 	MeshManager::GetInstance()->StoreMesh(std::string("whiteBox"), whiteBox);
 	MeshManager::GetInstance()->StoreMesh(std::string("brickBox"), brickBox);
@@ -143,7 +144,7 @@ void GameEngine::OnStart() {
 
 	Model *cyborgModel = new Model(std::string("../Resources/cyborg/cyborg.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModelNormals")));
 	ModelManager::GetInstance()->StoreModel(std::string("cyborg"), cyborgModel);
-	cyborgModel->SetReflectiveness(0.75f);
+	cyborgModel->SetReflectiveness(1.0f);
 
 	Model *gameLoftModel = new Model(std::string("../Resources/clay/gameloftLogo.obj"), ShaderManager::GetInstance()->GetShader(std::string("clay")));
 	ModelManager::GetInstance()->StoreModel(std::string("clay"), gameLoftModel);
@@ -154,16 +155,19 @@ void GameEngine::OnStart() {
 	terrainModel->SetBackFaceCulling(false);
 
 	// Lights
-	spotLight1 = new Light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -0.2f, -1.0f), 0.09f, 0.032f, 10.0f, 12.5f);
-	Light *dirLight = new Light(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.8f, -0.4f, -1.0f));
+	pointLight = new Light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.014f, 0.0007f);
+	spotLight = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -0.2f, -1.0f), 0.09f, 0.032f, 10.0f, 12.5f);
+	dirLight = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.8f, -0.4f, -1.0f));
 
 	// GameObjects
 	GameObject *empty = new GameObject(std::string("emptyGameObject"));
 
 	GameObject *dirgameObject = new GameObject(std::string("dirLight"), dirLight);
 
-	GameObject *spotGameObject = new GameObject(std::string("spotLight1"), spotLight1);
-	spotGameObject->SetPosition(glm::vec3(0.0f, 4.25f, 5.0f));
+	GameObject *spotgameObject = new GameObject(std::string("spotLight1"), spotLight);
+
+	GameObject *pointGameObject = new GameObject(std::string("pointLight1"), pointLight);
+	pointGameObject->SetPosition(glm::vec3(0.0f, 4.0f, 0.0f));
 
 	GameObject *clay = new GameObject(std::string("clay"), ModelManager::GetInstance()->GetModel(std::string("clay")));
 	clay->SetScale(glm::vec3(0.02f));
@@ -174,25 +178,44 @@ void GameEngine::OnStart() {
 	terrain->SetScale(glm::vec3(0.02f));
 	terrain->SetPosition(glm::vec3(5.0f, 0.0f, -2.0f));
 
-	GameObject *nanosuit = new GameObject(std::string("nanosuit"), ModelManager::GetInstance()->GetModel(std::string("cyborg")));
-	nanosuit->SetPosition(glm::vec3(-5.0f, 0.0f, 0.0f));
-	nanosuit->SetScale(glm::vec3(1.0f));
+	GameObject *cyborg = new GameObject(std::string("cyborg"), ModelManager::GetInstance()->GetModel(std::string("cyborg")));
+	cyborg->SetPosition(glm::vec3(-5.0f, 0.0f, 0.0f));
+	cyborg->SetScale(glm::vec3(1.0f));
+
+	GameObject *test = new GameObject(std::string("test"), MeshManager::GetInstance()->GetMesh(std::string("whiteBox")));
+	test->SetScale(glm::vec3(1.0f));
+	test->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	// Scene Graph usage
 	GetRootSceneNode()->AttachChild(empty->GetSceneNode());
 	empty->AttachChild(terrain);
 	empty->AttachChild(clay);
-	empty->AttachChild(dirgameObject);
-	empty->AttachChild(nanosuit);
-	clay->AttachChild(spotGameObject);
+    empty->AttachChild(dirgameObject);
+	empty->AttachChild(cyborg);
+	empty->AttachChild(pointGameObject);
+	empty->AttachChild(spotgameObject);
+	pointGameObject->AttachChild(test);
 
 	camera->SetPosition(glm::vec3(0.0f, 2.5f, 5.0f));
 
 	Timer::GetInstance().Start();
+
+	// Orbiting point light variables
+	float radius = 20.0f;
+	float angle = 0.0f;
+	float speed = 0.35f;
 	
 	while (isRunning) {
 
 		Timer::GetInstance().Update();
+
+		// Circle for the point light
+		pointGameObject->SetPosition(glm::vec3(0.0f + (radius * glm::cos(angle)), pointGameObject->GetPosition().y, -2.0f + (radius * glm::sin(angle))));
+		angle += speed * Timer::GetInstance().GetDeltaTime();;
+
+		// Spot light follows the camera
+		spotgameObject->SetPosition(camera->GetPosition());
+		spotLight->SetDirection(camera->GetFront());
 
 		PreRender();
 		Render();
@@ -238,6 +261,27 @@ void GameEngine::HandleInput() {
 			break;
 		case SDL_KEYDOWN:
 			switch (events.key.keysym.sym) {
+				// Turn off/on spot light with up arrow
+			case SDLK_UP:
+				if (spotLight->GetDiffuseColour() == glm::vec3(0.0f))
+					spotLight->SetColour(glm::vec3(0.75f));
+				else if (spotLight->GetDiffuseColour() == glm::vec3(0.75f))
+					spotLight->SetColour(glm::vec3(0.0f));
+				break;
+				// Turn off/on directional light with down arrow
+			case SDLK_DOWN:
+				if (dirLight->GetDiffuseColour() == glm::vec3(0.0f))
+					dirLight->SetColour(glm::vec3(0.75f));
+				else if (dirLight->GetDiffuseColour() == glm::vec3(0.75f))
+					dirLight->SetColour(glm::vec3(0.0f));
+				break;
+				// Turn off/on point light with spacebar
+			case SDLK_SPACE:
+				if (pointLight->GetDiffuseColour() == glm::vec3(0.0f))
+					pointLight->SetColour(glm::vec3(1.0f));
+				else if (pointLight->GetDiffuseColour() == glm::vec3(1.0f))
+					pointLight->SetColour(glm::vec3(0.0f));
+				break;
 			case SDLK_ESCAPE:
 				isRunning = false;
 				break;
@@ -264,16 +308,12 @@ void GameEngine::HandleInput() {
 		}
 
 		if (state[SDL_SCANCODE_UP]) {
-			spotLight1->SetDirection(glm::vec3(spotLight1->GetDirection().x, spotLight1->GetDirection().y + 0.01f, spotLight1->GetDirection().z));
 		}
 		if (state[SDL_SCANCODE_DOWN]) {
-			spotLight1->SetDirection(glm::vec3(spotLight1->GetDirection().x, spotLight1->GetDirection().y - 0.01f, spotLight1->GetDirection().z));
 		}
 		if (state[SDL_SCANCODE_LEFT]) {
-			spotLight1->SetDirection(glm::vec3(spotLight1->GetDirection().x - 0.01f, spotLight1->GetDirection().y, spotLight1->GetDirection().z));
 		}
 		if (state[SDL_SCANCODE_RIGHT]) {
-			spotLight1->SetDirection(glm::vec3(spotLight1->GetDirection().x + 0.01f, spotLight1->GetDirection().y, spotLight1->GetDirection().z));
 		}
 
 		if (events.type == SDL_MOUSEMOTION) {
