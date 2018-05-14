@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-Mesh::Mesh(std::vector<GLfloat> _vertices, std::vector<unsigned int> _indices, std::vector <Texture> _textures, glm::vec3 _position, std::string &_name) {
+Mesh::Mesh(std::vector<GLfloat> _vertices, std::vector<unsigned int> _indices, std::vector <Texture> _textures, glm::vec3 _position, std::string &_name, std::string &_shaderName) {
 	type = MESH_TYPE::MODEL;
 	vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 	vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
@@ -15,6 +15,7 @@ Mesh::Mesh(std::vector<GLfloat> _vertices, std::vector<unsigned int> _indices, s
 	Material *material = new Material(_textures, _name);
 	MaterialManager::GetInstance()->StoreMaterial(_name, material);
 	materialName = material->GetName();
+	material->SetShaderName(_shaderName);
 	GenerateBuffers();
 }
 
@@ -526,7 +527,6 @@ void Mesh::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 mo
 {
 
 	if (type == MESH_TYPE::MODEL) {
-		glDisable(GL_CULL_FACE);
 		if (materialName != "") {
 			Material* material = MaterialManager::GetInstance()->GetMaterial(materialName);
 			material->BindUniforms();
@@ -634,7 +634,7 @@ void Mesh::BindUniforms(Shader* shader) {
 
 void Mesh::PreRender() {
 	if (type == MESH_TYPE::MODEL) {
-		
+		glDisable(GL_CULL_FACE);
 	}
 	if (materialName != "") {
 		Material* material = MaterialManager::GetInstance()->GetMaterial(materialName);

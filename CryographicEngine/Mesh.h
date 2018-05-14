@@ -32,7 +32,7 @@ public:
 	Mesh() = delete;
 
 	// Creates a mesh with the loaded vertices, indices, and textures from assimp
-	Mesh(std::vector<GLfloat> _vertices, std::vector<unsigned int> _indices, std::vector <Texture> _textures, glm::vec3 _position, std::string &_name);
+	Mesh(std::vector<GLfloat> _vertices, std::vector<unsigned int> _indices, std::vector <Texture> _textures, glm::vec3 _position, std::string &_name, std::string &_shaderName);
 
 	// Creates a mesh with the default colour
 	Mesh(MESH_TYPE primType);

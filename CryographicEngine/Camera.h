@@ -18,7 +18,7 @@ enum CAMERA_DIRECTION {
 };
 
 class Camera {
-public:
+private:
 
 	// Frustum of the camera
 	/*Frustum *frustum;*/
@@ -82,5 +82,7 @@ public:
 	// Utility functions that set the rotation of the camera
 	void SetRotationX(float _pitch);
 	void SetRotationY(float _yaw);
+
+	void SetPosition(glm::vec3 _pos);
 };
 #endif

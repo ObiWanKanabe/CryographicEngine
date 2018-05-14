@@ -3,6 +3,7 @@
 Model::Model(std::string filePath) {
 	LoadModel(filePath);
 	shaderName = std::string("defaultModel");
+	isBackCulled = true;
 }
 
 Model::Model(std::string filePath, Shader* shader) {
@@ -15,6 +16,7 @@ Model::Model(std::string filePath, Shader* shader) {
 		std::cerr << "Shader provided for: " << name << " is not in the shader manager and cannot be used" << std::endl;
 	}
 	shaderName = shader->GetName();
+	isBackCulled = true;
 }
 
 void Model::SetName(std::string& _name) {
@@ -51,6 +53,10 @@ void Model::PrintMeshNames() {
 	}
 }
 
+void Model::SetBackFaceCulling(bool _culled) {
+	isBackCulled = _culled;
+}
+
 void Model::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
 	Shader* shader = ShaderManager::GetInstance()->GetShader(shaderName);
 	shader->use();
@@ -75,6 +81,9 @@ void Model::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 m
 }
 
 void Model::PreRender() {
+	if (!isBackCulled)
+		glDisable(GL_CULL_FACE);
+
 	for (unsigned int i = 0; i < meshes.size(); i++) {
 		meshes[i]->PreRender();
 	}
@@ -83,10 +92,12 @@ void Model::PreRender() {
 void Model::Render() {
 	Shader* shader = ShaderManager::GetInstance()->GetShader(shaderName);
 	shader->use();
+
 	for (unsigned int i = 0; i < meshes.size(); i++) {
 		meshes[i]->BindUniforms(shader);
 		meshes[i]->Render();
 	}
+
 }
 
 void Model::Draw() {
@@ -99,6 +110,9 @@ void Model::PostRender() {
 	for (unsigned int i = 0; i < meshes.size(); i++) {
 		meshes[i]->PostRender();
 	}
+
+	if (!isBackCulled)
+		glEnable(GL_CULL_FACE);
 }
 
 void Model::LoadModel(std::string filePath) {
@@ -217,7 +231,7 @@ Mesh* Model::ProcessMesh(aiMesh* _mesh, const aiScene *scene) {
 	position /= static_cast<float>(_mesh->mNumVertices);
 
 	// Create the mesh using our mesh class and pass in the imported values
-	Mesh *mesh = new Mesh(vertices, indices, textures, position, std::string(_mesh->mName.C_Str()));
+	Mesh *mesh = new Mesh(vertices, indices, textures, position, std::string(_mesh->mName.C_Str()), shaderName);
 	return mesh;
 }	
 

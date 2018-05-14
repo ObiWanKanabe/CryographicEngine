@@ -139,7 +139,6 @@ Material::Material(MATERIAL_TYPE _type, Shader *shader) {
 }
 
 Material::Material(std::vector<Texture> _texture, std::string &_name) {
-	shaderName = "defaultModel";
 	shininess = 32.0f;
 	reflectiveness = 0.0f;
 	for (size_t i = 0; i < _texture.size(); i++) {
@@ -157,7 +156,6 @@ Material::Material(std::vector<Texture> _texture, std::string &_name) {
 		}
 		else if (_texture[i].type == "texture_normal") {
 			textureNames.push_back("material.normal" + std::to_string(normalNr++));
-			shaderName = "defaultModelNormals";
 		}
 		else if (_texture[i].type == "texture_reflective") {
 			textureNames.push_back("material.reflective" + std::to_string(reflectNr++));
@@ -346,7 +344,7 @@ void Material::BindUniforms(Shader *shader) {
 
 void Material::PreRender() {
 	Shader* shader = GetShader();
-	shader->use();
+	//shader->use();
 	if (type == MATERIAL_TYPE::TEXTURE) {
 		for (int i = 0; i < textureNames.size(); i++) {
 			

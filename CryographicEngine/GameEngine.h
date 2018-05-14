@@ -32,16 +32,11 @@ private:
 	Frustum *frustum;
 
 	// Testing in Engine
-	Camera *camera;
+	Camera* camera;
 	SDL_Event events;
 	CubeMap* skybox;
 
-	GameObject* box1;
-	GameObject* box2;
-	GameObject* box3;
-	GameObject* nanosuitModel;
-	GameObject* nanosuitHelmet;
-	GameObject* nanosuitVisor;
+	Light* spotLight1;
 
 public:
 

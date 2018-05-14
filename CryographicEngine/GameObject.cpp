@@ -4,9 +4,11 @@ std::map<std::string, GameObject*> *GameObject::nameIndex = nullptr;
 
 GameObject::GameObject(std::string& _name) {
 	name = _name;
-	sceneNode = nullptr;
+	sceneNode = new SceneNode();
+	sceneNode->AddObject(this);
 	boundingVolume = nullptr;
-	meshName = nullptr;
+	DetachMesh();
+	DetachModel();
 	if (nameIndex == nullptr) {
 		nameIndex = new std::map<std::string, GameObject*>();
 	}

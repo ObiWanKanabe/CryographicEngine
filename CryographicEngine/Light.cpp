@@ -85,43 +85,43 @@ void Light::SetPosition(glm::vec3 _pos) {
 	position = _pos;
 }
 
-const glm::vec3 Light::GetColour() {
+glm::vec3 Light::GetColour() {
 	return diffuse;
 }
 
-const glm::vec3 Light::GetAmbientColour() {
+glm::vec3 Light::GetAmbientColour() {
 	return ambient;
 }
 
-const glm::vec3 Light::GetDiffuseColour() {
+glm::vec3 Light::GetDiffuseColour() {
 	return diffuse;
 }
 
-const glm::vec3 Light::GetSpecularColour() {
+glm::vec3 Light::GetSpecularColour() {
 	return specular;
 }
 
-const glm::vec3 Light::GetDirection() {
+glm::vec3 Light::GetDirection() {
 	return direction;
 }
 
-const glm::vec3 Light::GetPosition() {
+glm::vec3 Light::GetPosition() {
 	return position;
 }
 
-const float Light::GetLinear() {
+float Light::GetLinear() {
 	return linear;
 }
 
-const float Light::GetQuadratic() {
+float Light::GetQuadratic() {
 	return quadratic;
 }
 
-const float Light::GetInnerCutoff() {
+float Light::GetInnerCutoff() {
 	return innerCutOff;
 }
 
-const float Light::GetOuterCutoff() {
+float Light::GetOuterCutoff() {
 	return outerCutOff;
 }
 

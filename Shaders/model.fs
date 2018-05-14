@@ -56,9 +56,9 @@ uniform vec3 cameraPos;
 uniform samplerCube skybox;
 
 // Functions 
-vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir);
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
+vec3 DirLightResult(DirectionalLight light, vec3 normal, vec3 viewDir);
+vec3 PointLightResult(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
+vec3 SpotLightResult(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main()
 {
@@ -77,16 +77,16 @@ vec3 viewDir = normalize(cameraPos - FragPos);
 vec3 refl = reflect(-viewDir, norm);
 
 // Calculate the one directional light allowed in the world
-result += CalcDirLight(directionalLight, norm, viewDir);
+result += DirLightResult(directionalLight, norm, viewDir);
 
 // Calculate all the point lights in the world
 for (int i = 0; i < NR_POINT_LIGHTS; i++) {
-result += CalcPointLight(pointLights[i], norm, FragPos, viewDir); 
+result += PointLightResult(pointLights[i], norm, FragPos, viewDir); 
 }
 
 // Calculate all the spot lights in the world
 for (int i = 0; i < NR_SPOT_LIGHTS; i++) {
-result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir);
+result += SpotLightResult(spotLights[i], norm, FragPos, viewDir);
 }
 
 // Calculating the reflection intensity
@@ -101,7 +101,7 @@ FragColor = vec4(result, 1.0f) + vec4(reflect_result, 1.0f);
 }
 
 // Directional Lights need the normal vector and view direction
-vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir)
+vec3 DirLightResult(DirectionalLight light, vec3 normal, vec3 viewDir)
 {
 // The light direction vector only takes into account its own direction
 vec3 lightDir = normalize(-light.direction);
@@ -121,7 +121,7 @@ vec3 specular = light.specular * spec * vec3(texture(material.specular1, TexCoor
 return (ambient + diffuse + specular);
 }
 
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+vec3 PointLightResult(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
 // The light direction vector is facing the fragment
 vec3 lightDir = normalize(light.position - fragPos);
@@ -148,7 +148,7 @@ specular *= attenuation;
 return (ambient + diffuse + specular);
 } 
 
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+vec3 SpotLightResult(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
 // The light direction vector is facing the fragment
 vec3 lightDir = normalize(light.position - fragPos);

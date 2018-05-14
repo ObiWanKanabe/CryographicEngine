@@ -3,6 +3,8 @@
 
 #include <string>
 #include <glm.hpp>
+#include <math.h>
+#include <random>
 #include "Image.h"
 #include "Camera.h"
 #include "MeshManager.h"
@@ -45,6 +47,9 @@ public:
 
 	// Prints the names of the meshes loaded 
 	void PrintMeshNames();
+
+	// Set Back Face Culling On/Off
+	void SetBackFaceCulling(bool _culled);
 	
 	// Binds the uniforms of the shader
 	void BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
@@ -80,6 +85,9 @@ private:
 
 	// Offset of the model from the drawing point
 	glm::vec3 offset;
+
+	// Is back faced culled condition
+	bool isBackCulled;
 
 	// Initial model loading method
 	void LoadModel(std::string filePath);

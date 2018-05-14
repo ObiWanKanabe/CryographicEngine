@@ -53,6 +53,8 @@ void GameEngine::OnStart() {
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultModel"), "../Shaders/model.vs", "../Shaders/model.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultModelNormals"), "../Shaders/modelNormals.vs", "../Shaders/modelNormals.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultShadowDepth"), "../Shaders/defaultShadow.vs", "../Shaders/defaultShadow.fs");
+	ShaderManager::GetInstance()->StoreShader(std::string("clay"), "../Shaders/clay.vs", "../Shaders/clay.fs");
+	ShaderManager::GetInstance()->StoreShader(std::string("terrain"), "../Shaders/terrain.vs", "../Shaders/terrain.fs");
 
 	// Skybox Images
 
@@ -90,8 +92,8 @@ void GameEngine::OnStart() {
 	};
 	
 	// Images
-	ImageManager::GetInstance()->StoreImage(std::string("wack"), "../Resources/woodbox_diffuse.png");
-	ImageManager::GetInstance()->GetImage(std::string("wack"))->SetMapType(MAP_TYPE::DIFFUSE);
+	ImageManager::GetInstance()->StoreImage(std::string("wood_diff"), "../Resources/woodbox_diffuse.png");
+	ImageManager::GetInstance()->GetImage(std::string("wood_diff"))->SetMapType(MAP_TYPE::DIFFUSE);
 
 	ImageManager::GetInstance()->StoreImage(std::string("wood_spec"), "../Resources/woodbox_specular.png");
 	ImageManager::GetInstance()->GetImage(std::string("wood_spec"))->SetMapType(MAP_TYPE::SPECULAR);
@@ -106,98 +108,93 @@ void GameEngine::OnStart() {
 
 
 	// Materials
-	Material *myMaterial = new Material(ImageManager::GetInstance()->GetImage(std::string("wack")), ShaderManager::GetInstance()->GetShader(std::string("defaultImage")));
-	myMaterial->AddImage(ImageManager::GetInstance()->GetImage(std::string("wood_spec")));
-	Material *myMaterial2 = new Material(MATERIAL_TYPE::REFLECTIVE, ShaderManager::GetInstance()->GetShader(std::string("defaultReflective")));
-	Material *myMaterial3 = new Material(glm::vec3(1.0f, 1.0f, 1.0f), ShaderManager::GetInstance()->GetShader(std::string("defaultColour")));
-	Material *myMaterial4 = new Material(ImageManager::GetInstance()->GetImage(std::string("wood")));
-	Material *myMaterial5 = new Material(ImageManager::GetInstance()->GetImage(std::string("brickwall")));
-	myMaterial5->AddImage(ImageManager::GetInstance()->GetImage(std::string("brickwall_norm")));
-	MaterialManager::GetInstance()->StoreMaterial(std::string("material"), myMaterial);
-	MaterialManager::GetInstance()->StoreMaterial(std::string("material2"), myMaterial2);
-	MaterialManager::GetInstance()->StoreMaterial(std::string("material3"), myMaterial3);
-	MaterialManager::GetInstance()->StoreMaterial(std::string("material4"), myMaterial4);
-	MaterialManager::GetInstance()->StoreMaterial(std::string("material5"), myMaterial5);
+	Material *woodBoxMat = new Material(ImageManager::GetInstance()->GetImage(std::string("wood_diff")), ShaderManager::GetInstance()->GetShader(std::string("defaultImage")));
+	woodBoxMat->AddImage(ImageManager::GetInstance()->GetImage(std::string("wood_spec")));
+	Material *reflectiveMat = new Material(MATERIAL_TYPE::REFLECTIVE, ShaderManager::GetInstance()->GetShader(std::string("defaultReflective")));
+	Material *whiteMat = new Material(glm::vec3(1.0f, 1.0f, 1.0f), ShaderManager::GetInstance()->GetShader(std::string("defaultColour")));
+	Material *woodPlankMat = new Material(ImageManager::GetInstance()->GetImage(std::string("wood")));
+	Material *brickMat = new Material(ImageManager::GetInstance()->GetImage(std::string("brickwall")));
+	brickMat->AddImage(ImageManager::GetInstance()->GetImage(std::string("brickwall_norm")));
+	MaterialManager::GetInstance()->StoreMaterial(std::string("woodBox"), woodBoxMat);
+	MaterialManager::GetInstance()->StoreMaterial(std::string("reflective"), reflectiveMat);
+	MaterialManager::GetInstance()->StoreMaterial(std::string("white"), whiteMat);
+	MaterialManager::GetInstance()->StoreMaterial(std::string("woodPlank"), woodPlankMat);
+	MaterialManager::GetInstance()->StoreMaterial(std::string("brick"), brickMat);
 
 	// Skybox
 	skybox = new CubeMap(skyboxImageList);
 
 	// Meshes
-	Mesh *mesh = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material")));
-	Mesh *mesh2 = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material2")));
-	Mesh *mesh3 = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material3")));
-	Mesh *mesh4 = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("material5")));
-	mesh4->SetTextureScale(7.0f, 7.0f);
-	MeshManager::GetInstance()->StoreMesh(std::string("mesh"), mesh);
-	MeshManager::GetInstance()->StoreMesh(std::string("mesh2"), mesh2);
-	MeshManager::GetInstance()->StoreMesh(std::string("mesh3"), mesh3);
-	MeshManager::GetInstance()->StoreMesh(std::string("mesh4"), mesh4);
+	Mesh *woodBox = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("woodBox")));
+	Mesh *reflectiveBox = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("reflective")));
+	Mesh *whiteBox = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("white")));
+	Mesh *brickBox = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("brick")));
+	brickBox->SetTextureScale(7.0f, 7.0f);
+	MeshManager::GetInstance()->StoreMesh(std::string("woodbox"), woodBox);
+	MeshManager::GetInstance()->StoreMesh(std::string("reflectiveBox"), reflectiveBox);
+	MeshManager::GetInstance()->StoreMesh(std::string("whiteBox"), whiteBox);
+	MeshManager::GetInstance()->StoreMesh(std::string("brickBox"), brickBox);
 
 	// Models
-	Model *model = new Model(std::string("../Resources/nanosuit/nanosuit.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModelNormals")));
-	ModelManager::GetInstance()->StoreModel(std::string("nanosuit"), model);
-	model->SetShininess(256.0f);
-	model->SetReflectiveness(1.0f);
+	Model *nanosuitModel = new Model(std::string("../Resources/nanosuit/nanosuit.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModelNormals")));
+	ModelManager::GetInstance()->StoreModel(std::string("nanosuit"), nanosuitModel);
+	nanosuitModel->SetShininess(256.0f);
+	nanosuitModel->SetReflectiveness(1.0f);
 
-	Model *model2 = new Model(std::string("../Resources/cyborg/cyborg.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModelNormals")));
-	ModelManager::GetInstance()->StoreModel(std::string("cyborg"), model2);
-	
+	Model *cyborgModel = new Model(std::string("../Resources/cyborg/cyborg.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModelNormals")));
+	ModelManager::GetInstance()->StoreModel(std::string("cyborg"), cyborgModel);
+	cyborgModel->SetReflectiveness(0.75f);
+
+	Model *gameLoftModel = new Model(std::string("../Resources/clay/gameloftLogo.obj"), ShaderManager::GetInstance()->GetShader(std::string("clay")));
+	ModelManager::GetInstance()->StoreModel(std::string("clay"), gameLoftModel);
+	gameLoftModel->SetShininess(256.0f);
+
+	Model *terrainModel = new Model(std::string("../Resources/terrain/terrain.obj"), ShaderManager::GetInstance()->GetShader(std::string("terrain")));
+	ModelManager::GetInstance()->StoreModel(std::string("terrain"), terrainModel);
+	terrainModel->SetBackFaceCulling(false);
 
 	// Lights
-	Light *spotLight1 = new Light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-0.0f, -1.0f, -0.0f), 0.09f, 0.032f, 12.5f, 17.5f);
-	Light *pointLight = new Light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f, -0.0f), 0.09f, 0.032f, 12.5f, 17.5f);
-	Light *dirLight = new Light(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.8f, 0.0f, -1.0f));
-
-	//MaterialManager::GetInstance()->GetMaterial(MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Body"))->GetMaterialName())->SetShaderName(std::string("defaultModel"));
-	//MaterialManager::GetInstance()->GetMaterial(MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Legs"))->GetMaterialName())->SetShaderName(std::string("defaultModel"));
-	//MaterialManager::GetInstance()->GetMaterial(MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Arms"))->GetMaterialName())->SetShaderName(std::string("defaultModel"));
+	spotLight1 = new Light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -0.2f, -1.0f), 0.09f, 0.032f, 10.0f, 12.5f);
+	Light *dirLight = new Light(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.8f, -0.4f, -1.0f));
 
 	// GameObjects
+	GameObject *empty = new GameObject(std::string("emptyGameObject"));
+
 	GameObject *dirgameObject = new GameObject(std::string("dirLight"), dirLight);
 
-	GameObject *spotGameObject = new GameObject(std::string("spotLight"), spotLight1);
+	GameObject *spotGameObject = new GameObject(std::string("spotLight1"), spotLight1);
+	spotGameObject->SetPosition(glm::vec3(0.0f, 4.25f, 5.0f));
 
-	GameObject *floor = new GameObject(std::string("derp"), MeshManager::GetInstance()->GetMesh(std::string("mesh4")));
-	floor->SetPosition(glm::vec3(0.0f, -1.0f, 0.0f));
-	floor->SetScale(glm::vec3(100.0f, 1.0f, 100.0f));
+	GameObject *clay = new GameObject(std::string("clay"), ModelManager::GetInstance()->GetModel(std::string("clay")));
+	clay->SetScale(glm::vec3(0.02f));
+	clay->SetPosition(glm::vec3(0.0f, 3.0f, -2.0f));
+	clay->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
 
-	box1 = new GameObject(std::string("derp"), MeshManager::GetInstance()->GetMesh(std::string("mesh")));
-	box1->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	GameObject *terrain = new GameObject(std::string("terrain"), ModelManager::GetInstance()->GetModel(std::string("terrain")));
+	terrain->SetScale(glm::vec3(0.02f));
+	terrain->SetPosition(glm::vec3(5.0f, 0.0f, -2.0f));
 
-	box2 = new GameObject(std::string("reflect"), MeshManager::GetInstance()->GetMesh(std::string("mesh")));
-	box2->AttachLight(spotLight1);
-	box2->SetPosition(glm::vec3(0.0f, 5.0f, 0.0f));
-
-	box3 = new GameObject(std::string("teal"), MeshManager::GetInstance()->GetMesh(std::string("mesh")));
-	box3->AttachLight(pointLight);
-	box3->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
-
-	nanosuitModel = new GameObject(std::string("crate1"), ModelManager::GetInstance()->GetModel(std::string("cyborg")));
-	nanosuitModel->SetPosition(glm::vec3(15.0f, 0.0f, 0.0f));
-
-	nanosuitHelmet = new GameObject(std::string("crate2"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
-	nanosuitHelmet->SetPosition(glm::vec3(20.0f, 0.0f, 0.0f));
-
-	nanosuitVisor = new GameObject(std::string("crate3"), MeshManager::GetInstance()->GetMesh(std::string("nanosuit_Helmet")));
-	nanosuitVisor->SetPosition(glm::vec3(25.0f, 0.0f, 0.0f));
+	GameObject *nanosuit = new GameObject(std::string("nanosuit"), ModelManager::GetInstance()->GetModel(std::string("cyborg")));
+	nanosuit->SetPosition(glm::vec3(-5.0f, 0.0f, 0.0f));
+	nanosuit->SetScale(glm::vec3(1.0f));
 
 	// Scene Graph usage
-	GetRootSceneNode()->AttachChild(box1->GetSceneNode());
-	//box1->AttachChild(floor);
-	box1->AttachChild(spotGameObject);
-	box1->AttachChild(box2);
-	box1->AttachChild(nanosuitModel);
-	box1->AttachChild(nanosuitHelmet);
-	box1->AttachChild(nanosuitVisor);
-	box1->AttachChild(box3);
-	box1->AttachChild(dirgameObject);
+	GetRootSceneNode()->AttachChild(empty->GetSceneNode());
+	empty->AttachChild(terrain);
+	empty->AttachChild(clay);
+	empty->AttachChild(dirgameObject);
+	empty->AttachChild(nanosuit);
+	clay->AttachChild(spotGameObject);
+
+	camera->SetPosition(glm::vec3(0.0f, 2.5f, 5.0f));
 
 	Timer::GetInstance().Start();
 	
 	while (isRunning) {
+
+		Timer::GetInstance().Update();
+
 		PreRender();
-		spotGameObject->SetPosition(camera->GetPosition());
-		spotGameObject->GetAttachedLight()->SetDirection(camera->GetFront());
 		Render();
 		PostRender();
 	}
@@ -248,6 +245,7 @@ void GameEngine::HandleInput() {
 				break;
 			}
 		}
+
 		if (state[SDL_SCANCODE_W]) {
 			camera->ProcessKeyboard(CAMERA_DIRECTION::FORWARD, 0.01f);
 			//frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
@@ -266,16 +264,16 @@ void GameEngine::HandleInput() {
 		}
 
 		if (state[SDL_SCANCODE_UP]) {
-			box2->SetPosition(glm::vec3(box2->GetPosition().x, box2->GetPosition().y + 0.05f, box2->GetPosition().z));
+			spotLight1->SetDirection(glm::vec3(spotLight1->GetDirection().x, spotLight1->GetDirection().y + 0.01f, spotLight1->GetDirection().z));
 		}
 		if (state[SDL_SCANCODE_DOWN]) {
-			box2->SetPosition(glm::vec3(box2->GetPosition().x, box2->GetPosition().y - 0.05f, box2->GetPosition().z));
+			spotLight1->SetDirection(glm::vec3(spotLight1->GetDirection().x, spotLight1->GetDirection().y - 0.01f, spotLight1->GetDirection().z));
 		}
 		if (state[SDL_SCANCODE_LEFT]) {
-			box2->SetPosition(glm::vec3(box2->GetPosition().x - 0.05f, box2->GetPosition().y, box2->GetPosition().z));
+			spotLight1->SetDirection(glm::vec3(spotLight1->GetDirection().x - 0.01f, spotLight1->GetDirection().y, spotLight1->GetDirection().z));
 		}
 		if (state[SDL_SCANCODE_RIGHT]) {
-			box2->SetPosition(glm::vec3(box2->GetPosition().x + 0.05f, box2->GetPosition().y, box2->GetPosition().z));
+			spotLight1->SetDirection(glm::vec3(spotLight1->GetDirection().x + 0.01f, spotLight1->GetDirection().y, spotLight1->GetDirection().z));
 		}
 
 		if (events.type == SDL_MOUSEMOTION) {
