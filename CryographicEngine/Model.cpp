@@ -119,7 +119,7 @@ void Model::LoadModel(std::string filePath) {
 	// We're setting up the assimp scene here
 	// Making sure the model uses only triangles and the UVs are flipped when necessary
 	Assimp::Importer import;
-	const aiScene *scene = import.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+	const aiScene *scene = import.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{

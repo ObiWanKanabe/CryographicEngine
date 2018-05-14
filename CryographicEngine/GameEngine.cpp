@@ -136,7 +136,7 @@ void GameEngine::OnStart() {
 	MeshManager::GetInstance()->StoreMesh(std::string("brickBox"), brickBox);
 
 	// Models
-	Model *nanosuitModel = new Model(std::string("../Resources/nanosuit/nanosuit.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModelNormals")));
+	Model *nanosuitModel = new Model(std::string("../Resources/nanosuit/nanosuit.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModel")));
 	ModelManager::GetInstance()->StoreModel(std::string("nanosuit"), nanosuitModel);
 	nanosuitModel->SetShininess(256.0f);
 	nanosuitModel->SetReflectiveness(1.0f);

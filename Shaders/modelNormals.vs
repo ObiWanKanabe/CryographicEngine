@@ -20,20 +20,20 @@ void main()
 // Calculating TBN matrix for normal mapping
 // This uses the tangents, bitangents and normals in their local space
 // and results in a matrix to transform them back to world space
-vec3 T = vec3(0, 0, 0);
-T = normalize(vec3(model * vec4(aTangent,   0.0)));
-vec3 N = vec3(0, 0, 0);
-N = normalize(vec3(model * vec4(aNormal,    0.0)));
+vec3 T = normalize(vec3(model * vec4(aTangent,   0.0)));
+vec3 N = normalize(vec3(model * vec4(aNormal,    0.0)));
 
-T = normalize(T - dot(T, N) * N);
+// Checking to make sure the tangent is perpendicular
+ T = normalize(T - dot(T, N) * N);
 
-vec3 B = vec3(0, 0, 0);
-B = cross(N,T);
+// Calculating the bitangent using the cross product
+vec3 B = cross(N,T);
 
+// Checking to make sure tangents aren't using a left handed system
 if (dot(cross(N, T), B) < 0.0)
     T = T * -1.0;
 
-// Finally transposing the orthogonal matrix to get its inverse
+// Finally creating the TBN matrix
 TBN = mat3(T,B,N);
 
 TexCoords = aTexCoords;
