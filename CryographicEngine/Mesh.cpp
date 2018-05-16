@@ -503,8 +503,6 @@ void Mesh::GenerateBuffers() {
 			glVertexAttribPointer(i, vertexDescriptor.componentList[i].GetNumFloats(), GL_FLOAT, GL_FALSE, vertexDescriptor.GetStride(), (void*)(vertexDescriptor.componentList[i].offset));
 		}
 
-		glBindVertexArray(0);
-
 	}
 	else {
 		glGenVertexArrays(1, &VAO);
@@ -518,9 +516,9 @@ void Mesh::GenerateBuffers() {
 			glEnableVertexAttribArray(i);
 			glVertexAttribPointer(i, vertexDescriptor.componentList[i].GetNumFloats(), GL_FLOAT, GL_FALSE, vertexDescriptor.GetStride(), (void*)(vertexDescriptor.componentList[i].offset));
 		}
-
-		glBindVertexArray(0);
 	}
+
+	glBindVertexArray(0);
 }
 
 void Mesh::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
@@ -633,9 +631,7 @@ void Mesh::BindUniforms(Shader* shader) {
 }
 
 void Mesh::PreRender() {
-	if (type == MESH_TYPE::MODEL) {
-		glDisable(GL_CULL_FACE);
-	}
+	
 	if (materialName != "") {
 		Material* material = MaterialManager::GetInstance()->GetMaterial(materialName);
 		material->PreRender();
@@ -669,13 +665,9 @@ void Mesh::Render() {
 
 void Mesh::PostRender() {
 
-	glBindVertexArray(0);
+	/*glBindVertexArray(0);
+	glActiveTexture(GL_TEXTURE0);*/
 
-	if (type == MESH_TYPE::MODEL) {
-		glEnable(GL_CULL_FACE);
-	}
-
-	glActiveTexture(GL_TEXTURE0);
 	if (materialName != "") {
 		MaterialManager::GetInstance()->GetMaterial(materialName)->PostRender();
 	}

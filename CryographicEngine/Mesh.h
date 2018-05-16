@@ -110,7 +110,7 @@ private:
 	std::string materialName;
 
 	// VAOs , VBOs, and EBOs stored on the GPU
-	unsigned int VAO, VBO, EBO;
+	GLuint VAO, VBO, EBO;
 
 	// List of vertices used when creating the mesh
 	std::vector<GLfloat> vertices;

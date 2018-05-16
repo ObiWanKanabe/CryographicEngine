@@ -5,7 +5,7 @@ Light::Light(glm::vec3 _colour, glm::vec3 _direction) {
 	direction = _direction;
 	type = LIGHT_TYPE::DIRECTIONAL_LIGHT;
 	shaderName = "defaultShadowDepth";
-	ShadowSetup();
+	//ShadowSetup();
 }
 
 Light::Light(glm::vec3 _colour, glm::vec3 _position, float _linear, float _quadratic) {
@@ -15,7 +15,7 @@ Light::Light(glm::vec3 _colour, glm::vec3 _position, float _linear, float _quadr
 	quadratic = _quadratic;
 	type = LIGHT_TYPE::POINT_LIGHT;
 	shaderName = "defaultShadowDepth";
-	ShadowSetup();
+	//ShadowSetup();
 }
 
 Light::Light(glm::vec3 _colour, glm::vec3 _position, glm::vec3 _direction, float _linear, float _quadratic, float _innerCutoff, float _outerCutoff) {
@@ -28,7 +28,7 @@ Light::Light(glm::vec3 _colour, glm::vec3 _position, glm::vec3 _direction, float
 	SetOuterCutoff(_outerCutoff);
 	type = LIGHT_TYPE::SPOT_LIGHT;
 	shaderName = "defaultShadowDepth";
-	ShadowSetup();
+	//ShadowSetup();
 }
 
 void Light::SetType(LIGHT_TYPE _type) {
@@ -156,6 +156,8 @@ void Light::BindUniforms(Shader* _shader, int pointIndex, int spotIndex) {
 		_shader->SetVec3("spotLights[" + std::to_string(spotIndex) + "].specular", specular);
 		_shader->SetVec3("spotLights[" + std::to_string(spotIndex) + "].position", position);
 		_shader->SetVec3("spotLights[" + std::to_string(spotIndex) + "].direction", direction);
+		_shader->SetFloat("spotLights[" + std::to_string(spotIndex) + "].linear", linear);
+		_shader->SetFloat("spotLights[" + std::to_string(spotIndex) + "].quadratic", quadratic);
 		_shader->SetFloat("spotLights[" + std::to_string(spotIndex) + "].innerCutOff", innerCutOff);
 		_shader->SetFloat("spotLights[" + std::to_string(spotIndex) + "].outerCutOff", outerCutOff);
 	}

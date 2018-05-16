@@ -12,7 +12,7 @@ public:
 	explicit AbstractRenderer() {};
 	virtual ~AbstractRenderer() {};
 
-	virtual bool Init() = 0;
+	virtual bool Init(Window *window) = 0;
 
 	virtual void PreRender(Window *window, Camera *camera, CubeMap *skybox) = 0;
 	virtual void Render(Window *window, Camera *camera, CubeMap *skybox) = 0;

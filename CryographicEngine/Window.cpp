@@ -80,6 +80,7 @@ void Window::SetAttributes() {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CW);
+	glDepthFunc(GL_LESS);
 
 }
 

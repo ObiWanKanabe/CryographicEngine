@@ -36,7 +36,7 @@ SceneNode* GameEngine::GetRootSceneNode() {
 
 void GameEngine::OnStart() {
 	window = new Window("Cryographic Engine", 1200, 900);
-	renderer = new OpenGLRenderer();
+	renderer = new OpenGLRenderer(window);
 	sceneGraph = new SceneGraph();
 	frustum = new Frustum();
 	camera = new Camera();
@@ -156,7 +156,7 @@ void GameEngine::OnStart() {
 
 	// Lights
 	pointLight = new Light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.014f, 0.0007f);
-	spotLight = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -0.2f, -1.0f), 0.09f, 0.032f, 10.0f, 12.5f);
+	spotLight = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -0.2f, -1.0f), 0.014f, 0.0007f, 10.0f, 12.5f);
 	dirLight = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.8f, -0.4f, -1.0f));
 
 	// GameObjects

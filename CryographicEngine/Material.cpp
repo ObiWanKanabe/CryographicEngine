@@ -361,6 +361,8 @@ void Material::Render() {
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, textureID[i]);
 		}
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	else if (type == MATERIAL_TYPE::REFLECTIVE) {
 
@@ -368,7 +370,7 @@ void Material::Render() {
 }
 
 void Material::PostRender() {
-	if (type == MATERIAL_TYPE::MODEL_TEXTURE) {
+	/*if (type == MATERIAL_TYPE::MODEL_TEXTURE) {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	} 
 	else if (type == MATERIAL_TYPE::TEXTURE) {
@@ -376,5 +378,5 @@ void Material::PostRender() {
 	}
 	else if (type == MATERIAL_TYPE::REFLECTIVE) {
 		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+	}*/
 }
