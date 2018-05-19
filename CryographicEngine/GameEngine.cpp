@@ -186,6 +186,10 @@ void GameEngine::OnStart() {
 	test->SetScale(glm::vec3(1.0f));
 	test->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
+	GameObject *nanosuit = new GameObject(std::string("nanosuit"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
+	nanosuit->SetScale(glm::vec3(0.25f));
+	nanosuit->SetPosition(glm::vec3(10.0f, 0.0f, 0.0f));
+
 	// Scene Graph usage
 	GetRootSceneNode()->AttachChild(empty->GetSceneNode());
 	empty->AttachChild(terrain);
@@ -194,6 +198,7 @@ void GameEngine::OnStart() {
 	empty->AttachChild(cyborg);
 	empty->AttachChild(pointGameObject);
 	empty->AttachChild(spotgameObject);
+	empty->AttachChild(nanosuit);
 	pointGameObject->AttachChild(test);
 
 	camera->SetPosition(glm::vec3(0.0f, 2.5f, 5.0f));
@@ -201,7 +206,7 @@ void GameEngine::OnStart() {
 	Timer::GetInstance().Start();
 
 	// Orbiting point light variables
-	float radius = 20.0f;
+	float radius = 15.0f;
 	float angle = 0.0f;
 	float speed = 0.35f;
 	
@@ -210,7 +215,7 @@ void GameEngine::OnStart() {
 		Timer::GetInstance().Update();
 
 		// Circle for the point light
-		pointGameObject->SetPosition(glm::vec3(0.0f + (radius * glm::cos(angle)), pointGameObject->GetPosition().y, -2.0f + (radius * glm::sin(angle))));
+		pointGameObject->SetPosition(glm::vec3(2.5f + (radius * glm::cos(angle)), pointGameObject->GetPosition().y, -2.0f + (radius * glm::sin(angle))));
 		angle += speed * Timer::GetInstance().GetDeltaTime();;
 
 		// Spot light follows the camera
