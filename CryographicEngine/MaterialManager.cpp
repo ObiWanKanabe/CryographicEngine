@@ -11,6 +11,8 @@ MaterialManager* MaterialManager::GetInstance() {
 
 MaterialManager::~MaterialManager() {
 	materials.clearKeysAndValues();
+	delete theInstance;
+	theInstance = nullptr;
 }
 
 MaterialManager::HandleType MaterialManager::StoreMaterial(std::string &name, Material* material) {

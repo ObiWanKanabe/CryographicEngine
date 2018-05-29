@@ -13,7 +13,14 @@ Material::Material(Image *image) {
 	textureNames.push_back(image->GetName());
 	shaderName = ShaderManager::GetInstance()->GetShader(std::string("defaultImage"))->GetName();
 	shininess = 32.0f;
+	reflectiveness = 0.0f;
 	type = MATERIAL_TYPE::TEXTURE;
+
+	for (size_t i = 0; i < textureNames.size(); i++) {
+		if (ImageManager::GetInstance()->GetImage(textureNames[i])->GetMapType() == MAP_TYPE::NORMAL) {
+			shaderName = ShaderManager::GetInstance()->GetShader(std::string("defaultImageNormals"))->GetName();
+		}
+	}
 }
 
 Material::Material(std::vector<Image*> imageList) {
@@ -25,7 +32,14 @@ Material::Material(std::vector<Image*> imageList) {
 	}
 	shaderName = ShaderManager::GetInstance()->GetShader(std::string("defaultImage"))->GetName();
 	shininess = 32.0f;
+	reflectiveness = 0.0f;
 	type = MATERIAL_TYPE::TEXTURE;
+
+	for (size_t i = 0; i < textureNames.size(); i++) {
+		if (ImageManager::GetInstance()->GetImage(textureNames[i])->GetMapType() == MAP_TYPE::NORMAL) {
+			shaderName = ShaderManager::GetInstance()->GetShader(std::string("defaultImageNormals"))->GetName();
+		}
+	}
 }
 
 Material::Material(MATERIAL_TYPE _type) {
@@ -72,6 +86,7 @@ Material::Material(Image *image, Shader *shader) {
 	SetDiffuseColour(glm::vec3(0.0f));
 	SetSpecularColour(glm::vec3(1.0f));
 	shininess = 32.0f;
+	reflectiveness = 0.0f;
 	type = MATERIAL_TYPE::TEXTURE;
 }
 
@@ -100,6 +115,7 @@ Material::Material(std::vector<Image*> imageList, Shader *shader) {
 	SetDiffuseColour(glm::vec3(0.0f));
 	SetSpecularColour(glm::vec3(1.0f));
 	shininess = 32.0f;
+	reflectiveness = 0.0f;
 	type = MATERIAL_TYPE::TEXTURE;
 }
 
@@ -119,9 +135,12 @@ Material::Material(MATERIAL_TYPE _type, Shader *shader) {
 		std::cerr << "Other formats not supported in this constructor yet.\n";
 	}
 	shininess = 32.0f;
+	reflectiveness = 0.0f;
 }
 
 Material::Material(std::vector<Texture> _texture, std::string &_name) {
+	shininess = 32.0f;
+	reflectiveness = 0.0f;
 	for (size_t i = 0; i < _texture.size(); i++) {
 		unsigned int diffuseNr = 1;
 		unsigned int specularNr = 1;
@@ -140,17 +159,20 @@ Material::Material(std::vector<Texture> _texture, std::string &_name) {
 		}
 		else if (_texture[i].type == "texture_reflective") {
 			textureNames.push_back("material.reflective" + std::to_string(reflectNr++));
+			reflectiveness = 1.0f;
 		}
 		else {
 
 		}
 	}
-	shaderName = "defaultModel";
-	shininess = 32.0f;
 }
 
 void Material::AddImage(Image* _image) {
 	textureNames.push_back(_image->GetName());
+	if (_image->GetMapType() == MAP_TYPE::NORMAL) {
+		shaderName = ShaderManager::GetInstance()->GetShader(std::string("defaultImageNormals"))->GetName();
+	}
+	
 }
 
 void Material::SetName(std::string &_name) {
@@ -166,6 +188,7 @@ void Material::SetColour(glm::vec3 _colour) {
 	diffuse = _colour;
 	specular = glm::vec3(0.5f, 0.5f, 0.5f);
 	shininess = 32.0f;
+	reflectiveness = 0.0f;
 }
 void Material::SetAmbientColour(glm::vec3 _ambient) {
 	ambient = _ambient;
@@ -181,6 +204,10 @@ void Material::SetSpecularColour(glm::vec3 _specular) {
 
 void Material::SetShininess(float _shininess) {
 	shininess = glm::clamp(_shininess, 0.0f, 256.0f);
+}
+
+void Material::SetReflectiveness(float _reflectiveness) {
+	reflectiveness = glm::clamp(_reflectiveness, 0.0f, 1.0f);
 }
 
 std::string Material::GetName() {
@@ -215,6 +242,10 @@ const float Material::GetShininess() {
 	return shininess;
 }
 
+const float Material::GetReflectiveness() {
+	return reflectiveness;
+}
+
 void Material::Setup() {
 	if (type == MATERIAL_TYPE::TEXTURE) {
 		for (int i = 0; i < textureNames.size(); i++) {
@@ -239,9 +270,11 @@ void Material::Setup() {
 void Material::BindUniforms() {
 	Shader* shader = GetShader();
 	shader->use();
+	shader->SetInt("material.diffuse1", 0);
+	shader->SetInt("material.specular1", 0);
+	shader->SetInt("material.normal1", 0);
+	shader->SetInt("material.reflection1", 0);
 	if (type == MATERIAL_TYPE::TEXTURE) {
-		//shader->SetInt("material.diffuse" + std::to_string(1), 0);
-		//shader->SetInt("material.specular" + std::to_string(1), 0);
 		for (int i = 0; i < textureNames.size(); i++) {
 			unsigned int diffuseNr = 1;
 			unsigned int specularNr = 1;
@@ -267,7 +300,7 @@ void Material::BindUniforms() {
 	else if (type == MATERIAL_TYPE::MODEL_TEXTURE) {
 		for (unsigned int i = 0; i < textureNames.size(); i++)
 			{
-				//glActiveTexture(GL_TEXTURE0 + i);
+				glActiveTexture(GL_TEXTURE0 + i);
 
 				shader->SetInt(textureNames[i], i);
 			}
@@ -282,19 +315,18 @@ void Material::BindUniforms() {
 	else if (type == MATERIAL_TYPE::REFLECTIVE) {
 		shader->SetInt("skybox", 0);
 	}
-	else {
-		shader->SetVec3("material.ambient", ambient);
-		shader->SetVec3("material.diffuse", diffuse);
-		shader->SetVec3("material.specular", specular);
-	}
+	shader->SetVec3("material.ambient", ambient);
+	shader->SetVec3("material.diffuse", diffuse);
+	shader->SetVec3("material.specular", specular);
 	shader->SetFloat("material.shininess", shininess);
+	shader->SetFloat("material.reflectiveness", reflectiveness);
 }
 
 void Material::BindUniforms(Shader *shader) {
 	shader->use();
 	for (unsigned int i = 0; i < textureNames.size(); i++)
 	{
-		//glActiveTexture(GL_TEXTURE0 + i);
+		glActiveTexture(GL_TEXTURE0 + i);
 
 		shader->SetInt(textureNames[i], i);
 	}
@@ -307,11 +339,12 @@ void Material::BindUniforms(Shader *shader) {
 	shader->SetVec3("material.diffuse", diffuse);
 	shader->SetVec3("material.specular", specular);
 	shader->SetFloat("material.shininess", shininess);
+	shader->SetFloat("material.reflectiveness", reflectiveness);
 }
 
 void Material::PreRender() {
 	Shader* shader = GetShader();
-	shader->use();
+	//shader->use();
 	if (type == MATERIAL_TYPE::TEXTURE) {
 		for (int i = 0; i < textureNames.size(); i++) {
 			
@@ -328,6 +361,8 @@ void Material::Render() {
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, textureID[i]);
 		}
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	else if (type == MATERIAL_TYPE::REFLECTIVE) {
 
@@ -335,10 +370,13 @@ void Material::Render() {
 }
 
 void Material::PostRender() {
-	if (type == MATERIAL_TYPE::TEXTURE) {
+	/*if (type == MATERIAL_TYPE::MODEL_TEXTURE) {
+		glBindTexture(GL_TEXTURE_2D, 0);
+	} 
+	else if (type == MATERIAL_TYPE::TEXTURE) {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	else if (type == MATERIAL_TYPE::REFLECTIVE) {
 		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+	}*/
 }

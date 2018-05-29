@@ -15,7 +15,7 @@ Light::Light(glm::vec3 _colour, glm::vec3 _position, float _linear, float _quadr
 	quadratic = _quadratic;
 	type = LIGHT_TYPE::POINT_LIGHT;
 	shaderName = "defaultShadowDepth";
-	ShadowSetup();
+	//ShadowSetup();
 }
 
 Light::Light(glm::vec3 _colour, glm::vec3 _position, glm::vec3 _direction, float _linear, float _quadratic, float _innerCutoff, float _outerCutoff) {
@@ -28,7 +28,7 @@ Light::Light(glm::vec3 _colour, glm::vec3 _position, glm::vec3 _direction, float
 	SetOuterCutoff(_outerCutoff);
 	type = LIGHT_TYPE::SPOT_LIGHT;
 	shaderName = "defaultShadowDepth";
-	ShadowSetup();
+	//ShadowSetup();
 }
 
 void Light::SetType(LIGHT_TYPE _type) {
@@ -85,43 +85,43 @@ void Light::SetPosition(glm::vec3 _pos) {
 	position = _pos;
 }
 
-const glm::vec3 Light::GetColour() {
+glm::vec3 Light::GetColour() {
 	return diffuse;
 }
 
-const glm::vec3 Light::GetAmbientColour() {
+glm::vec3 Light::GetAmbientColour() {
 	return ambient;
 }
 
-const glm::vec3 Light::GetDiffuseColour() {
+glm::vec3 Light::GetDiffuseColour() {
 	return diffuse;
 }
 
-const glm::vec3 Light::GetSpecularColour() {
+glm::vec3 Light::GetSpecularColour() {
 	return specular;
 }
 
-const glm::vec3 Light::GetDirection() {
+glm::vec3 Light::GetDirection() {
 	return direction;
 }
 
-const glm::vec3 Light::GetPosition() {
+glm::vec3 Light::GetPosition() {
 	return position;
 }
 
-const float Light::GetLinear() {
+float Light::GetLinear() {
 	return linear;
 }
 
-const float Light::GetQuadratic() {
+float Light::GetQuadratic() {
 	return quadratic;
 }
 
-const float Light::GetInnerCutoff() {
+float Light::GetInnerCutoff() {
 	return innerCutOff;
 }
 
-const float Light::GetOuterCutoff() {
+float Light::GetOuterCutoff() {
 	return outerCutOff;
 }
 
@@ -156,6 +156,8 @@ void Light::BindUniforms(Shader* _shader, int pointIndex, int spotIndex) {
 		_shader->SetVec3("spotLights[" + std::to_string(spotIndex) + "].specular", specular);
 		_shader->SetVec3("spotLights[" + std::to_string(spotIndex) + "].position", position);
 		_shader->SetVec3("spotLights[" + std::to_string(spotIndex) + "].direction", direction);
+		_shader->SetFloat("spotLights[" + std::to_string(spotIndex) + "].linear", linear);
+		_shader->SetFloat("spotLights[" + std::to_string(spotIndex) + "].quadratic", quadratic);
 		_shader->SetFloat("spotLights[" + std::to_string(spotIndex) + "].innerCutOff", innerCutOff);
 		_shader->SetFloat("spotLights[" + std::to_string(spotIndex) + "].outerCutOff", outerCutOff);
 	}
@@ -164,7 +166,7 @@ void Light::BindUniforms(Shader* _shader, int pointIndex, int spotIndex) {
 void Light::BindSpaceMatrix() {
 	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
 	glm::mat4 lightView = glm::lookAt(glm::vec3(direction * 10.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 lightSpaceMatrix = lightProjection - lightView;
+	glm::mat4 lightSpaceMatrix = lightProjection * lightView;
 	Shader* shader = ShaderManager::GetInstance()->GetShader(shaderName);
 	shader->use();
 	shader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
@@ -175,22 +177,25 @@ void Light::BindSpaceMatrix() {
 }
 
 void Light::ShadowSetup() {
-	if (type == DIRECTIONAL_LIGHT) {
-		glGenFramebuffers(1, &depthMapFBO);
-		glGenTextures(1, &depthMap);
-		glBindTexture(GL_TEXTURE_2D, depthMap);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	depthMapFBO = 0;
+	glGenFramebuffers(1, &depthMapFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
+	glGenTextures(1, &depthMap);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glDrawBuffer(GL_NONE);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "Shadow Map FrameBuffer Incomplete";
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Light::CalculateShadows(glm::mat4 _model) {

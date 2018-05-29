@@ -11,6 +11,8 @@
 
 #include "LogManager.h"
 
+// Learning material used @ learnopengl.com
+
 class Shader
 {
 public:

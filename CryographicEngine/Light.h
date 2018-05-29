@@ -14,6 +14,8 @@ enum LIGHT_TYPE {
 class Light {
 public:
 
+	Light() = delete;
+
 	// A Directional light has a colour and direction
 	Light(glm::vec3 _colour, glm::vec3 _direction);
 
@@ -43,16 +45,16 @@ public:
 	void SetInnerCutoff(float _innerCutoff);
 	void SetOuterCutoff(float _outerCutoff);
 	
-	const glm::vec3 GetColour();
-	const glm::vec3 GetAmbientColour();
-	const glm::vec3 GetDiffuseColour();
-	const glm::vec3 GetSpecularColour();
-	const glm::vec3 GetDirection();
-	const glm::vec3 GetPosition();
-	const float GetLinear();
-	const float GetQuadratic();
-	const float GetInnerCutoff();
-	const float GetOuterCutoff();
+	glm::vec3 GetColour();
+	glm::vec3 GetAmbientColour();
+	glm::vec3 GetDiffuseColour();
+	glm::vec3 GetSpecularColour();
+	glm::vec3 GetDirection();
+	glm::vec3 GetPosition();
+	float GetLinear();
+	float GetQuadratic();
+	float GetInnerCutoff();
+	float GetOuterCutoff();
 	
 
 	// Binding the uniforms of the shader

@@ -11,6 +11,8 @@ MeshManager* MeshManager::GetInstance() {
 
 MeshManager::~MeshManager() {
 	meshes.clearKeysAndValues();
+	delete theInstance;
+	theInstance = nullptr;
 }
 
 MeshManager::HandleType MeshManager::StoreMesh(std::string &name, Mesh* mesh) {

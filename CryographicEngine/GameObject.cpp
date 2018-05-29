@@ -4,9 +4,11 @@ std::map<std::string, GameObject*> *GameObject::nameIndex = nullptr;
 
 GameObject::GameObject(std::string& _name) {
 	name = _name;
-	sceneNode = nullptr;
+	sceneNode = new SceneNode();
+	sceneNode->AddObject(this);
 	boundingVolume = nullptr;
-	meshName = nullptr;
+	DetachMesh();
+	DetachModel();
 	if (nameIndex == nullptr) {
 		nameIndex = new std::map<std::string, GameObject*>();
 	}
@@ -94,6 +96,12 @@ GameObject::GameObject(std::string& _name, GameObject* parent, Light* light) {
 GameObject::~GameObject() {
 	DetachFromSceneNode();
 	DeregisterGameObject(name);
+	delete light;
+	delete boundingVolume;
+	delete rigidBody;
+	light = nullptr;
+	boundingVolume = nullptr;
+	rigidBody = nullptr;
 }
 
 void GameObject::RegisterGameObject(std::string& _name, GameObject* object) {
@@ -316,7 +324,7 @@ void GameObject::Render(Shader *shader) {
 		mesh = MeshManager::GetInstance()->GetMesh(meshName);
 		shader->use();
 		shader->SetMat4("model", modelMatrix);
-		mesh->Render();
+		mesh->Draw();
 	}
 	else if (modelName != "") {
 		Model* model;

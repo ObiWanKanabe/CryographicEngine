@@ -36,10 +36,10 @@ void Timer::Update() {
 	currtime = GetTicks();
 }
 
-LARGE_INTEGER Timer::GetDeltaTime() {
+double Timer::GetDeltaTime() {
 	LARGE_INTEGER deltaTime;
 	deltaTime.QuadPart = currtime.QuadPart - prevTime.QuadPart;
 	deltaTime.QuadPart *= 1000;
 	deltaTime.QuadPart /= frequency.QuadPart;
-	return deltaTime;
+	return deltaTime.QuadPart * 0.001;
 }

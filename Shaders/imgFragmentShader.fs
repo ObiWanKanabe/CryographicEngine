@@ -107,16 +107,20 @@ float ShadowCalculation(vec4 fragPosLightSpace) {
 // Directional Lights need the normal vector and view direction
 vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir)
 {
+
 // The light direction vector only takes into account its own direction
 vec3 lightDir = normalize(-light.direction);
+
+// We're using Blinn-Phong here and calculating an imaginary halfway vector
+// between the view direction and light direction
+// This will be used for the specular light
+vec3 halfwayDir = normalize(lightDir + viewDir);
 
 // Diffuse shading
 float diff = max(dot(normal, lightDir), 0.0);
 
 // Specular shading
-vec3 reflectDir = reflect(-lightDir, normal);
-
-float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
 
 // Combine the results
 vec3 ambient  = light.ambient  * vec3(texture(material.diffuse1, TexCoords)) * 0.5;
@@ -135,12 +139,16 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 // The light direction vector is facing the fragment
 vec3 lightDir = normalize(light.position - fragPos);
 
+// We're using Blinn-Phong here and calculating an imaginary halfway vector
+// between the view direction and light direction
+// This will be used for the specular light
+vec3 halfwayDir = normalize(lightDir + viewDir);
+
 // Diffuse shading
 float diff = max(dot(normal, lightDir), 0.0);
 
 // Specular shading
-vec3 reflectDir = reflect(-lightDir, normal);
-float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
 
 // Attenuation
 float distance    = length(light.position - fragPos);
@@ -162,12 +170,16 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 // The light direction vector is facing the fragment
 vec3 lightDir = normalize(light.position - fragPos);
 
+// We're using Blinn-Phong here and calculating an imaginary halfway vector
+// between the view direction and light direction
+// This will be used for the specular light
+vec3 halfwayDir = normalize(lightDir + viewDir);
+
 // Diffuse shading
 float diff = max(dot(normal, lightDir), 0.0);
 
 // Specular shading
-vec3 reflectDir = reflect(-lightDir, normal); 
-float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
 
 // Attenuation
 float distance    = length(light.position - FragPos);

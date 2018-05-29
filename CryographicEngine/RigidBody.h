@@ -5,6 +5,8 @@
 #include <glm.hpp>
 #include <gtc\quaternion.hpp>
 
+// TO DO : IMPLEMENTATION
+
 struct RigidBody {
 	float mass;
 	glm::mat3 intertia;

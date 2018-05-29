@@ -29,8 +29,10 @@ class Mesh {
 
 public:
 
+	Mesh() = delete;
+
 	// Creates a mesh with the loaded vertices, indices, and textures from assimp
-	Mesh(std::vector<GLfloat> _vertices, std::vector<unsigned int> _indices, std::vector <Texture> _textures, glm::vec3 _position, std::string &_name);
+	Mesh(std::vector<GLfloat> _vertices, std::vector<unsigned int> _indices, std::vector <Texture> _textures, glm::vec3 _position, std::string &_name, std::string &_shaderName);
 
 	// Creates a mesh with the default colour
 	Mesh(MESH_TYPE primType);
@@ -50,6 +52,10 @@ public:
 	// Sets the shininess of the material
 	// Suggested max of 256.0f
 	void SetShininess(float _shininess);
+
+	// The opacity of the reflection on the material
+	// Between 0.0f and 1.0f
+	void SetReflectiveness(float _reflectiveness);
 
 	// Can repeat or stretch the UV coordinates of the texture
 	void SetTextureScale(float _x, float _y);
@@ -81,6 +87,8 @@ public:
 	// Renders the mesh on the screen
 	void Render();
 
+	void Draw();
+
 	// Function called after render
 	void PostRender();
 
@@ -104,7 +112,7 @@ private:
 	std::string materialName;
 
 	// VAOs , VBOs, and EBOs stored on the GPU
-	unsigned int VAO, VBO, EBO;
+	GLuint VAO, VBO, EBO;
 
 	// List of vertices used when creating the mesh
 	std::vector<GLfloat> vertices;

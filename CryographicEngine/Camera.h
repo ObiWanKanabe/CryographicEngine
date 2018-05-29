@@ -5,6 +5,9 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 #include <vector>
+#include "Window.h"
+
+// Learning material used @ learnopengl.com
 
 // Directions the Camera can be moved
 enum CAMERA_DIRECTION {
@@ -15,7 +18,7 @@ enum CAMERA_DIRECTION {
 };
 
 class Camera {
-public:
+private:
 
 	// Frustum of the camera
 	/*Frustum *frustum;*/
@@ -35,8 +38,8 @@ public:
 	float FOV;
 
 	// Utility Variables
-	float lastX = 1200.0f / 2.0f;
-	float lastY = 900.0f / 2.0f;
+	float lastX = SCREEN_WDITH / 2.0f;
+	float lastY = SCREEN_HEIGHT / 2.0f;
 	bool firstMouse = true;
 public:
 	// Default Constructor using set default values
@@ -47,6 +50,8 @@ public:
 
 	// Constructor to set up all adjustable camera values
 	Camera(glm::vec3 _pos, float _yaw, float _pitch, float _speed, float _sensitivity, float _zoom);
+
+	~Camera() {};
 
 	/*Frustum *GetFrustum();*/
 
@@ -77,5 +82,7 @@ public:
 	// Utility functions that set the rotation of the camera
 	void SetRotationX(float _pitch);
 	void SetRotationY(float _yaw);
+
+	void SetPosition(glm::vec3 _pos);
 };
 #endif

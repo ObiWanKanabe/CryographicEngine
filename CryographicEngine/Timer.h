@@ -44,9 +44,8 @@ public:
 	void Start();
 	void Update();
 
-	LARGE_INTEGER GetDeltaTime();
+	double GetDeltaTime();
 
 
 };
 #endif
-

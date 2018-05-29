@@ -139,3 +139,7 @@ void Camera::SetRotationY(float _yaw) {
 	yaw = _yaw;
 	UpdateCameraVectors();
 }
+
+void Camera::SetPosition(glm::vec3 _pos) {
+	position = _pos;
+}

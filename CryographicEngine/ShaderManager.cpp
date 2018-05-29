@@ -11,6 +11,8 @@ ShaderManager* ShaderManager::GetInstance() {
 
 ShaderManager::~ShaderManager() {
 	shaders.clearKeysAndValues();
+	delete theInstance;
+	theInstance = nullptr;
 }
 
 ShaderManager::HandleType ShaderManager::StoreShader(std::string &name, const char* vertexPath, const char* fragmentPath) {

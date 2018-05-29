@@ -3,6 +3,8 @@
 
 #include <glm.hpp>
 
+// Taught in Game Engine Design Class @ Humber College
+
 class Plane {
 private:
 	glm::vec3 p;

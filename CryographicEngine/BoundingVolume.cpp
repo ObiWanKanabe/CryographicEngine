@@ -55,7 +55,7 @@ BoundingVolume::BoundingVolume(BOUNDING_SHAPE _type, Model *model) {
 	type = _type;
 	glm::vec3 min, max;
 
-	for (int j = 0; j < model->GetMeshes().size(); j++) {
+	for (size_t j = 0; j < model->GetMeshes().size(); j++) {
 		std::vector<GLfloat> vertexList = model->GetMeshes()[j]->GetVertices();
 		int componentListSize = model->GetMeshes()[j]->GetVertexDescriptor().GetSize();
 		for (int i = 0; i < componentListSize; i++) {
@@ -156,15 +156,17 @@ void BoundingVolume::SetPosition(glm::vec3 pos) {
 }
 
 glm::vec3 BoundingVolume::GetMaximumCorner() {
-	if (type = BOUNDING_SHAPE::AABB) {
+	if (type = BOUNDING_SHAPE::AABB)
 		return BoundingAABB->c + BoundingAABB->r;
-	}
+	else
+		return glm::vec3(0.0f);
 }
 
 glm::vec3 BoundingVolume::GetMinimumCorner() {
-	if (type = BOUNDING_SHAPE::AABB) {
+	if (type = BOUNDING_SHAPE::AABB)
 		return BoundingAABB->c - BoundingAABB->r;
-	}
+	else
+		return glm::vec3(0.0f);
 }
 
 glm::vec3 BoundingVolume::GetPositiveVertex(glm::vec3 &normal) {

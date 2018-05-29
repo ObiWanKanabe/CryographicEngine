@@ -12,6 +12,8 @@ LogManager::LogManager() {
 
 LogManager::~LogManager() {
 	Close();
+	delete theInstance;
+	theInstance = nullptr;
 }
 
 

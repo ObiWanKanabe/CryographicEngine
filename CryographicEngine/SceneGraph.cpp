@@ -6,6 +6,7 @@ SceneGraph::SceneGraph() {
 
 SceneGraph::~SceneGraph() {
 	delete rootSceneNode;
+	rootSceneNode = nullptr;
 }
 
 void SceneGraph::RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, AbstractRenderer &renderer, Camera *camera, CubeMap *skybox) {
@@ -43,29 +44,30 @@ void SceneGraph::Render(Frustum &frustum, AbstractRenderer &renderer, Camera *ca
 	lightList = GetSceneLights();
 
 	glm::mat4 viewMatrix = glm::mat4(camera->GetViewMatrix());
-	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), 1200.0f / 900.0f, 0.1f, 100.0f);
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), SCREEN_WDITH / SCREEN_HEIGHT, 0.1f, 100.0f);
 
 	// We're going through the lights here first, to calculate the shadow depth map
 	// This happens to every light so each one has their own calculations for each object
-	/*for (size_t i = 0; i < lightList.size(); i++) {
+	for (size_t i = 0; i < lightList.size(); i++) {
 		lightList[i]->BindSpaceMatrix();
 		for (size_t j = 0; j < objectList.size(); j++) {
 			objectList[j]->Render(lightList[i]->GetShader());
 		}
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glViewport(0, 0, 1200, 900);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Now that the shadows for each light and their depth map have been calculated
-	// Continue like normal and pass the lights and their information to each object
-	for (size_t i = 0; i < objectList.size(); i++) {
-		skybox->BindTexture();
-		objectList[i]->PreRender();
-		objectList[i]->Render(camera, lightList, objectList[i]->GetModelMatrix(), viewMatrix, projectionMatrix);
-		objectList[i]->PostRender();
-	}
+	//// Now that the shadows for each light and their depth map have been calculated
+	//// Continue like normal and pass the lights and their information to each object
+	//for (size_t i = 0; i < objectList.size(); i++) {
+	//	skybox->BindTexture();
+	//	objectList[i]->PreRender();
+	//	objectList[i]->Render(camera, lightList, objectList[i]->GetModelMatrix(), viewMatrix, projectionMatrix);
+	//	objectList[i]->PostRender();
+	//}
 }
 
 SceneNode* SceneGraph::GetRootSceneNode() {

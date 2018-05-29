@@ -2,6 +2,7 @@
 #include "BoundingVolume.h"
 
 #define ANG2RAD 3.14159265358979323846/180.0
+
 Frustum::Frustum() {
 
 }
@@ -82,5 +83,8 @@ Frustum::ENCLOSURE_TYPE  Frustum::IsInside(BoundingVolume &volume) {
 				return OVERLAP;
 		}
 		return result;
+	}
+	else {
+		return INSIDE;
 	}
 }

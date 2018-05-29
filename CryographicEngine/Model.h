@@ -3,6 +3,8 @@
 
 #include <string>
 #include <glm.hpp>
+#include <math.h>
+#include <random>
 #include "Image.h"
 #include "Camera.h"
 #include "MeshManager.h"
@@ -10,8 +12,12 @@
 #include "assimp\scene.h"
 #include "assimp\postprocess.h"
 
+// Learning material used @ learnopengl.com
+
 class Model {
 public:
+
+	Model() = delete;
 
 	// Creates a model from the file path
 	Model(std::string filePath);
@@ -26,6 +32,10 @@ public:
 	// Suggested max of 256.0f
 	void SetShininess(float _shininess);
 
+	// The opacity of the reflection on the material
+	// Between 0.0f and 1.0f
+	void SetReflectiveness(float _reflectiveness);
+
 	// Gets the name of the model in the manager
 	std::string GetName();
 
@@ -37,6 +47,9 @@ public:
 
 	// Prints the names of the meshes loaded 
 	void PrintMeshNames();
+
+	// Set Back Face Culling On/Off
+	void SetBackFaceCulling(bool _culled);
 	
 	// Binds the uniforms of the shader
 	void BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
@@ -72,6 +85,9 @@ private:
 
 	// Offset of the model from the drawing point
 	glm::vec3 offset;
+
+	// Is back faced culled condition
+	bool isBackCulled;
 
 	// Initial model loading method
 	void LoadModel(std::string filePath);

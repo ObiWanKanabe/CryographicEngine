@@ -7,8 +7,13 @@
 #include "ShaderManager.h"
 #include "Vertex.h"
 
+// Learning material used @ learnopengl.com && from Scott Fielder
+
 class CubeMap {
 public:
+
+	CubeMap() = delete;
+
 	// Constructor takes in the list of images and uses the default skybox shader
 	CubeMap(std::vector<Image*> imageList);
 

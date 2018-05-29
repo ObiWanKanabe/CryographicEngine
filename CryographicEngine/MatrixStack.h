@@ -8,6 +8,7 @@
 #include <gtc/type_ptr.hpp>
 #include <stack>
 
+// Taught in Game Engine Design Class @ Humber College
 
 class MatrixStack {
 private:

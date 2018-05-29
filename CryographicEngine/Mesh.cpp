@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-Mesh::Mesh(std::vector<GLfloat> _vertices, std::vector<unsigned int> _indices, std::vector <Texture> _textures, glm::vec3 _position, std::string &_name) {
+Mesh::Mesh(std::vector<GLfloat> _vertices, std::vector<unsigned int> _indices, std::vector <Texture> _textures, glm::vec3 _position, std::string &_name, std::string &_shaderName) {
 	type = MESH_TYPE::MODEL;
 	vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 	vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
@@ -15,6 +15,7 @@ Mesh::Mesh(std::vector<GLfloat> _vertices, std::vector<unsigned int> _indices, s
 	Material *material = new Material(_textures, _name);
 	MaterialManager::GetInstance()->StoreMaterial(_name, material);
 	materialName = material->GetName();
+	material->SetShaderName(_shaderName);
 	GenerateBuffers();
 }
 
@@ -225,6 +226,7 @@ Mesh::Mesh(MESH_TYPE primType, Material* material) {
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_POSITION);
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_UV);
 			vertexDescriptor.AddComponent(VertexComponentDescriptor::VertexComponentType::VERTEX_NORMAL);
+
 			vertices = {
 				-0.5f, -0.5f, -0.5f,  1.0f, 1.0f,  0.0f,  0.0f, -1.0f,
 				0.5f,  0.5f, -0.5f,  0.0f, 0.0f,  0.0f,  0.0f, -1.0f,
@@ -444,6 +446,10 @@ void Mesh::SetShininess(float _shininess) {
 	GetMaterial()->SetShininess(_shininess);
 }
 
+void Mesh::SetReflectiveness(float _reflectiveness) {
+	GetMaterial()->SetReflectiveness(_reflectiveness);
+}
+
 void Mesh::SetTextureScale(float _x, float _y) {
 	bool firstSet = true;
 	for (int i = 0; i < vertexDescriptor.GetComponentList().size(); i++) {
@@ -497,8 +503,6 @@ void Mesh::GenerateBuffers() {
 			glVertexAttribPointer(i, vertexDescriptor.componentList[i].GetNumFloats(), GL_FLOAT, GL_FALSE, vertexDescriptor.GetStride(), (void*)(vertexDescriptor.componentList[i].offset));
 		}
 
-		glBindVertexArray(0);
-
 	}
 	else {
 		glGenVertexArrays(1, &VAO);
@@ -512,23 +516,21 @@ void Mesh::GenerateBuffers() {
 			glEnableVertexAttribArray(i);
 			glVertexAttribPointer(i, vertexDescriptor.componentList[i].GetNumFloats(), GL_FLOAT, GL_FALSE, vertexDescriptor.GetStride(), (void*)(vertexDescriptor.componentList[i].offset));
 		}
-
-		glBindVertexArray(0);
 	}
+
+	glBindVertexArray(0);
 }
 
 void Mesh::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 {
 
 	if (type == MESH_TYPE::MODEL) {
-		glDisable(GL_CULL_FACE);
 		if (materialName != "") {
 			Material* material = MaterialManager::GetInstance()->GetMaterial(materialName);
 			material->BindUniforms();
 			glm::mat4 model = glm::translate(modelMatrix, offset);
 			glm::mat4 normal = glm::transpose(glm::inverse(model));
 			Shader* shader = material->GetShader();
-			shader->use();
 			int pointNr = 0;
 			int spotNr = 0;
 			for (size_t i = 0; i < lights.size(); i++) {
@@ -629,9 +631,7 @@ void Mesh::BindUniforms(Shader* shader) {
 }
 
 void Mesh::PreRender() {
-	if (type == MESH_TYPE::MODEL) {
-		
-	}
+	
 	if (materialName != "") {
 		Material* material = MaterialManager::GetInstance()->GetMaterial(materialName);
 		material->PreRender();
@@ -663,15 +663,17 @@ void Mesh::Render() {
 	}
 }
 
+void Mesh::Draw() {
+	glBindVertexArray(VAO);
+	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+	glBindVertexArray(0);
+}
+
 void Mesh::PostRender() {
 
-	glBindVertexArray(0);
+	/*glBindVertexArray(0);
+	glActiveTexture(GL_TEXTURE0);*/
 
-	if (type == MESH_TYPE::MODEL) {
-		glEnable(GL_CULL_FACE);
-	}
-
-	glActiveTexture(GL_TEXTURE0);
 	if (materialName != "") {
 		MaterialManager::GetInstance()->GetMaterial(materialName)->PostRender();
 	}

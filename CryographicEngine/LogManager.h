@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <string>
 
+// Taught in Game Engine Design Class @ Humber College
+
 class LogManager {
 
 public:

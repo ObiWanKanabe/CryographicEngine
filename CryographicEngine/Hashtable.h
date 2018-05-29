@@ -6,6 +6,8 @@
 #include <iostream>
 #include "LogManager.h"
 
+// Taught in Game Engine Design Class @ Humber College
+
 // uncomment this to enable debugging
 //#define HTABLE_DEBUG 1
 
@@ -493,20 +495,6 @@ public:
 		}
 		return result;
 	}
-
-	/* This version created duplicate keys for different strings
-	static int stringhash(std::string &s)
-	{
-	int result = 0;
-	std::string::size_type i;
-
-	for(i = 0; i < s.size(); i++)
-	{
-	int v = (int)s[i];
-	result = (result * 256 + v);
-	}
-	return result;
-	}*/
 
 };
 

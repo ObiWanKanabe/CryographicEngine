@@ -3,6 +3,7 @@
 Model::Model(std::string filePath) {
 	LoadModel(filePath);
 	shaderName = std::string("defaultModel");
+	isBackCulled = true;
 }
 
 Model::Model(std::string filePath, Shader* shader) {
@@ -15,6 +16,7 @@ Model::Model(std::string filePath, Shader* shader) {
 		std::cerr << "Shader provided for: " << name << " is not in the shader manager and cannot be used" << std::endl;
 	}
 	shaderName = shader->GetName();
+	isBackCulled = true;
 }
 
 void Model::SetName(std::string& _name) {
@@ -24,6 +26,12 @@ void Model::SetName(std::string& _name) {
 void Model::SetShininess(float _shininess) {
 	for (size_t i = 0; i < meshes.size(); i++) {
 		meshes[i]->GetMaterial()->SetShininess(_shininess);
+	}
+}
+
+void Model::SetReflectiveness(float _reflectiveness) {
+	for (size_t i = 0; i < meshes.size(); i++) {
+		meshes[i]->GetMaterial()->SetReflectiveness(_reflectiveness);
 	}
 }
 
@@ -43,6 +51,10 @@ void Model::PrintMeshNames() {
 	for (size_t i = 0; i < meshes.size(); i++) {
 		std::cout << meshes[i]->GetName() << std::endl;
 	}
+}
+
+void Model::SetBackFaceCulling(bool _culled) {
+	isBackCulled = _culled;
 }
 
 void Model::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
@@ -69,6 +81,9 @@ void Model::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 m
 }
 
 void Model::PreRender() {
+	if (!isBackCulled)
+		glDisable(GL_CULL_FACE);
+
 	for (unsigned int i = 0; i < meshes.size(); i++) {
 		meshes[i]->PreRender();
 	}
@@ -77,15 +92,17 @@ void Model::PreRender() {
 void Model::Render() {
 	Shader* shader = ShaderManager::GetInstance()->GetShader(shaderName);
 	shader->use();
+
 	for (unsigned int i = 0; i < meshes.size(); i++) {
 		meshes[i]->BindUniforms(shader);
 		meshes[i]->Render();
 	}
+
 }
 
 void Model::Draw() {
 	for (unsigned int i = 0; i < meshes.size(); i++) {
-		meshes[i]->Render();
+		meshes[i]->Draw();
 	}
 }
 
@@ -93,13 +110,16 @@ void Model::PostRender() {
 	for (unsigned int i = 0; i < meshes.size(); i++) {
 		meshes[i]->PostRender();
 	}
+
+	if (!isBackCulled)
+		glEnable(GL_CULL_FACE);
 }
 
 void Model::LoadModel(std::string filePath) {
 	// We're setting up the assimp scene here
 	// Making sure the model uses only triangles and the UVs are flipped when necessary
 	Assimp::Importer import;
-	const aiScene *scene = import.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene *scene = import.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
@@ -136,7 +156,6 @@ Mesh* Model::ProcessMesh(aiMesh* _mesh, const aiScene *scene) {
 	// Setting up the vertex data of the mesh
 	for (unsigned int i = 0; i < _mesh->mNumVertices; i++)
 	{
-		
 		// Position 
 		vertices.push_back(_mesh->mVertices[i].x);
 		vertices.push_back(_mesh->mVertices[i].y);
@@ -198,8 +217,12 @@ Mesh* Model::ProcessMesh(aiMesh* _mesh, const aiScene *scene) {
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 		std::vector<Texture> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-		std::vector<Texture> normalMaps = LoadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal");
+		std::vector<Texture> normalMaps = LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+		if (normalMaps.size() > 0) { 
+			shaderName = "defaultModelNormals"; 
+		}
 		textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+		// Cheating here since assimp doesn't like reflection maps
 		std::vector<Texture> reflectionMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_reflective");
 		textures.insert(textures.end(), reflectionMaps.begin(), reflectionMaps.end());
 	}
@@ -208,7 +231,7 @@ Mesh* Model::ProcessMesh(aiMesh* _mesh, const aiScene *scene) {
 	position /= static_cast<float>(_mesh->mNumVertices);
 
 	// Create the mesh using our mesh class and pass in the imported values
-	Mesh *mesh = new Mesh(vertices, indices, textures, position, std::string(_mesh->mName.C_Str()));
+	Mesh *mesh = new Mesh(vertices, indices, textures, position, std::string(_mesh->mName.C_Str()), shaderName);
 	return mesh;
 }	
 
