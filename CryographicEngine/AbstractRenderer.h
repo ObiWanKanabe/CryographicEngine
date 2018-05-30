@@ -5,7 +5,7 @@
 #include "Camera.h"
 #include "MeshManager.h"
 #include "CubeMap.h"
-#include "SceneNode.h"
+#include "SceneGraph.h"
 
 class AbstractRenderer {
 public:
@@ -15,7 +15,7 @@ public:
 	virtual bool Init(Window *window) = 0;
 
 	virtual void PreRender(Window *window, Camera *camera, CubeMap *skybox) = 0;
-	virtual void Render(Window *window, Camera *camera, CubeMap *skybox) = 0;
+	virtual void Render(Window *window, Frustum &frustum, Camera *camera, CubeMap *skybox, SceneGraph *scenegraph) = 0;
 	virtual void PostRender(Window *window, Camera *camera, CubeMap *skybox) = 0;
 
 	virtual void Clear() = 0;

@@ -150,6 +150,8 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ContactData.h" />
     <ClInclude Include="CubeMap.h" />
+    <ClInclude Include="CubeMapCamera.h" />
+    <ClInclude Include="EnvironmentMap.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameInterface.h" />
@@ -184,6 +186,8 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CubeMap.cpp" />
+    <ClCompile Include="CubeMapCamera.cpp" />
+    <ClCompile Include="EnvironmentMap.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameInterface.cpp" />

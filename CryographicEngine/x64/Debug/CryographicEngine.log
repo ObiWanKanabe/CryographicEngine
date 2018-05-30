@@ -1,0 +1,53 @@
+﻿  Window.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\window.h(5): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  ShaderManager.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\shader.h(4): fatal error C1083: Cannot open include file: 'glew.h': No such file or directory
+  Shader.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\shader.h(4): fatal error C1083: Cannot open include file: 'glew.h': No such file or directory
+  SceneNode.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\scenenode.h(5): fatal error C1083: Cannot open include file: 'glm.hpp': No such file or directory
+  SceneGraph.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\scenenode.h(5): fatal error C1083: Cannot open include file: 'glm.hpp': No such file or directory
+  Plane.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\plane.h(4): fatal error C1083: Cannot open include file: 'glm.hpp': No such file or directory
+  PhysicsEngine.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\boundingvolume.h(4): fatal error C1083: Cannot open include file: 'glm.hpp': No such file or directory
+  OpenGLRenderer.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\window.h(5): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  ModelManager.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\mesh.h(4): fatal error C1083: Cannot open include file: 'glm.hpp': No such file or directory
+  Model.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\model.h(5): fatal error C1083: Cannot open include file: 'glm.hpp': No such file or directory
+  MeshManager.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\mesh.h(4): fatal error C1083: Cannot open include file: 'glm.hpp': No such file or directory
+  Mesh.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\mesh.h(4): fatal error C1083: Cannot open include file: 'glm.hpp': No such file or directory
+  MatrixStack.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\matrixstack.h(4): fatal error C1083: Cannot open include file: 'glm.hpp': No such file or directory
+  MaterialManager.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\material.h(4): fatal error C1083: Cannot open include file: 'glm.hpp': No such file or directory
+  Material.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\material.h(4): fatal error C1083: Cannot open include file: 'glm.hpp': No such file or directory
+  Light.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\shader.h(4): fatal error C1083: Cannot open include file: 'glew.h': No such file or directory
+  ImageManager.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\image.h(4): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  Image.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\image.h(4): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  GameObject.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\boundingvolume.h(4): fatal error C1083: Cannot open include file: 'glm.hpp': No such file or directory
+  GameInterface.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\window.h(5): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  Generating Code...
+  Compiling...
+  GameEngine.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\window.h(5): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  Frustum.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\plane.h(4): fatal error C1083: Cannot open include file: 'glm.hpp': No such file or directory
+  CubeMap.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\cubemap.h(4): fatal error C1083: Cannot open include file: 'glew.h': No such file or directory
+  Camera.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\camera.h(4): fatal error C1083: Cannot open include file: 'glm.hpp': No such file or directory
+  BoundingVolume.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\boundingvolume.h(4): fatal error C1083: Cannot open include file: 'glm.hpp': No such file or directory
+  Generating Code...

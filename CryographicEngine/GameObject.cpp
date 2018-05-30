@@ -270,6 +270,14 @@ bool GameObject::HasLight() {
 	return light != nullptr;
 }
 
+void GameObject::EnableEnvironmentMap() {
+	//environmentMap = new EnvironmentMap(128, GetPosition());
+}
+
+void GameObject::DisableEnvironmentMap() {
+	//environmentMap = nullptr;
+}
+
 BoundingVolume* GameObject::GetBoundingVolume() {
 	return boundingVolume;
 }
@@ -281,6 +289,10 @@ RigidBody* GameObject::GetRigidBody() {
 Light* GameObject::GetAttachedLight() {
 	return light;
 }
+
+//EnvironmentMap* GameObject::GetEnvironmentMap() {
+//	return environmentMap;
+//}
 
 void GameObject::SetModelMatrix(glm::mat4 _model) {
 	modelMatrix = _model;

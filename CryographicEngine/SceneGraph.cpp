@@ -9,7 +9,7 @@ SceneGraph::~SceneGraph() {
 	rootSceneNode = nullptr;
 }
 
-void SceneGraph::RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, AbstractRenderer &renderer, Camera *camera, CubeMap *skybox) {
+void SceneGraph::RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, Camera *camera, CubeMap *skybox) {
 	glm::mat4 viewMatrix = glm::mat4(camera->GetViewMatrix());
 	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), 1200.0f / 900.0f, 0.1f, 100.0f);
 
@@ -32,14 +32,14 @@ void SceneGraph::RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, Abstrac
 
 	SceneNode *child = sceneRoot->GetFirstChild();
 	while (child != nullptr) {
-		RenderSceneNode(child, frustum, renderer, camera, skybox);
+		RenderSceneNode(child, frustum,  camera, skybox);
 		child = child->GetNextSibling();
 	}
 
 	matStk.PopModelMatrix();
 }
 
-void SceneGraph::Render(Frustum &frustum, AbstractRenderer &renderer, Camera *camera, CubeMap* skybox) {
+void SceneGraph::Render(Frustum &frustum, Camera *camera, CubeMap* skybox) {
 	objectList = GetSceneObjects();
 	lightList = GetSceneLights();
 
@@ -133,9 +133,9 @@ std::vector<Object*> SceneGraph::GetSceneObjects() {
 
 
 
-void SceneGraph::RenderSceneGraph(Frustum &frustum, AbstractRenderer &renderer, Camera *camera, CubeMap* skybox) {
+void SceneGraph::RenderSceneGraph(Frustum &frustum, Camera *camera, CubeMap* skybox) {
 	objectList = GetSceneObjects();
 	lightList = GetSceneLights();
-	RenderSceneNode(rootSceneNode, frustum, renderer, camera, skybox);
+	RenderSceneNode(rootSceneNode, frustum, camera, skybox);
 }
 

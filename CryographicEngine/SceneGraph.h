@@ -2,7 +2,6 @@
 #define SCENEGRAPH_H
 
 #include "SceneNode.h"
-#include "AbstractRenderer.h"
 #include "Camera.h"
 #include "CubeMap.h"
 #include "Frustum.h"
@@ -17,7 +16,7 @@ private:
 	std::vector<Light*> lightList;
 	std::vector<Object*> objectList;
 
-	void RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, AbstractRenderer &renderer, Camera *camera, CubeMap* skybox);
+	void RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, Camera *camera, CubeMap* skybox);
 	std::vector<Light*> GetLights(SceneNode *sceneRoot);
 	std::vector<Object*> GetObjects(SceneNode *sceneRoot);
 
@@ -29,8 +28,8 @@ public:
 	SceneNode* GetRootSceneNode();
 	std::vector<Light*> GetSceneLights();
 	std::vector<Object*> GetSceneObjects();
-	void RenderSceneGraph(Frustum &frustum, AbstractRenderer &renderer, Camera *camera, CubeMap* skybox);
-	void Render(Frustum &frustum, AbstractRenderer &renderer, Camera *camera, CubeMap* skybox);
+	void RenderSceneGraph(Frustum &frustum, Camera *camera, CubeMap* skybox);
+	void Render(Frustum &frustum, Camera *camera, CubeMap* skybox);
 
 };
 #endif

@@ -36,7 +36,7 @@ public:
 	virtual void PreRender(Window *window, Camera *camera, CubeMap *skybox) override;
 
 	// Renders meshes here
-	virtual void Render(Window *window, Camera *camera, CubeMap *skybox) override;
+	virtual void Render(Window *window, Frustum &frustum, Camera *camera, CubeMap *skybox, SceneGraph *scenegraph) override;
 
 	// Post render here
 	virtual void PostRender(Window *window, Camera *camera, CubeMap *skybox) override;

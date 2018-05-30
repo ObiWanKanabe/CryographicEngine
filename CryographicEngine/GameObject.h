@@ -19,6 +19,7 @@ private:
 	glm::mat4 modelMatrix;
 	Light* light;
 	BoundingVolume* boundingVolume;
+	//EnvironmentMap* environmentMap;
 	RigidBody* rigidBody;
 	static std::map<std::string, GameObject*> *nameIndex;
 
@@ -75,9 +76,13 @@ public:
 	void DetachLight();
 	bool HasLight();
 
+	void EnableEnvironmentMap();
+	void DisableEnvironmentMap();
+
 	BoundingVolume* GetBoundingVolume();
 	RigidBody* GetRigidBody();
 	Light* GetAttachedLight();
+	//EnvironmentMap* GetEnvironmentMap();
 	void SetModelMatrix(glm::mat4 _model);
 	glm::mat4 GetModelMatrix();
 

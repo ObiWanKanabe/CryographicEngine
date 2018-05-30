@@ -56,6 +56,7 @@ void GameEngine::OnStart() {
 	ShaderManager::GetInstance()->StoreShader(std::string("clay"), "../Shaders/clay.vs", "../Shaders/clay.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("terrain"), "../Shaders/terrain.vs", "../Shaders/terrain.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("plainColour"), "../Shaders/colourNoLight.vs", "../Shaders/colourNoLight.fs");
+	ShaderManager::GetInstance()->StoreShader(std::string("lowDetail"), "../Shaders/lowDetailModel.vs", "../Shaders/lowDetailModel.fs");
 
 	// Skybox Images
 
@@ -246,9 +247,7 @@ void GameEngine::PreRender() {
 }
 
 void GameEngine::Render() {
-	sceneGraph->RenderSceneGraph(*frustum, *renderer, camera, skybox);
-	//sceneGraph->Render(*frustum, *renderer, camera, skybox);
-	renderer->Render(window, camera, skybox);
+	renderer->Render(window, *frustum, camera, skybox, sceneGraph);
 }
 
 void GameEngine::PostRender() {

@@ -2,6 +2,7 @@
 #define OBJECT_H
 
 #include "BoundingVolume.h"
+//#include "EnvironmentMap.h"
 #include "Light.h"
 
 class Object {
@@ -10,6 +11,7 @@ public:
 
 	virtual BoundingVolume* GetBoundingVolume() = 0;
 	virtual Light* GetAttachedLight() = 0;
+//	virtual EnvironmentMap* GetEnvironmentMap() = 0;
 	virtual void SetModelMatrix(glm::mat4 _model) = 0;
 	virtual glm::mat4 GetModelMatrix() = 0;
 	virtual void PreRender() = 0;
