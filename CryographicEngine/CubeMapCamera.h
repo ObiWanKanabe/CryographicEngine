@@ -25,10 +25,10 @@ private:
 	glm::vec3 front, up, right;
 	glm::vec3 worldUp;
 
-	float FOV = 90.0f;
-	float aspectRatio = 1.0f;
-	float near = 0.1f;
-	float far = 100.0f;
+	float FOV;
+	float aspectRatio;
+	float nearhuh;
+	float farhuh;
 
 	float pitch;
 	float yaw;

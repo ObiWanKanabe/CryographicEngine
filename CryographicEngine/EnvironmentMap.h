@@ -15,6 +15,8 @@ public:
 
 	void BindTexture();
 
+	CubeMapCamera* GetCamera();
+
 private:
 
 	CubeMapCamera *camera;

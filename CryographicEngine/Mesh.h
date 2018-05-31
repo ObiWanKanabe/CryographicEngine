@@ -78,6 +78,9 @@ public:
 	// Binds the uniforms of the shader
 	void BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
+	// Binds the uniforms of the shader using a low detail shader for reflections
+	void BindUniformsLowDetail(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
+
 	// Bind the uniform samplers for model meshes
 	void BindUniforms(Shader *shader);
 
@@ -86,6 +89,9 @@ public:
 
 	// Renders the mesh on the screen
 	void Render();
+
+	// Renders the mesh on the screen using a low detail shader for reflections
+	void RenderLowDetail();
 
 	// Function called after render
 	void PostRender();

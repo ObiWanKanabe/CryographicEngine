@@ -8,13 +8,13 @@ CubeMapCamera::CubeMapCamera(glm::vec3 _centre) {
 	yaw = 90.0f;
 	FOV = 90.0f;
 	aspectRatio = 1.0f;
-	near = 0.1f;
-	far = 100.0f;
+	nearhuh = 0.1f;
+	farhuh = 100.0f;
 	UpdateCameraVectors();
 }
 
 glm::mat4 CubeMapCamera::GetProjectionMatrix() {
-	return glm::perspective(FOV, aspectRatio, near, far);
+	return glm::perspective(FOV, aspectRatio, nearhuh, farhuh);
 }
 
 glm::mat4 CubeMapCamera::GetViewMatrix() {

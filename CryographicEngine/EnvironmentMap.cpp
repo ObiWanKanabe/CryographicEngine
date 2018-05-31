@@ -23,9 +23,7 @@ void EnvironmentMap::SetUp(int _size, glm::vec3 _position) {
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-}
 
-void EnvironmentMap::PreRender() {
 	glGenFramebuffers(1, &FBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 	glDrawBuffer(GL_COLOR_ATTACHMENT0);
@@ -35,14 +33,18 @@ void EnvironmentMap::PreRender() {
 	glBindRenderbuffer(GL_RENDERBUFFER, RBO);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, size, size);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
+}
 
+void EnvironmentMap::PreRender() {
 	glViewport(0, 0, size, size);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 }
 
 void EnvironmentMap::RenderToFace(int _index) {
+
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + _index, textureID, 0);
 	camera->SwitchFace(_index);
 }
@@ -54,4 +56,8 @@ void EnvironmentMap::PostRender() {
 void EnvironmentMap::BindTexture() {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+}
+
+CubeMapCamera* EnvironmentMap::GetCamera() {
+	return camera;
 }

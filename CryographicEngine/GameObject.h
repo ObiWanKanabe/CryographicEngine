@@ -19,7 +19,7 @@ private:
 	glm::mat4 modelMatrix;
 	Light* light;
 	BoundingVolume* boundingVolume;
-	//EnvironmentMap* environmentMap;
+	EnvironmentMap* environmentMap;
 	RigidBody* rigidBody;
 	static std::map<std::string, GameObject*> *nameIndex;
 
@@ -82,12 +82,13 @@ public:
 	BoundingVolume* GetBoundingVolume();
 	RigidBody* GetRigidBody();
 	Light* GetAttachedLight();
-	//EnvironmentMap* GetEnvironmentMap();
+	EnvironmentMap* GetEnvironmentMap();
 	void SetModelMatrix(glm::mat4 _model);
 	glm::mat4 GetModelMatrix();
 
 	virtual void PreRender();
 	virtual void Render(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
+	virtual void RenderLowDetail(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 	virtual void Render(Shader *shader);
 	virtual void PostRender();
 	virtual void Update(float deltaTime);

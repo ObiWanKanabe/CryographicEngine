@@ -14,6 +14,7 @@ GameObject::GameObject(std::string& _name) {
 	}
 	RegisterGameObject(_name, this);
 	light = nullptr;
+	environmentMap = nullptr;
 }
 
 GameObject::GameObject(std::string& _name, Mesh *mesh) {
@@ -27,6 +28,7 @@ GameObject::GameObject(std::string& _name, Mesh *mesh) {
 	}
 	RegisterGameObject(_name, this);
 	light = nullptr;
+	environmentMap = nullptr;
 }
 
 GameObject::GameObject(std::string& _name, GameObject* parent, Mesh* mesh) {
@@ -41,6 +43,7 @@ GameObject::GameObject(std::string& _name, GameObject* parent, Mesh* mesh) {
 	boundingVolume = new BoundingVolume(BOUNDING_SHAPE::AABB, mesh);
 	AttachMesh(mesh);
 	light = nullptr;
+	environmentMap = nullptr;
 }
 
 GameObject::GameObject(std::string& _name, Model *model) {
@@ -54,6 +57,7 @@ GameObject::GameObject(std::string& _name, Model *model) {
 	}
 	RegisterGameObject(_name, this);
 	light = nullptr;
+	environmentMap = nullptr;
 }
 
 GameObject::GameObject(std::string& _name, GameObject* parent, Model* model) {
@@ -68,6 +72,7 @@ GameObject::GameObject(std::string& _name, GameObject* parent, Model* model) {
 	boundingVolume = new BoundingVolume(BOUNDING_SHAPE::AABB, model);
 	AttachModel(model);
 	light = nullptr;
+	environmentMap = nullptr;
 }
 
 GameObject::GameObject(std::string& _name, Light* light) {
@@ -79,6 +84,7 @@ GameObject::GameObject(std::string& _name, Light* light) {
 		nameIndex = new std::map<std::string, GameObject*>();
 	}
 	RegisterGameObject(_name, this);
+	environmentMap = nullptr;
 }
 
 GameObject::GameObject(std::string& _name, GameObject* parent, Light* light) {
@@ -91,6 +97,7 @@ GameObject::GameObject(std::string& _name, GameObject* parent, Light* light) {
 
 	parent->AttachChild(this);
 	AttachLight(light);
+	environmentMap = nullptr;
 }
 
 GameObject::~GameObject() {
@@ -271,11 +278,11 @@ bool GameObject::HasLight() {
 }
 
 void GameObject::EnableEnvironmentMap() {
-	//environmentMap = new EnvironmentMap(128, GetPosition());
+	environmentMap = new EnvironmentMap(128, GetPosition());
 }
 
 void GameObject::DisableEnvironmentMap() {
-	//environmentMap = nullptr;
+	environmentMap = nullptr;
 }
 
 BoundingVolume* GameObject::GetBoundingVolume() {
@@ -290,9 +297,9 @@ Light* GameObject::GetAttachedLight() {
 	return light;
 }
 
-//EnvironmentMap* GameObject::GetEnvironmentMap() {
-//	return environmentMap;
-//}
+EnvironmentMap* GameObject::GetEnvironmentMap() {
+	return environmentMap;
+}
 
 void GameObject::SetModelMatrix(glm::mat4 _model) {
 	modelMatrix = _model;
@@ -327,6 +334,21 @@ void GameObject::Render(Camera *camera, std::vector<Light*> lights, glm::mat4 mo
 		model = ModelManager::GetInstance()->GetModel(modelName);
 		model->BindUniforms(camera, lights, modelMatrix, viewMatrix, projectionMatrix);
 		model->Render();
+	}
+}
+
+void GameObject::RenderLowDetail(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
+	if (meshName != "") {
+		Mesh* mesh;
+		mesh = MeshManager::GetInstance()->GetMesh(meshName);
+		mesh->BindUniformsLowDetail(camera, modelMatrix, viewMatrix, projectionMatrix);
+		mesh->RenderLowDetail();
+	}
+	else if (modelName != "") {
+		Model* model;
+		model = ModelManager::GetInstance()->GetModel(modelName);
+		model->BindUniformsLowDetail(camera, modelMatrix, viewMatrix, projectionMatrix);
+		model->RenderLowDetail();
 	}
 }
 

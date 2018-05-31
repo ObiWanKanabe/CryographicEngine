@@ -79,6 +79,7 @@ void OpenGLRenderer::Render(Window *window, Frustum &frustum, Camera *camera, Cu
 	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), static_cast<float>(window->GetWidth() / window->GetHeight()), 0.1f, 100.0f);
 
 	scenegraph->RenderSceneGraph(frustum, camera, skybox);
+	//scenegraph->RenderLowDetailSceneGraph(frustum, camera, skybox);
 
 	skybox->BindUniforms(viewMatrix, projectionMatrix);
 	skybox->Render();

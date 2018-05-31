@@ -1,5 +1,20 @@
-﻿  GameEngine.cpp
+﻿  BoundingVolume.cpp
+  CubeMapCamera.cpp
+  EnvironmentMap.cpp
+  Frustum.cpp
+  GameEngine.cpp
 GameEngine.cpp(220): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  GameInterface.cpp
+  GameObject.cpp
+  Mesh.cpp
+Mesh.cpp(455): warning C4018: '<': signed/unsigned mismatch
+  MeshManager.cpp
+  Model.cpp
+  ModelManager.cpp
+  OpenGLRenderer.cpp
+  PhysicsEngine.cpp
+  SceneGraph.cpp
+  SceneNode.cpp
 SDL2_image.lib(SDL2_image.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored
 opengl32.lib(OPENGL32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored
 glew32.lib(glew32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored

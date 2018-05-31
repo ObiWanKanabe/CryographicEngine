@@ -618,6 +618,41 @@ void Mesh::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 mo
 	}
 }
 
+void Mesh::BindUniformsLowDetail(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
+	if (type == MESH_TYPE::MODEL) {
+			Material* material = MaterialManager::GetInstance()->GetMaterial(materialName);
+			Shader* shader = ShaderManager::GetInstance()->GetShader(std::string("lowDetail"));
+			material->BindUniforms(shader);
+			glm::mat4 model = glm::translate(modelMatrix, offset);
+			shader->SetMat4("model", model);
+			shader->SetMat4("view", viewMatrix);
+			shader->SetMat4("projection", projectionMatrix);
+			shader->SetVec3("cameraPos", camera->GetPosition());
+	}
+	else if (materialName != "") {
+		Material* material = MaterialManager::GetInstance()->GetMaterial(materialName);
+		Shader* shader;
+		if (material->GetType() == MATERIAL_TYPE::COLOUR) {
+			shader = ShaderManager::GetInstance()->GetShader(std::string("plainColour"));
+		}
+		else {
+			shader = ShaderManager::GetInstance()->GetShader(std::string("lowDetail"));
+		}
+		material->BindUniforms(shader);
+		shader->SetMat4("model", modelMatrix);
+		shader->SetMat4("view", viewMatrix);
+		shader->SetMat4("projection", projectionMatrix);
+		shader->SetVec3("cameraPos", camera->GetPosition());
+	}
+	else {
+		Shader* shader = ShaderManager::GetInstance()->GetShader(std::string("plainColour"));
+		shader->use();
+		shader->SetMat4("model", modelMatrix);
+		shader->SetMat4("view", viewMatrix);
+		shader->SetMat4("projection", projectionMatrix);
+	}
+}
+
 void Mesh::BindUniforms(Shader* shader) {
 	if (materialName != "") {
 		Material* material = MaterialManager::GetInstance()->GetMaterial(materialName);
@@ -656,6 +691,28 @@ void Mesh::Render() {
 		}
 		else {
 			ShaderManager::GetInstance()->GetShader(std::string("defaultColour"))->use();
+		}
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+		glBindVertexArray(0);
+	}
+}
+
+void Mesh::RenderLowDetail() {
+	if (type == MESH_TYPE::MODEL) {
+		Material* material = MaterialManager::GetInstance()->GetMaterial(materialName);
+		material->Render();
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
+	else {
+		if (materialName != "") {
+			Material* material = MaterialManager::GetInstance()->GetMaterial(materialName);
+			material->Render();
+		}
+		else {
+			ShaderManager::GetInstance()->GetShader(std::string("plainColour"))->use();
 		}
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size());

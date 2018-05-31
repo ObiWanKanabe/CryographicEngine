@@ -17,6 +17,7 @@ private:
 	std::vector<Object*> objectList;
 
 	void RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, Camera *camera, CubeMap* skybox);
+	void RenderLowDetailSceneNode(SceneNode *sceneRoot, Frustum &frustum, Camera *camera, glm::mat4 view, glm::mat4 projection, CubeMap* skybox);
 	std::vector<Light*> GetLights(SceneNode *sceneRoot);
 	std::vector<Object*> GetObjects(SceneNode *sceneRoot);
 
@@ -29,6 +30,7 @@ public:
 	std::vector<Light*> GetSceneLights();
 	std::vector<Object*> GetSceneObjects();
 	void RenderSceneGraph(Frustum &frustum, Camera *camera, CubeMap* skybox);
+	void RenderLowDetailSceneGraph(Frustum &frustum, Camera *camera, glm::mat4 view, glm::mat4 projection, CubeMap* skybox);
 	void Render(Frustum &frustum, Camera *camera, CubeMap* skybox);
 
 };
