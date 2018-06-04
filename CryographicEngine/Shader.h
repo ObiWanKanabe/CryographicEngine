@@ -28,7 +28,10 @@ public:
 	void Init(const char* vertexPath, const char* fragmentPath);
 
 	// Activate the shader
-	void use();
+	void Use();
+
+	// De-Activate the shader
+	void Stop();
 
 	void SetName(std::string &_name);
 	

@@ -20,12 +20,12 @@ void SceneGraph::RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, Camera 
 
 	SceneNode::objectIterator it = sceneRoot->ObjectBegin();
 	while (it != sceneRoot->ObjectEnd()) {
-		Object *mesh = *it;
+		Object *object = *it;
 	
 		skybox->BindTexture();
-		mesh->PreRender();
-		mesh->Render(camera, lightList, matStk.GetModelMatrix(), viewMatrix, projectionMatrix);
-		mesh->PostRender();
+		object->PreRender();
+		object->Render(camera, lightList, matStk.GetModelMatrix(), viewMatrix, projectionMatrix);
+		object->PostRender();
 		
 		it++;
 	}
@@ -50,12 +50,11 @@ void SceneGraph::RenderLowDetailSceneNode(SceneNode *sceneRoot, Frustum &frustum
 
 	SceneNode::objectIterator it = sceneRoot->ObjectBegin();
 	while (it != sceneRoot->ObjectEnd()) {
-		Object *mesh = *it;
+		Object *object = *it;
 
-		skybox->BindTexture();
-		mesh->PreRender();
-		mesh->RenderLowDetail(camera, matStk.GetModelMatrix(), view, projection);
-		mesh->PostRender();
+		object->PreRender();
+		object->RenderLowDetail(camera, matStk.GetModelMatrix(), view, projection);
+		object->PostRender();
 
 		it++;
 	}
@@ -63,6 +62,29 @@ void SceneGraph::RenderLowDetailSceneNode(SceneNode *sceneRoot, Frustum &frustum
 	SceneNode *child = sceneRoot->GetFirstChild();
 	while (child != nullptr) {
 		RenderLowDetailSceneNode(child, frustum, camera, view, projection, skybox);
+		child = child->GetNextSibling();
+	}
+
+	matStk.PopModelMatrix();
+}
+
+void SceneGraph::RenderDepthSceneNode(SceneNode *sceneRoot, Frustum &frustum, Light *light) {
+	matStk.Translate(sceneRoot->GetPosition());
+	matStk.Rotate(sceneRoot->GetRotation());
+	matStk.Scale(sceneRoot->GetScale());
+
+	SceneNode::objectIterator it = sceneRoot->ObjectBegin();
+	while (it != sceneRoot->ObjectEnd()) {
+		Object *object = *it;
+
+		object->RenderDepth();
+
+		it++;
+	}
+
+	SceneNode *child = sceneRoot->GetFirstChild();
+	while (child != nullptr) {
+		RenderDepthSceneNode(child, frustum, light);
 		child = child->GetNextSibling();
 	}
 
@@ -141,6 +163,10 @@ void SceneGraph::RenderSceneGraph(Frustum &frustum, Camera *camera, CubeMap* sky
 
 void SceneGraph::RenderLowDetailSceneGraph(Frustum &frustum, Camera *camera, glm::mat4 view, glm::mat4 projection, CubeMap* skybox) {
 	RenderLowDetailSceneNode(rootSceneNode, frustum, camera, view, projection, skybox);
+}
+
+void SceneGraph::RenderDepthSceneGraph(Frustum &frustum, Light *light) {
+	RenderDepthSceneNode(rootSceneNode, frustum, light);
 }
 
 void SceneGraph::Render(Frustum &frustum, Camera *camera, CubeMap* skybox) {

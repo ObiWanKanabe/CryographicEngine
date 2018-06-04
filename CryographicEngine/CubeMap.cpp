@@ -150,7 +150,7 @@ void CubeMap::BindTexture() {
 
 void CubeMap::BindUniforms(glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
 	Shader* shader = ShaderManager::GetInstance()->GetShader(shaderName);
-	shader->use();
+	shader->Use();
 	viewMatrix = glm::mat4(glm::mat3(viewMatrix));
 	SetMat4("view", viewMatrix);
 	SetMat4("projection", projectionMatrix);
@@ -162,7 +162,7 @@ void CubeMap::PreRender() {
 
 void CubeMap::Render() {
 	Shader* shader = ShaderManager::GetInstance()->GetShader(shaderName);
-	shader->use();
+	shader->Use();
 
 	glBindVertexArray(VAO);
 	glActiveTexture(GL_TEXTURE0);

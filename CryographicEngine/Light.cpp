@@ -166,14 +166,21 @@ void Light::BindUniforms(Shader* _shader, int pointIndex, int spotIndex) {
 void Light::BindSpaceMatrix() {
 	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
 	glm::mat4 lightView = glm::lookAt(glm::vec3(direction * 10.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 lightSpaceMatrix = lightProjection - lightView;
+	glm::mat4 lightSpaceMatrix = lightProjection * lightView;
 	Shader* shader = ShaderManager::GetInstance()->GetShader(shaderName);
-	shader->use();
+	shader->Use();
 	shader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 
 	glViewport(0, 0, shadowWidth, shadowHeight);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
+}
+
+glm::mat4 Light::GetLightSpaceMatrix() {
+	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+	glm::mat4 lightView = glm::lookAt(glm::vec3(direction * 10.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	return lightProjection * lightView;
 }
 
 void Light::ShadowSetup() {

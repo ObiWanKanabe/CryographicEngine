@@ -81,6 +81,9 @@ public:
 	// Binds the uniforms of the shader using a low detail shader for reflections
 	void BindUniformsLowDetail(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
+	// Binds the uniforms of the shader only showing depth for shadows
+	void BindUniformsDepth(glm::mat4 modelMatrix, glm::mat4 lightSpaceMatrix);
+
 	// Bind the uniform samplers for model meshes
 	void BindUniforms(Shader *shader);
 
@@ -92,6 +95,9 @@ public:
 
 	// Renders the mesh on the screen using a low detail shader for reflections
 	void RenderLowDetail();
+
+	// Renders the mesh on the screen using a shader only showing depth for shadows
+	void RenderDepth();
 
 	// Function called after render
 	void PostRender();

@@ -59,7 +59,7 @@ void Model::SetBackFaceCulling(bool _culled) {
 
 void Model::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
 	Shader* shader = ShaderManager::GetInstance()->GetShader(shaderName);
-	shader->use();
+	shader->Use();
 	glm::mat4 model = glm::translate(modelMatrix, offset);
 	glm::mat4 normal = glm::transpose(glm::inverse(model));
 	int pointNr = 0;
@@ -82,12 +82,20 @@ void Model::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 m
 
 void Model::BindUniformsLowDetail(Camera *camera, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
 	Shader* shader = ShaderManager::GetInstance()->GetShader(std::string("lowDetail"));
-	shader->use();
+	shader->Use();
 	glm::mat4 model = glm::translate(modelMatrix, offset);
 	shader->SetMat4("model", model);
 	shader->SetMat4("view", viewMatrix);
 	shader->SetMat4("projection", projectionMatrix);
 	shader->SetVec3("cameraPos", camera->GetPosition());
+}
+
+void Model::BindUniformsDepth(glm::mat4 modelMatrix, glm::mat4 lightSpaceMatrix) {
+	Shader* shader = ShaderManager::GetInstance()->GetShader(std::string("defaultShadowDepth"));
+	shader->Use();
+	glm::mat4 model = glm::translate(modelMatrix, offset);
+	shader->SetMat4("model", model);
+	shader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 }
 
 void Model::PreRender() {
@@ -101,7 +109,7 @@ void Model::PreRender() {
 
 void Model::Render() {
 	Shader* shader = ShaderManager::GetInstance()->GetShader(shaderName);
-	shader->use();
+	shader->Use();
 
 	for (unsigned int i = 0; i < meshes.size(); i++) {
 		meshes[i]->BindUniforms(shader);
@@ -112,11 +120,20 @@ void Model::Render() {
 
 void Model::RenderLowDetail() {
 	Shader* shader = ShaderManager::GetInstance()->GetShader(std::string("lowDetail"));
-	shader->use();
+	shader->Use();
 
 	for (unsigned int i = 0; i < meshes.size(); i++) {
 		meshes[i]->BindUniforms(shader);
 		meshes[i]->Render();
+	}
+}
+
+void Model::RenderDepth() {
+	Shader* shader = ShaderManager::GetInstance()->GetShader(std::string("defaultShadowDepth"));
+	shader->Use();
+
+	for (unsigned int i = 0; i < meshes.size(); i++) {
+		meshes[i]->RenderDepth();
 	}
 }
 

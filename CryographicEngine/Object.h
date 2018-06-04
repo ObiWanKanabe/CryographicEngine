@@ -17,6 +17,7 @@ public:
 	virtual void PreRender() = 0;
 	virtual void Render(Camera *camera, std::vector<Light*> lights, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) = 0;
 	virtual void RenderLowDetail(Camera *camera,  glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) = 0;
+	virtual void RenderDepth(glm::mat4 modelMatrix, glm::mat4 lightSpaceMatrix) = 0;
 	virtual void Render(Shader *shader) = 0;
 	virtual void PostRender() = 0;
 	virtual void Update(float deltaTime) = 0;

@@ -75,8 +75,12 @@ void Shader::Init(const char* vertexPath, const char* fragmentPath) {
 	glDeleteShader(fragment);
 }
 
-void Shader::use() {
+void Shader::Use() {
 	glUseProgram(ID);
+}
+
+void Shader::Stop() {
+	glUseProgram(0);
 }
 
 void Shader::SetName(std::string &_name) {

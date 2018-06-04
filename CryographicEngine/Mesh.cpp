@@ -550,7 +550,7 @@ void Mesh::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 mo
 		}
 		else {
 			Shader *shader = ShaderManager::GetInstance()->GetShader(std::string("defaultModel"));
-			shader->use();
+			shader->Use();
 			shader->SetInt("texture_diffuse1", 0);
 			shader->SetInt("texture_specular1", 0);
 			shader->SetInt("texture_normal1", 0);
@@ -597,7 +597,7 @@ void Mesh::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 mo
 	}
 	else {
 		Shader* shader = ShaderManager::GetInstance()->GetShader(std::string("defaultColour"));
-		shader->use();
+		shader->Use();
 		glm::mat4 normal = glm::transpose(glm::inverse(modelMatrix));
 		int pointNr = 0;
 		int spotNr = 0;
@@ -646,11 +646,18 @@ void Mesh::BindUniformsLowDetail(Camera *camera, glm::mat4 modelMatrix, glm::mat
 	}
 	else {
 		Shader* shader = ShaderManager::GetInstance()->GetShader(std::string("plainColour"));
-		shader->use();
+		shader->Use();
 		shader->SetMat4("model", modelMatrix);
 		shader->SetMat4("view", viewMatrix);
 		shader->SetMat4("projection", projectionMatrix);
 	}
+}
+
+void Mesh::BindUniformsDepth(glm::mat4 modelMatrix, glm::mat4 lightSpaceMatrix) {
+	Shader* shader = ShaderManager::GetInstance()->GetShader(std::string("defaultShadowDepth"));
+	shader->Use();
+	shader->SetMat4("model", modelMatrix);
+	shader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 }
 
 void Mesh::BindUniforms(Shader* shader) {
@@ -682,6 +689,7 @@ void Mesh::Render() {
 		material->Render();
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		material->GetShader()->Stop();
 		glBindVertexArray(0);
 	}
 	else {
@@ -690,11 +698,12 @@ void Mesh::Render() {
 			material->Render();
 		}
 		else {
-			ShaderManager::GetInstance()->GetShader(std::string("defaultColour"))->use();
+			ShaderManager::GetInstance()->GetShader(std::string("defaultColour"))->Use();
 		}
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 		glBindVertexArray(0);
+		
 	}
 }
 
@@ -712,12 +721,29 @@ void Mesh::RenderLowDetail() {
 			material->Render();
 		}
 		else {
-			ShaderManager::GetInstance()->GetShader(std::string("plainColour"))->use();
+			ShaderManager::GetInstance()->GetShader(std::string("plainColour"))->Use();
 		}
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 		glBindVertexArray(0);
 	}
+}
+
+void Mesh::RenderDepth() {
+	Shader* shader = ShaderManager::GetInstance()->GetShader(std::string("defaultShadowDepth"));
+	shader->Use();
+
+	if (type == MESH_TYPE::MODEL) {
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
+	else {
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+		glBindVertexArray(0);
+	}
+	shader->Stop();
 }
 
 void Mesh::PostRender() {

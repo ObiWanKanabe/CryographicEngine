@@ -18,10 +18,10 @@ sampler2D reflective1;
 
 // Three Light types available
 struct DirectionalLight {
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
-	vec3 direction;
+vec3 ambient;
+vec3 diffuse;
+vec3 specular;
+vec3 direction;
 };
 
 struct PointLight {

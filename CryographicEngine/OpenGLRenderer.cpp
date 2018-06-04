@@ -98,7 +98,7 @@ void OpenGLRenderer::PostRender(Window *window, Camera *camera, CubeMap *skybox)
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
 	// Drawing the final screen quad
-	shader->use();
+	shader->Use();
 	glBindVertexArray(VAO);
 	glBindTexture(GL_TEXTURE_2D, textureColourBuffer);
 	glDrawArrays(GL_TRIANGLES, 0, vertices.size());

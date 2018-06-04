@@ -269,7 +269,7 @@ void Material::Setup() {
 
 void Material::BindUniforms() {
 	Shader* shader = GetShader();
-	shader->use();
+	shader->Use();
 	shader->SetInt("material.diffuse1", 0);
 	shader->SetInt("material.specular1", 0);
 	shader->SetInt("material.normal1", 0);
@@ -323,7 +323,7 @@ void Material::BindUniforms() {
 }
 
 void Material::BindUniforms(Shader *shader) {
-	shader->use();
+	shader->Use();
 	for (unsigned int i = 0; i < textureNames.size(); i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + i);

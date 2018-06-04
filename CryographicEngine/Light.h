@@ -62,6 +62,8 @@ public:
 
 	void BindSpaceMatrix();
 
+	glm::mat4 GetLightSpaceMatrix();
+
 	void ShadowSetup();
 	
 	void CalculateShadows(glm::mat4 _model);

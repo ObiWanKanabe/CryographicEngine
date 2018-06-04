@@ -352,18 +352,33 @@ void GameObject::RenderLowDetail(Camera *camera, glm::mat4 modelMatrix, glm::mat
 	}
 }
 
+void GameObject::RenderDepth(glm::mat4 modelMatrix, glm::mat4 lightSpaceMatrix) {
+	if (meshName != "") {
+		Mesh* mesh;
+		mesh = MeshManager::GetInstance()->GetMesh(meshName);
+		mesh->BindUniformsDepth(modelMatrix, lightSpaceMatrix);
+		mesh->RenderDepth();
+	}
+	else if (modelName != "") {
+		Model* model;
+		model = ModelManager::GetInstance()->GetModel(modelName);
+		model->BindUniformsDepth(modelMatrix, lightSpaceMatrix);
+		model->RenderDepth();
+	}
+}
+
 void GameObject::Render(Shader *shader) {
 	if (meshName != "") {
 		Mesh* mesh;
 		mesh = MeshManager::GetInstance()->GetMesh(meshName);
-		shader->use();
+		shader->Use();
 		shader->SetMat4("model", modelMatrix);
 		mesh->Render();
 	}
 	else if (modelName != "") {
 		Model* model;
 		model = ModelManager::GetInstance()->GetModel(modelName);
-		shader->use();
+		shader->Use();
 		shader->SetMat4("model", modelMatrix);
 		model->Draw();
 	}
