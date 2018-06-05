@@ -60,13 +60,13 @@ public:
 	// Binding the uniforms of the shader
 	void BindUniforms(Shader* _shader, int pointIndex, int spotIndex);
 
-	void BindSpaceMatrix();
-
-	glm::mat4 GetLightSpaceMatrix();
+	glm::mat4 GetLightSpaceMatrix(glm::vec3 _pos);
 
 	void ShadowSetup();
-	
-	void CalculateShadows(glm::mat4 _model);
+
+	void PrepareShadow();
+
+	GLuint GetShadowMap();
 
 private:
 
@@ -78,7 +78,9 @@ private:
 
 	unsigned int depthMap;
 
-	float near_plane = 1.0f, far_plane = 7.5f;
+	float near_plane = 1.0f, far_plane = 300.0f;
+
+	glm::mat4 lightSpaceMatrix;
 
 	// The type of light
 	LIGHT_TYPE type;

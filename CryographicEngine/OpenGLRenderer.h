@@ -13,11 +13,18 @@ private:
 	// The frame buffer object and colour output texture of the final screen quad
 	GLuint FBO, textureColourBuffer;
 
+	// Depth Map FBO and buffer texture for testing
+	GLuint depthMapFBO, depthMapTexture;
+
 	// List of vertices used when drawing to the final screen quad
 	std::vector<GLfloat> vertices;
 
 	// Shader to be used when drawing the final screen quad
 	Shader* shader;
+
+	Light* shadowLight;
+
+	std::vector<Light*> lights;
 
 public:
 

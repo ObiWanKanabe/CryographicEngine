@@ -1,18 +1,19 @@
 #include "OpenGLRenderer.h"
 #include <iostream>
 
-OpenGLRenderer::OpenGLRenderer(Window *window){
+OpenGLRenderer::OpenGLRenderer(Window *window) {
 	_closed = !Init(window);
 
 }
 
 OpenGLRenderer::~OpenGLRenderer() {
-	
+
 }
 
 bool OpenGLRenderer::Init(Window *window) {
 
 	shader = new Shader("../Shaders/screen.vs", "../Shaders/screen.fs");
+	//shader = new Shader("../Shaders/shadowDebug.vs", "../Shaders/shadowDebug.fs");
 
 	// Initializing the final framebuffer object and putting it into a texture
 	// We're only going to put this coloured texture on the final screen quad
@@ -61,22 +62,38 @@ bool OpenGLRenderer::Init(Window *window) {
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-	
+
 	return true;
 }
 
 void OpenGLRenderer::PreRender(Window *window, Camera *camera, CubeMap *skybox) {
-	// Switching to our final screen framebuffer
-	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
-	glEnable(GL_DEPTH_TEST);
-
-	window->Clear();
-	skybox->PreRender();
+	glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 void OpenGLRenderer::Render(Window *window, Frustum &frustum, Camera *camera, CubeMap *skybox, SceneGraph *scenegraph) {
 	glm::mat4 viewMatrix = glm::mat4(camera->GetViewMatrix());
 	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), static_cast<float>(window->GetWidth() / window->GetHeight()), 0.1f, 100.0f);
+
+	lights = scenegraph->GetSceneLights();
+
+	for (int i = 0; i < lights.size(); i++) {
+		if (lights[i]->GetType() == LIGHT_TYPE::DIRECTIONAL_LIGHT)
+			lights[i]->PrepareShadow();
+	}
+
+	for (int i = 0; i < lights.size(); i++) {
+		if (lights[i]->GetType() == LIGHT_TYPE::DIRECTIONAL_LIGHT)
+			scenegraph->RenderDepthSceneGraph(frustum, camera, lights[i]);
+	}
+
+	glViewport(0, 0, window->GetWidth(), window->GetHeight());
+
+	// Switching to our final screen framebuffer and clearing the buffers
+	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+	glEnable(GL_DEPTH_TEST);
+	window->Clear();
+
+	skybox->PreRender();
 
 	scenegraph->RenderSceneGraph(frustum, camera, skybox);
 	//scenegraph->RenderLowDetailSceneGraph(frustum, camera, skybox);
@@ -94,18 +111,26 @@ void OpenGLRenderer::PostRender(Window *window, Camera *camera, CubeMap *skybox)
 	glBindVertexArray(0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);
+	glViewport(0, 0, window->GetWidth(), window->GetHeight());
+
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 
 	// Drawing the final screen quad
 	shader->Use();
 	glBindVertexArray(VAO);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureColourBuffer);
+	/*for (int i = 0; i < lights.size(); i++) {
+		if (lights[i]->GetType() == LIGHT_TYPE::DIRECTIONAL_LIGHT)
+			glBindTexture(GL_TEXTURE_2D, lights[i]->GetShadowMap());
+	}*/
 	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 
 	window->DoubleBuffer();
 }
 
 void OpenGLRenderer::Clear() {
-	
+
 }

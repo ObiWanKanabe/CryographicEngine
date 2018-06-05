@@ -53,6 +53,7 @@ void GameEngine::OnStart() {
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultModel"), "../Shaders/model.vs", "../Shaders/model.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultModelNormals"), "../Shaders/modelNormals.vs", "../Shaders/modelNormals.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultShadowDepth"), "../Shaders/defaultShadow.vs", "../Shaders/defaultShadow.fs");
+	ShaderManager::GetInstance()->StoreShader(std::string("shadowDbug"), "../Shaders/shadowDebug.vs", "../Shaders/shadowDebug.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("clay"), "../Shaders/clay.vs", "../Shaders/clay.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("terrain"), "../Shaders/terrain.vs", "../Shaders/terrain.fs");
 	ShaderManager::GetInstance()->StoreShader(std::string("plainColour"), "../Shaders/colourNoLight.vs", "../Shaders/colourNoLight.fs");
@@ -127,11 +128,12 @@ void GameEngine::OnStart() {
 	skybox = new CubeMap(skyboxImageList);
 
 	// Meshes
-	Mesh *woodBox = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("woodBox")));
+	Mesh *woodBox = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("woodPlank")));
 	Mesh *reflectiveBox = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("reflective")));
 	Mesh *whiteBox = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("white")));
 	Mesh *brickBox = new Mesh(MESH_TYPE::CUBE, MaterialManager::GetInstance()->GetMaterial(std::string("brick")));
 	brickBox->SetTextureScale(7.0f, 7.0f);
+	woodBox->SetTextureScale(10.0f, 10.0f);
 	MeshManager::GetInstance()->StoreMesh(std::string("woodBox"), woodBox);
 	MeshManager::GetInstance()->StoreMesh(std::string("reflectiveBox"), reflectiveBox);
 	MeshManager::GetInstance()->StoreMesh(std::string("whiteBox"), whiteBox);
@@ -147,7 +149,7 @@ void GameEngine::OnStart() {
 	ModelManager::GetInstance()->StoreModel(std::string("cyborg"), cyborgModel);
 	cyborgModel->SetReflectiveness(1.0f);
 
-	Model *gameLoftModel = new Model(std::string("../Resources/clay/gameloftLogo.obj"), ShaderManager::GetInstance()->GetShader(std::string("clay")));
+	Model *gameLoftModel = new Model(std::string("../Resources/clay/gameloftLogo.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModelNormals")));
 	ModelManager::GetInstance()->StoreModel(std::string("clay"), gameLoftModel);
 	gameLoftModel->SetShininess(256.0f);
 
@@ -158,7 +160,7 @@ void GameEngine::OnStart() {
 	// Lights
 	pointLight = new Light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.014f, 0.0007f);
 	spotLight = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -0.2f, -1.0f), 0.014f, 0.0007f, 10.0f, 12.5f);
-	dirLight = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.8f, -0.4f, -1.0f));
+	dirLight = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.8f, -0.6f, 0.2f));
 
 	// GameObjects
 	GameObject *empty = new GameObject(std::string("emptyGameObject"));
@@ -177,10 +179,10 @@ void GameEngine::OnStart() {
 
 	GameObject *terrain = new GameObject(std::string("terrain"), ModelManager::GetInstance()->GetModel(std::string("terrain")));
 	terrain->SetScale(glm::vec3(0.02f));
-	terrain->SetPosition(glm::vec3(5.0f, 0.0f, -2.0f));
+	terrain->SetPosition(glm::vec3(10.0f, 2.0f, -2.0f));
 
 	GameObject *cyborg = new GameObject(std::string("cyborg"), ModelManager::GetInstance()->GetModel(std::string("cyborg")));
-	cyborg->SetPosition(glm::vec3(-5.0f, 0.0f, 0.0f));
+	cyborg->SetPosition(glm::vec3(-10.0f, 0.0f, 0.0f));
 	cyborg->SetScale(glm::vec3(1.0f));
 
 	GameObject *test = new GameObject(std::string("test"), MeshManager::GetInstance()->GetMesh(std::string("whiteBox")));
@@ -189,7 +191,12 @@ void GameEngine::OnStart() {
 
 	GameObject *nanosuit = new GameObject(std::string("nanosuit"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
 	nanosuit->SetScale(glm::vec3(0.25f));
-	nanosuit->SetPosition(glm::vec3(10.0f, 0.0f, 0.0f));
+	nanosuit->SetPosition(glm::vec3(20.0f, 0.0f, 0.0f));
+
+	GameObject *floor = new GameObject(std::string("floor"), MeshManager::GetInstance()->GetMesh(std::string("woodBox")));
+	floor->SetScale(glm::vec3(100.0f, 1.0f, 100.0f));
+	floor->SetPosition(glm::vec3(0.0f, -0.5f, 0.0f));
+
 
 	// Scene Graph usage
 	GetRootSceneNode()->AttachChild(empty->GetSceneNode());
@@ -200,6 +207,7 @@ void GameEngine::OnStart() {
 	empty->AttachChild(pointGameObject);
 	empty->AttachChild(spotgameObject);
 	empty->AttachChild(nanosuit);
+	empty->AttachChild(floor);
 	pointGameObject->AttachChild(test);
 
 	camera->SetPosition(glm::vec3(0.0f, 2.5f, 5.0f));
@@ -207,7 +215,7 @@ void GameEngine::OnStart() {
 	Timer::GetInstance().Start();
 
 	// Orbiting point light variables
-	float radius = 15.0f;
+	float radius = 25.0f;
 	float angle = 0.0f;
 	float speed = 0.35f;
 	

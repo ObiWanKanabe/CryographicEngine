@@ -5,7 +5,7 @@ Light::Light(glm::vec3 _colour, glm::vec3 _direction) {
 	direction = _direction;
 	type = LIGHT_TYPE::DIRECTIONAL_LIGHT;
 	shaderName = "defaultShadowDepth";
-	//ShadowSetup();
+	ShadowSetup();
 }
 
 Light::Light(glm::vec3 _colour, glm::vec3 _position, float _linear, float _quadratic) {
@@ -132,10 +132,6 @@ void Light::BindUniforms(Shader* _shader, int pointIndex, int spotIndex) {
 		_shader->SetVec3("directionalLight.specular", specular);
 		_shader->SetVec3("directionalLight.direction", direction);
 
-		glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-		glm::mat4 lightView = glm::lookAt(glm::vec3(direction * 10.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		glm::mat4 lightSpaceMatrix = lightProjection - lightView;
-
 		_shader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 
 		_shader->SetInt("shadowMap", 2);
@@ -163,45 +159,41 @@ void Light::BindUniforms(Shader* _shader, int pointIndex, int spotIndex) {
 	}
 }
 
-void Light::BindSpaceMatrix() {
-	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-	glm::mat4 lightView = glm::lookAt(glm::vec3(direction * 10.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 lightSpaceMatrix = lightProjection * lightView;
-	Shader* shader = ShaderManager::GetInstance()->GetShader(shaderName);
-	shader->Use();
-	shader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
-
-	glViewport(0, 0, shadowWidth, shadowHeight);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glClear(GL_DEPTH_BUFFER_BIT);
-}
-
-glm::mat4 Light::GetLightSpaceMatrix() {
-	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-	glm::mat4 lightView = glm::lookAt(glm::vec3(direction * 10.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-	return lightProjection * lightView;
+glm::mat4 Light::GetLightSpaceMatrix(glm::vec3 _pos) {
+	glm::mat4 lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
+	glm::mat4 lightView = glm::lookAt(direction * -100.0f, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	lightSpaceMatrix = lightProjection * lightView;
+	return lightSpaceMatrix;
 }
 
 void Light::ShadowSetup() {
-	if (type == DIRECTIONAL_LIGHT) {
-		glGenFramebuffers(1, &depthMapFBO);
-		glGenTextures(1, &depthMap);
-		glBindTexture(GL_TEXTURE_2D, depthMap);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glGenFramebuffers(1, &depthMapFBO);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
+	glGenTextures(1, &depthMap);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Light::CalculateShadows(glm::mat4 _model) {
+void Light::PrepareShadow() {
+	glViewport(0, 0, shadowWidth, shadowHeight);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glClear(GL_DEPTH_BUFFER_BIT);
+}
 
+GLuint Light::GetShadowMap() {
+	return depthMap;
 }

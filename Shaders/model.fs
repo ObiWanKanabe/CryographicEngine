@@ -4,6 +4,7 @@ out vec4 FragColor;
 in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
+in vec4 FragPosLightSpace;
 
 // The Material of the fragment
 struct Material {
@@ -54,11 +55,13 @@ uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform SpotLight spotLights[NR_SPOT_LIGHTS];
 uniform vec3 cameraPos;
 uniform samplerCube skybox;
+uniform sampler2D shadowMap;
 
 // Functions 
-vec3 DirLightResult(DirectionalLight light, vec3 normal, vec3 viewDir);
-vec3 PointLightResult(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
-vec3 SpotLightResult(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
+float ShadowCalculation(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir);
+vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec4 fragPosLightSpace);
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace);
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace);
 
 void main()
 {
@@ -77,16 +80,16 @@ vec3 viewDir = normalize(cameraPos - FragPos);
 vec3 refl = reflect(-viewDir, norm);
 
 // Calculate the one directional light allowed in the world
-result += DirLightResult(directionalLight, norm, viewDir);
+result += CalcDirLight(directionalLight, norm, viewDir, FragPosLightSpace);
 
 // Calculate all the point lights in the world
 for (int i = 0; i < NR_POINT_LIGHTS; i++) {
-result += PointLightResult(pointLights[i], norm, FragPos, viewDir); 
+result += CalcPointLight(pointLights[i], norm, FragPos, viewDir, FragPosLightSpace); 
 }
 
 // Calculate all the spot lights in the world
 for (int i = 0; i < NR_SPOT_LIGHTS; i++) {
-result += SpotLightResult(spotLights[i], norm, FragPos, viewDir);
+result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir, FragPosLightSpace);
 }
 
 // Calculating the reflection intensity
@@ -100,8 +103,46 @@ if(reflect_intensity > 0.1)
 FragColor = vec4(result, 1.0f) + vec4(reflect_result, 1.0f);
 }
 
+// Calculate shadows for the directional light
+float ShadowCalculation(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir) {
+
+// Convert from our orthographic projection space to perspective and transform to [0, 1] range to match our texture
+vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+projCoords = projCoords * 0.5 + 0.5;
+
+// This will be our closest depth value to compare our current fragments depth value to
+float closestDepth = texture(shadowMap, projCoords.xy).r;  
+
+// The depth value of the current fragment from the light's point of view
+float currentDepth = projCoords.z;   
+
+// Giving a small bias to prevent shadow acne and darkening surrounding fragments
+// This is dependent on the angle between the normal and light's direction
+float bias = max(0.001 * (1.0 - dot(normal, lightDir)), 0.0005);
+
+// Using PCF to sample numerous times from the shadow depth map
+// Sampling the surrounding texels to produce a smoother shadow result
+// This is done 9 times in the example and then we take the average
+float shadow = 0.0;
+vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+for(int x = -1; x <= 1; ++x) {
+    for(int y = -1; y <= 1; ++y) {
+        float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
+        shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
+    }    
+}
+shadow /= 9.0;
+
+// Checking to see if the projected coordinates are outside of the orthographic frustum
+// Don't apply shadows if it is
+if (projCoords.z > 1.0)
+	shadow = 0.0;
+
+return shadow;
+}
+
 // Directional Lights need the normal vector and view direction
-vec3 DirLightResult(DirectionalLight light, vec3 normal, vec3 viewDir)
+vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec4 fragPosLightSpace)
 {
 // The light direction vector only takes into account its own direction
 vec3 lightDir = normalize(-light.direction);
@@ -118,10 +159,14 @@ vec3 ambient  = light.ambient  * vec3(texture(material.diffuse1, TexCoords)) * 0
 vec3 diffuse  = light.diffuse  * diff * vec3(texture(material.diffuse1, TexCoords));
 vec3 specular = light.specular * spec * vec3(texture(material.specular1, TexCoords));
 
-return (ambient + diffuse + specular);
+// Apply shadow calculations
+float shadow = ShadowCalculation(FragPosLightSpace, normal, lightDir);       
+vec3 result = (ambient + (1.0 - shadow) * (diffuse + specular));
+
+return result;
 }
 
-vec3 PointLightResult(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace)
 {
 // The light direction vector is facing the fragment
 vec3 lightDir = normalize(light.position - fragPos);
@@ -145,10 +190,14 @@ ambient  *= attenuation;
 diffuse  *= attenuation;
 specular *= attenuation;
 
-return (ambient + diffuse + specular);
+// Apply shadow calculations
+float shadow = ShadowCalculation(FragPosLightSpace, normal, lightDir);       
+vec3 result = (ambient + (1.0 - shadow) * (diffuse + specular));
+
+return result;
 } 
 
-vec3 SpotLightResult(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace)
 {
 // The light direction vector is facing the fragment
 vec3 lightDir = normalize(light.position - fragPos);
