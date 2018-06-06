@@ -77,13 +77,12 @@ void OpenGLRenderer::Render(Window *window, Frustum &frustum, Camera *camera, Cu
 	lights = scenegraph->GetSceneLights();
 
 	for (int i = 0; i < lights.size(); i++) {
-		if (lights[i]->GetType() == LIGHT_TYPE::DIRECTIONAL_LIGHT)
-			lights[i]->PrepareShadow();
-	}
-
-	for (int i = 0; i < lights.size(); i++) {
-		if (lights[i]->GetType() == LIGHT_TYPE::DIRECTIONAL_LIGHT)
-			scenegraph->RenderDepthSceneGraph(frustum, camera, lights[i]);
+		if (lights[i]->GetType() == LIGHT_TYPE::DIRECTIONAL_LIGHT) {
+			for (int j = 0; j < 3; j++) {
+				lights[i]->PrepareShadow(j);
+				scenegraph->RenderDepthSceneGraph(frustum, camera, lights[i], j);
+			}
+		}
 	}
 
 	glViewport(0, 0, window->GetWidth(), window->GetHeight());

@@ -68,7 +68,7 @@ void SceneGraph::RenderLowDetailSceneNode(SceneNode *sceneRoot, Frustum &frustum
 	matStk.PopModelMatrix();
 }
 
-void SceneGraph::RenderDepthSceneNode(SceneNode *sceneRoot, Frustum &frustum, Camera* camera, Light *light) {
+void SceneGraph::RenderDepthSceneNode(SceneNode *sceneRoot, Frustum &frustum, Camera* camera, Light *light, int index) {
 
 	matStk.PushModelMatrix();
 	matStk.Translate(sceneRoot->GetPosition());
@@ -79,14 +79,14 @@ void SceneGraph::RenderDepthSceneNode(SceneNode *sceneRoot, Frustum &frustum, Ca
 	while (it != sceneRoot->ObjectEnd()) {
 		Object *object = *it;
 
-		object->RenderDepth(matStk.GetModelMatrix(), light->GetLightSpaceMatrix(camera->GetPosition()));
+		object->RenderDepth(matStk.GetModelMatrix(), light->GetLightSpaceMatrix(camera->GetPosition(), camera->GetFront(), index));
 
 		it++;
 	}
 
 	SceneNode *child = sceneRoot->GetFirstChild();
 	while (child != nullptr) {
-		RenderDepthSceneNode(child, frustum, camera, light);
+		RenderDepthSceneNode(child, frustum, camera, light, index);
 		child = child->GetNextSibling();
 	}
 
@@ -167,9 +167,9 @@ void SceneGraph::RenderLowDetailSceneGraph(Frustum &frustum, Camera *camera, glm
 	RenderLowDetailSceneNode(rootSceneNode, frustum, camera, view, projection, skybox);
 }
 
-void SceneGraph::RenderDepthSceneGraph(Frustum &frustum, Camera *camera, Light *light) {
+void SceneGraph::RenderDepthSceneGraph(Frustum &frustum, Camera *camera, Light *light, int index) {
 	glCullFace(GL_FRONT);
-	RenderDepthSceneNode(rootSceneNode, frustum, camera, light);
+	RenderDepthSceneNode(rootSceneNode, frustum, camera, light, index);
 	glCullFace(GL_FRONT);
 }
 

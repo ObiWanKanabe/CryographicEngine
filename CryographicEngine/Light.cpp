@@ -132,11 +132,19 @@ void Light::BindUniforms(Shader* _shader, int pointIndex, int spotIndex) {
 		_shader->SetVec3("directionalLight.specular", specular);
 		_shader->SetVec3("directionalLight.direction", direction);
 
-		_shader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+		_shader->SetMat4("lightSpaceMatrix[0]", lightSpaceMatrix[0]);
+		_shader->SetMat4("lightSpaceMatrix[1]", lightSpaceMatrix[1]);
+		_shader->SetMat4("lightSpaceMatrix[2]", lightSpaceMatrix[2]);
 
-		_shader->SetInt("shadowMap", 2);
+		_shader->SetInt("shadowMap[0]", 2);
 		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glBindTexture(GL_TEXTURE_2D, depthMap[0]);
+		_shader->SetInt("shadowMap[1]", 3);
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, depthMap[1]);
+		_shader->SetInt("shadowMap[2]", 4);
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, depthMap[2]);
 	}
 	else if (type == LIGHT_TYPE::POINT_LIGHT) {
 		_shader->SetVec3("pointLights[" + std::to_string(pointIndex) + "].ambient", ambient);
@@ -159,18 +167,23 @@ void Light::BindUniforms(Shader* _shader, int pointIndex, int spotIndex) {
 	}
 }
 
-glm::mat4 Light::GetLightSpaceMatrix(glm::vec3 _pos) {
-	glm::mat4 lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
-	glm::mat4 lightView = glm::lookAt(direction * -100.0f, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	lightSpaceMatrix = lightProjection * lightView;
-	return lightSpaceMatrix;
+glm::mat4 Light::GetLightSpaceMatrix(glm::vec3 _pos, glm::vec3 front, int index) {
+
+	glm::vec3 pos = _pos + front * frustum_size[index]/2.0f;
+
+	glm::mat4 lightProjection = glm::ortho(-frustum_size[index], frustum_size[index], -frustum_size[index], frustum_size[index], near_plane[index], far_plane[index]);
+	glm::mat4 lightView = glm::lookAt(direction * - frustum_size[index] * 4.0f + pos, pos, glm::vec3(0.0f, 1.0f, 0.0f));
+	
+	lightSpaceMatrix[index] = lightProjection * lightView;
+	return lightSpaceMatrix[index];
 }
 
 void Light::ShadowSetup() {
-	glGenFramebuffers(1, &depthMapFBO);
 
-	glGenTextures(1, &depthMap);
-	glBindTexture(GL_TEXTURE_2D, depthMap);
+	// Closest Shadow Map
+	glGenFramebuffers(3, &depthMapFBO[0]);
+	glGenTextures(3, &depthMap[0]);
+	glBindTexture(GL_TEXTURE_2D, depthMap[0]);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -179,21 +192,64 @@ void Light::ShadowSetup() {
 	float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO[0]);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap[0], 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	near_plane[0] = 1.0f;
+	far_plane[0] = 50.0f;
+	frustum_size[0] = 5.0f;
+
+	// Middle Shadow Map
+	glBindTexture(GL_TEXTURE_2D, depthMap[1]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO[1]);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap[1], 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	near_plane[1] = 1.0f;
+	far_plane[1] = 315.0f;
+	frustum_size[1] = 65.0f;
+
+	// Far Shadow Map
+
+	glBindTexture(GL_TEXTURE_2D, depthMap[2]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO[2]);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap[2], 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	near_plane[2] = 1.0f;
+	far_plane[2] = 350.0f;
+	frustum_size[2] = 65.0f;
 }
 
-void Light::PrepareShadow() {
+void Light::PrepareShadow(int index) {
 	glViewport(0, 0, shadowWidth, shadowHeight);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO[index]);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 GLuint Light::GetShadowMap() {
-	return depthMap;
+	return depthMap[1];
 }
