@@ -175,6 +175,50 @@ glm::mat4 Light::GetLightSpaceMatrix(glm::vec3 _pos, glm::vec3 front, int index)
 	glm::mat4 lightView = glm::lookAt(direction * - frustum_size[index] * 4.0f + pos, pos, glm::vec3(0.0f, 1.0f, 0.0f));
 	
 	lightSpaceMatrix[index] = lightProjection * lightView;
+
+	/*float height_near[3];
+	float width_near[3];
+
+	float height_far[3];
+	float width_far[3];
+
+	glm::vec3 center_near[3];
+	glm::vec3 center_far[3];
+
+	glm::vec3 near_top_left[3];
+	glm::vec3 near_top_right[3];
+	glm::vec3 near_bottom_left[3];
+	glm::vec3 near_button_right[3];
+
+	glm::vec3 far_top_left[3];
+	glm::vec3 far_top_right[3];
+	glm::vec3 far_bottom_left[3];
+	glm::vec3 far_bottom_right[3];
+
+	float ar = 1200.0f / 900.0f;
+	float tanFOV = tanf(90.0f / 2.0f);
+
+	for (int i = 0; i < 3; i++) {
+		height_near[i] = 2.0f * tanFOV * frustum_end[i];
+		width_near[i] = height_near[i] * ar;
+
+		height_far[i] = 2 * tanFOV * frustum_end[i + 1];
+		width_far[i] = height_far[i] * ar;
+
+		center_near[i] = _pos + front * frustum_end[i];
+		center_far[i] = _pos + front * frustum_end[i + 1];
+
+		near_top_left[3] = center_near[i] + glm::vec3(0.0f, 1.0f, 0.0f) * height_near[i] / 2.0f - glm::vec3(1.0f, 0.0f, 0.0f) * width_near[i] / 2.0f;
+		near_top_right[3] = center_near[i] + glm::vec3(0.0f, 1.0f, 0.0f) * height_near[i] / 2.0f + glm::vec3(1.0f, 0.0f, 0.0f) * width_near[i] / 2.0f;
+		near_bottom_left[3] = center_near[i] - glm::vec3(0.0f, 1.0f, 0.0f) * height_near[i] / 2.0f - glm::vec3(1.0f, 0.0f, 0.0f) * width_near[i] / 2.0f;
+		near_button_right[3] = center_near[i] - glm::vec3(0.0f, 1.0f, 0.0f) * height_near[i] / 2.0f + glm::vec3(1.0f, 0.0f, 0.0f) * width_near[i] / 2.0f;
+
+		far_top_left[3] = center_far[i] + glm::vec3(0.0f, 1.0f, 0.0f) * height_far[i] / 2.0f - glm::vec3(1.0f, 0.0f, 0.0f) * width_far[i] / 2.0f;
+		far_top_right[3] = center_far[i] + glm::vec3(0.0f, 1.0f, 0.0f) * height_far[i] / 2.0f + glm::vec3(1.0f, 0.0f, 0.0f) * width_far[i] / 2.0f;
+		far_bottom_left[3] = center_far[i] - glm::vec3(0.0f, 1.0f, 0.0f) * height_far[i] / 2.0f - glm::vec3(1.0f, 0.0f, 0.0f) * width_far[i] / 2.0f;
+		far_bottom_right[3] = center_far[i] - glm::vec3(0.0f, 1.0f, 0.0f) * height_far[i] / 2.0f + glm::vec3(1.0f, 0.0f, 0.0f) * width_far[i] / 2.0f;
+	}*/
+
 	return lightSpaceMatrix[index];
 }
 
@@ -202,6 +246,29 @@ void Light::ShadowSetup() {
 	far_plane[0] = 50.0f;
 	frustum_size[0] = 5.0f;
 
+	frustum_end[0] = 0.1f;
+	frustum_end[1] = frustum_end[0] + frustum_size[0];
+
+	float height_near[3];
+	float width_near[3];
+
+	float height_far[3];
+	float width_far[3];
+
+	float center_near[3];
+	float center_far[3];
+
+	float ar = 1200.0f / 900.0f;
+	float tanFOV = tanf(90.0f / 2.0f);
+
+	for (int i = 0; i < 3; i++) {
+		height_near[i] = 2.0f * tanFOV * frustum_end[i];
+		width_near[i] = height_near[i] * ar;
+
+		height_far[i] = 2 * tanFOV * frustum_end[i + 1];
+		width_far[i] = height_far[i] * ar;
+	}
+
 	// Middle Shadow Map
 	glBindTexture(GL_TEXTURE_2D, depthMap[1]);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
@@ -218,8 +285,10 @@ void Light::ShadowSetup() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	near_plane[1] = 1.0f;
-	far_plane[1] = 315.0f;
-	frustum_size[1] = 65.0f;
+	far_plane[1] = 200.0f;
+	frustum_size[1] = 20.0f;
+
+	frustum_end[2] = frustum_end[1] + frustum_size[1];
 
 	// Far Shadow Map
 
@@ -238,8 +307,10 @@ void Light::ShadowSetup() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	near_plane[2] = 1.0f;
-	far_plane[2] = 350.0f;
-	frustum_size[2] = 65.0f;
+	far_plane[2] = 500.0f;
+	frustum_size[2] = 50.0f;
+
+	frustum_end[3] = frustum_end[2] + frustum_size[2];
 }
 
 void Light::PrepareShadow(int index) {

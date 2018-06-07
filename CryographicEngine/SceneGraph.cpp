@@ -11,7 +11,7 @@ SceneGraph::~SceneGraph() {
 
 void SceneGraph::RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, Camera *camera, CubeMap *skybox) {
 	glm::mat4 viewMatrix = glm::mat4(camera->GetViewMatrix());
-	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), 1200.0f / 900.0f, 0.1f, 100.0f);
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), 1200.0f / 900.0f, 0.1f, 200.0f);
 
 	matStk.PushModelMatrix();
 	matStk.Translate(sceneRoot->GetPosition());
@@ -41,7 +41,7 @@ void SceneGraph::RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, Camera 
 
 void SceneGraph::RenderLowDetailSceneNode(SceneNode *sceneRoot, Frustum &frustum, Camera *camera, glm::mat4 view, glm::mat4 projection, CubeMap* skybox) {
 	glm::mat4 viewMatrix = glm::mat4(camera->GetViewMatrix());
-	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), 1200.0f / 900.0f, 0.1f, 100.0f);
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), 1200.0f / 900.0f, 0.1f, 200.0f);
 
 	matStk.PushModelMatrix();
 	matStk.Translate(sceneRoot->GetPosition());

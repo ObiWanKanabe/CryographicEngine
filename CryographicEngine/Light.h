@@ -82,7 +82,11 @@ private:
 
 	float frustum_size[3];
 
+	glm::vec3 frustum_pos[3];
+
 	glm::mat4 lightSpaceMatrix[3];
+
+	float frustum_end[4];
 
 	int shadowMapIndex;
 

@@ -51,6 +51,8 @@ uniform DirectionalLight directionalLight;
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform SpotLight spotLights[NR_SPOT_LIGHTS];
 uniform vec3 cameraPos;
+uniform vec3 frustumPos[3];
+uniform float frustumSize[3];
 uniform sampler2D shadowMap[3];
 
 // Functions 
@@ -97,6 +99,11 @@ for (int i = 0; i < 3; i++) {
 	projCoords[i] = projCoords[i] * 0.5 + 0.5;
 }
 
+float closestDepth[3];
+for (int i = 0; i < 3; i++) {
+	closestDepth[i] = texture(shadowMap[i], projCoords[i].xy).r;   
+}
+
 // The depth value of the current fragment from the light's point of view
 float currentDepth[3];
 for (int i = 0; i < 3; i++) {
@@ -105,27 +112,38 @@ for (int i = 0; i < 3; i++) {
 
 // Giving a small bias to prevent shadow acne and darkening surrounding fragments
 // This is dependent on the angle between the normal and light's direction
-float bias = max(0.002 * (1.0 - dot(normal, lightDir)), 0.001);
+float bias = max(0.001 * (1.0 - dot(normal, lightDir)), 0.001);
 
 // Using PCF to sample numerous times from the shadow depth map
 // Sampling the surrounding texels to produce a smoother shadow result
 // This is done 9 times in the example and then we take the average
-float shadow[3];
-for (int i = 0; i < 3; i++) {
-shadow[i] = 0.0;
-vec2 texelSize = 1.0 / textureSize(shadowMap[i], 0);
+float shadow;
+
+int s = 0;
+if (currentDepth[1] + 0.05 < closestDepth[0]) {
+	s = 1;
+	if (currentDepth[2] + 0.1 < closestDepth[1]) {
+	s = 2;
+	}
+}
+
+
+
+vec2 texelSize = 1.0 / textureSize(shadowMap[s], 0);
 for(int x = -1; x <= 1; ++x) {
     for(int y = -1; y <= 1; ++y) {
-        float pcfDepth = texture(shadowMap[i], projCoords[i].xy + vec2(x, y) * texelSize).r; 
-        shadow[i] += currentDepth[i] - bias > pcfDepth  ? 1.0 : 0.0;        
+        float pcfDepth = texture(shadowMap[s], projCoords[s].xy + vec2(x, y) * texelSize).r; 
+        shadow += currentDepth[s] - bias > pcfDepth  ? 1.0 : 0.0;        
     }    
 }
-shadow[i] /= 9.0;
-}
+shadow /= 9.0;
+
+if(projCoords[s].z > 1.0)
+        shadow = 0.0;
 
 // Checking to see if the projected coordinates are outside of the orthographic frustum
 // Don't apply shadows if it is
-return shadow[1];
+return shadow;
 }
 
 // Directional Lights need the normal vector and view direction
