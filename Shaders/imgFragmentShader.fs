@@ -57,6 +57,7 @@ uniform sampler2D shadowMap[3];
 
 // Functions 
 float ShadowCalculation(vec4 fragPosLightSpace[3], vec3 normal, vec3 lightDir);
+int ShadowDebug(vec4 fragPosLightSpace[3]);
 vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec4 fragPosLightSpace[3]);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace[3]);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace[3]);
@@ -99,6 +100,7 @@ for (int i = 0; i < 3; i++) {
 	projCoords[i] = projCoords[i] * 0.5 + 0.5;
 }
 
+// The closest depth value to the camera in the shadowMap
 float closestDepth[3];
 for (int i = 0; i < 3; i++) {
 	closestDepth[i] = texture(shadowMap[i], projCoords[i].xy).r;   
@@ -112,13 +114,11 @@ for (int i = 0; i < 3; i++) {
 
 // Giving a small bias to prevent shadow acne and darkening surrounding fragments
 // This is dependent on the angle between the normal and light's direction
-float bias = max(0.001 * (1.0 - dot(normal, lightDir)), 0.001);
+float bias = max(0.001 * (1.0 - dot(normal, lightDir)), 0.0005);
 
-// Using PCF to sample numerous times from the shadow depth map
-// Sampling the surrounding texels to produce a smoother shadow result
-// This is done 9 times in the example and then we take the average
+// We are roughly checking which depth is being taken for use in the shadow map
+// This is only an estimation in this iteration, merely to show the concept of CSM
 float shadow;
-
 int s = 0;
 if (currentDepth[1] + 0.05 < closestDepth[0]) {
 	s = 1;
@@ -127,8 +127,9 @@ if (currentDepth[1] + 0.05 < closestDepth[0]) {
 	}
 }
 
-
-
+// Using PCF to sample numerous times from the shadow depth map
+// Sampling the surrounding texels to produce a smoother shadow result
+// This is done 9 times in the example and then we take the average
 vec2 texelSize = 1.0 / textureSize(shadowMap[s], 0);
 for(int x = -1; x <= 1; ++x) {
     for(int y = -1; y <= 1; ++y) {
@@ -138,12 +139,44 @@ for(int x = -1; x <= 1; ++x) {
 }
 shadow /= 9.0;
 
+// Checking to see if the projected coordinates are outside of the orthographic frustum
+// Don't apply shadows if it is
 if(projCoords[s].z > 1.0)
         shadow = 0.0;
 
-// Checking to see if the projected coordinates are outside of the orthographic frustum
-// Don't apply shadows if it is
 return shadow;
+}
+
+// Quick Debug of CSM
+int ShadowDebug(vec4 fragPosLightSpace[3]) {
+// Convert from our orthographic projection space to perspective and transform to [0, 1] range to match our texture
+vec3 projCoords[3];
+for (int i = 0; i < 3; i++) {
+	projCoords[i] = fragPosLightSpace[i].xyz / fragPosLightSpace[i].w;
+	projCoords[i] = projCoords[i] * 0.5 + 0.5;
+}
+
+// The closest depth value to the camera in the shadowMap
+float closestDepth[3];
+for (int i = 0; i < 3; i++) {
+	closestDepth[i] = texture(shadowMap[i], projCoords[i].xy).r;   
+}
+
+// The depth value of the current fragment from the light's point of view
+float currentDepth[3];
+for (int i = 0; i < 3; i++) {
+	currentDepth[i] = projCoords[i].z;   
+}
+
+// Debugging to see which shadowMap we are taking the depth value
+int s = 0;
+if (currentDepth[1] + 0.05 < closestDepth[0]) {
+	s = 1;
+	if (currentDepth[2] + 0.1 < closestDepth[1]) {
+		s = 2;
+	}
+	return s;
+	}
 }
 
 // Directional Lights need the normal vector and view direction

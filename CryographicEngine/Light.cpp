@@ -246,29 +246,6 @@ void Light::ShadowSetup() {
 	far_plane[0] = 50.0f;
 	frustum_size[0] = 5.0f;
 
-	frustum_end[0] = 0.1f;
-	frustum_end[1] = frustum_end[0] + frustum_size[0];
-
-	float height_near[3];
-	float width_near[3];
-
-	float height_far[3];
-	float width_far[3];
-
-	float center_near[3];
-	float center_far[3];
-
-	float ar = 1200.0f / 900.0f;
-	float tanFOV = tanf(90.0f / 2.0f);
-
-	for (int i = 0; i < 3; i++) {
-		height_near[i] = 2.0f * tanFOV * frustum_end[i];
-		width_near[i] = height_near[i] * ar;
-
-		height_far[i] = 2 * tanFOV * frustum_end[i + 1];
-		width_far[i] = height_far[i] * ar;
-	}
-
 	// Middle Shadow Map
 	glBindTexture(GL_TEXTURE_2D, depthMap[1]);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
@@ -287,8 +264,6 @@ void Light::ShadowSetup() {
 	near_plane[1] = 1.0f;
 	far_plane[1] = 200.0f;
 	frustum_size[1] = 20.0f;
-
-	frustum_end[2] = frustum_end[1] + frustum_size[1];
 
 	// Far Shadow Map
 
@@ -310,7 +285,6 @@ void Light::ShadowSetup() {
 	far_plane[2] = 500.0f;
 	frustum_size[2] = 50.0f;
 
-	frustum_end[3] = frustum_end[2] + frustum_size[2];
 }
 
 void Light::PrepareShadow(int index) {

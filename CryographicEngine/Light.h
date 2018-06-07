@@ -86,10 +86,6 @@ private:
 
 	glm::mat4 lightSpaceMatrix[3];
 
-	float frustum_end[4];
-
-	int shadowMapIndex;
-
 	// The type of light
 	LIGHT_TYPE type;
 

@@ -1,6 +1,22 @@
 ﻿  Light.cpp
-c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\light.cpp(259): warning C4101: 'center_far': unreferenced local variable
-c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\light.cpp(258): warning C4101: 'center_near': unreferenced local variable
+  GameEngine.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\gameengine.cpp(228): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+  Compiling...
+  GameObject.cpp
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  SceneNode.cpp
+  SceneGraph.cpp
+  PhysicsEngine.cpp
+  OpenGLRenderer.cpp
+  ModelManager.cpp
+  Model.cpp
+  MeshManager.cpp
+  Mesh.cpp
+  GameInterface.cpp
+  Frustum.cpp
+  BoundingVolume.cpp
 SDL2_image.lib(SDL2_image.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored
 SDL2_image.lib(SDL2_image.dll) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
 opengl32.lib(OPENGL32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored
