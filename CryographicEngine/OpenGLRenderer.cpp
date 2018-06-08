@@ -76,15 +76,17 @@ void OpenGLRenderer::Render(Window *window, Frustum &frustum, Camera *camera, Cu
 
 	lights = scenegraph->GetSceneLights();
 
+	// Rendering Shadow Maps to the one directional light in the scene
 	for (int i = 0; i < lights.size(); i++) {
 		if (lights[i]->GetType() == LIGHT_TYPE::DIRECTIONAL_LIGHT) {
-			for (int j = 0; j < 3; j++) {
+			for (int j = 0; j < 4; j++) {
 				lights[i]->PrepareShadow(j);
 				scenegraph->RenderDepthSceneGraph(frustum, camera, lights[i], j);
 			}
 		}
 	}
 
+	// Changing viewport back to window values
 	glViewport(0, 0, window->GetWidth(), window->GetHeight());
 
 	// Switching to our final screen framebuffer and clearing the buffers
@@ -95,7 +97,6 @@ void OpenGLRenderer::Render(Window *window, Frustum &frustum, Camera *camera, Cu
 	skybox->PreRender();
 
 	scenegraph->RenderSceneGraph(frustum, camera, skybox);
-	//scenegraph->RenderLowDetailSceneGraph(frustum, camera, skybox);
 
 	skybox->BindUniforms(viewMatrix, projectionMatrix);
 	skybox->Render();

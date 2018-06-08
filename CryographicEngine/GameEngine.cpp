@@ -189,7 +189,7 @@ void GameEngine::OnStart() {
 	test->SetScale(glm::vec3(1.0f));
 	test->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
-	GameObject *nanosuit = new GameObject(std::string("nanosuit"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
+	nanosuit = new GameObject(std::string("nanosuit"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
 	nanosuit->SetScale(glm::vec3(0.25f));
 	nanosuit->SetPosition(glm::vec3(20.0f, 0.0f, 0.0f));
 

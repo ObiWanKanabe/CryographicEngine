@@ -9,6 +9,8 @@ Camera::Camera() {
 	movementSpeed = 2.5f;
 	mouseSensitivity = 0.1f;
 	FOV = 75.0f;
+	near_plane = 0.1f;
+	far_plane = 100.0f;
 	/*frustum = new Frustum();
 	frustum->WindowResize(FOV, 1200.0f / 900.0f, 0.1f, 100.0f);*/
 	UpdateCameraVectors();
@@ -20,6 +22,8 @@ Camera::Camera(glm::vec3 _pos, float _yaw, float _pitch) : position(_pos), yaw(-
 	movementSpeed = 2.5f;
 	mouseSensitivity = 0.1f;
 	FOV = 75.0f;
+	near_plane = 0.1f;
+	far_plane = 100.0f;
 	/*frustum = new Frustum();
 	frustum->WindowResize(FOV, 1200.0f / 900.0f, 0.1f, 100.0f);*/
 	UpdateCameraVectors();
@@ -29,6 +33,9 @@ Camera::Camera(glm::vec3 _pos, float _yaw, float _pitch, float _speed, float _se
 	position(_pos), yaw(-90.0f + _yaw), pitch(_pitch), movementSpeed(_speed), mouseSensitivity(_sensitivity), FOV(_zoom) {
 	front = glm::vec3(0.0f, 0.0f, -1.0f);
 	worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+	FOV = 75.0f;
+	near_plane = 0.1f;
+	far_plane = 100.0f;
 	/*frustum = new Frustum();
 	frustum->WindowResize(FOV, 1200.0f / 900.0f, 0.1f, 100.0f);
 	frustum->CameraMovement(position, -front, up, right);*/
@@ -61,6 +68,14 @@ glm::vec3 Camera::GetRight() {
 
 float Camera::GetFOV() {
 	return FOV;
+}
+
+float Camera::GetNear() {
+	return near_plane;
+}
+
+float Camera::GetFar() {
+	return far_plane;
 }
 
 void Camera::ProcessKeyboard(CAMERA_DIRECTION dir, float deltaTime) {
@@ -110,10 +125,10 @@ void Camera::ProcessMouseMovement(float eventX, float eventY) {
 }
 
 void Camera::ProcessMouseScroll(float offsetY) {
-	if (FOV >= 1.0f && FOV <= 75.0f)
+	if (FOV >= 10.0f && FOV <= 75.0f)
 		FOV -= offsetY;
-	if (FOV <= 1.0f)
-		FOV = 1.0f;
+	if (FOV <= 10.0f)
+		FOV = 10.0f;
 	if (FOV >= 75.0f)
 		FOV = 75.0f;
 

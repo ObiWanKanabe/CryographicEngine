@@ -40,6 +40,8 @@ private:
 	Light *dirLight;
 	Light *pointLight;
 
+	GameObject* nanosuit;
+
 public:
 
 	// Default Deconstructor

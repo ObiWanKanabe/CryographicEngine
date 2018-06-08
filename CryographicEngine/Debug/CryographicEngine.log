@@ -1,20 +1,18 @@
-﻿  Light.cpp
-  GameEngine.cpp
-c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\gameengine.cpp(228): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-  Generating Code...
-  Compiling...
-  GameObject.cpp
+﻿  SceneGraph.cpp
+  OpenGLRenderer.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\openglrenderer.cpp(80): warning C4018: '<': signed/unsigned mismatch
+  Light.cpp
   Generating Code...
   Skipping... (no relevant changes detected)
   SceneNode.cpp
-  SceneGraph.cpp
   PhysicsEngine.cpp
-  OpenGLRenderer.cpp
   ModelManager.cpp
   Model.cpp
   MeshManager.cpp
   Mesh.cpp
+  GameObject.cpp
   GameInterface.cpp
+  GameEngine.cpp
   Frustum.cpp
   BoundingVolume.cpp
 SDL2_image.lib(SDL2_image.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored

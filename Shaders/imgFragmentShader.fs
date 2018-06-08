@@ -4,7 +4,7 @@ out vec4 FragColor;
 in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
-in vec4 FragPosLightSpace[3];
+in vec4 FragPosLightSpace[4];
 
 // The Material of the fragment
 struct Material {
@@ -46,21 +46,22 @@ float outerCutOff;
 #define NR_POINT_LIGHTS 4
 #define NR_SPOT_LIGHTS 4
 
+// Defining how the max amount of shadow maps we can have in our cascade
+#define NR_CASCADES 4
+
 uniform Material material;
 uniform DirectionalLight directionalLight;
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform SpotLight spotLights[NR_SPOT_LIGHTS];
 uniform vec3 cameraPos;
-uniform vec3 frustumPos[3];
-uniform float frustumSize[3];
-uniform sampler2D shadowMap[3];
+uniform sampler2D shadowMap[NR_CASCADES];
 
 // Functions 
-float ShadowCalculation(vec4 fragPosLightSpace[3], vec3 normal, vec3 lightDir);
-int ShadowDebug(vec4 fragPosLightSpace[3]);
-vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec4 fragPosLightSpace[3]);
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace[3]);
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace[3]);
+float ShadowCalculation(vec4 fragPosLightSpace[NR_CASCADES], vec3 normal, vec3 lightDir);
+int ShadowDebug(vec4 fragPosLightSpace[NR_CASCADES]);
+vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec4 fragPosLightSpace[NR_CASCADES]);
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace[NR_CASCADES]);
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace[NR_CASCADES]);
 
 void main()
 {
@@ -90,25 +91,25 @@ FragColor = vec4(result, 1.0f);
 }
 
 // Calculate shadows for the directional light
-float ShadowCalculation(vec4 fragPosLightSpace[3], vec3 normal, vec3 lightDir) {
+float ShadowCalculation(vec4 fragPosLightSpace[NR_CASCADES], vec3 normal, vec3 lightDir) {
 
 // Convert from our orthographic projection space to perspective and transform to [0, 1] range to match our texture
-vec3 projCoords[3];
+vec3 projCoords[NR_CASCADES];
 
-for (int i = 0; i < 3; i++) {
+for (int i = 0; i < NR_CASCADES; i++) {
 	projCoords[i] = fragPosLightSpace[i].xyz / fragPosLightSpace[i].w;
 	projCoords[i] = projCoords[i] * 0.5 + 0.5;
 }
 
 // The closest depth value to the camera in the shadowMap
-float closestDepth[3];
-for (int i = 0; i < 3; i++) {
+float closestDepth[NR_CASCADES];
+for (int i = 0; i < NR_CASCADES; i++) {
 	closestDepth[i] = texture(shadowMap[i], projCoords[i].xy).r;   
 }
 
 // The depth value of the current fragment from the light's point of view
-float currentDepth[3];
-for (int i = 0; i < 3; i++) {
+float currentDepth[NR_CASCADES];
+for (int i = 0; i < NR_CASCADES; i++) {
 	currentDepth[i] = projCoords[i].z;   
 }
 
@@ -116,14 +117,18 @@ for (int i = 0; i < 3; i++) {
 // This is dependent on the angle between the normal and light's direction
 float bias = max(0.001 * (1.0 - dot(normal, lightDir)), 0.0005);
 
+int s = 0;
+float shadow;
+
 // We are roughly checking which depth is being taken for use in the shadow map
 // This is only an estimation in this iteration, merely to show the concept of CSM
-float shadow;
-int s = 0;
-if (currentDepth[1] + 0.05 < closestDepth[0]) {
+if (currentDepth[1] + 0.025 <= closestDepth[0] && texture(shadowMap[1], projCoords[1].xy).r > 0.1) {
 	s = 1;
-	if (currentDepth[2] + 0.1 < closestDepth[1]) {
-	s = 2;
+	if (currentDepth[2] + 0.05 <= closestDepth[1] && texture(shadowMap[2], projCoords[2].xy).r > 0.1) {
+		s = 2;
+		if (currentDepth[3] + 0.1 <= closestDepth[2] && texture(shadowMap[3], projCoords[3].xy).r > 0.1) {
+			s = 3;
+		} 
 	}
 }
 
@@ -139,48 +144,52 @@ for(int x = -1; x <= 1; ++x) {
 }
 shadow /= 9.0;
 
+
 // Checking to see if the projected coordinates are outside of the orthographic frustum
 // Don't apply shadows if it is
-if(projCoords[s].z > 1.0)
+	if(projCoords[s].z > 1.0)
         shadow = 0.0;
 
 return shadow;
 }
 
 // Quick Debug of CSM
-int ShadowDebug(vec4 fragPosLightSpace[3]) {
+int ShadowDebug(vec4 fragPosLightSpace[4]) {
 // Convert from our orthographic projection space to perspective and transform to [0, 1] range to match our texture
-vec3 projCoords[3];
-for (int i = 0; i < 3; i++) {
+vec3 projCoords[4];
+for (int i = 0; i < 4; i++) {
 	projCoords[i] = fragPosLightSpace[i].xyz / fragPosLightSpace[i].w;
 	projCoords[i] = projCoords[i] * 0.5 + 0.5;
 }
 
 // The closest depth value to the camera in the shadowMap
-float closestDepth[3];
-for (int i = 0; i < 3; i++) {
+float closestDepth[4];
+for (int i = 0; i < 4; i++) {
 	closestDepth[i] = texture(shadowMap[i], projCoords[i].xy).r;   
 }
 
 // The depth value of the current fragment from the light's point of view
-float currentDepth[3];
-for (int i = 0; i < 3; i++) {
+float currentDepth[4];
+for (int i = 0; i < 4; i++) {
 	currentDepth[i] = projCoords[i].z;   
 }
 
 // Debugging to see which shadowMap we are taking the depth value
 int s = 0;
-if (currentDepth[1] + 0.05 < closestDepth[0]) {
+if (currentDepth[1] + 0.025 <= closestDepth[0]) {
 	s = 1;
-	if (currentDepth[2] + 0.1 < closestDepth[1]) {
+	if (currentDepth[2] + 0.05 <= closestDepth[1]) {
 		s = 2;
+		if (currentDepth[3] + 0.1 <= closestDepth[2]) {
+			s = 3;
+		} 
 	}
-	return s;
-	}
+}
+return s;
 }
 
 // Directional Lights need the normal vector and view direction
-vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec4 fragPosLightSpace[3])
+vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec4 fragPosLightSpace[4])
 {
 
 // The light direction vector only takes into account its own direction
@@ -209,7 +218,7 @@ vec3 result = (ambient + (1.0 - shadow) * (diffuse + specular));
 return result;
 }
 
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace[3])
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace[4])
 {
 // The light direction vector is facing the fragment
 vec3 lightDir = normalize(light.position - fragPos);
@@ -241,7 +250,7 @@ return (ambient + diffuse + specular);
 
 } 
 
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace[3])
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace[4])
 {
 // The light direction vector is facing the fragment
 vec3 lightDir = normalize(light.position - fragPos);

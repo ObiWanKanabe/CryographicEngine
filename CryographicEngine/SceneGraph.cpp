@@ -11,7 +11,7 @@ SceneGraph::~SceneGraph() {
 
 void SceneGraph::RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, Camera *camera, CubeMap *skybox) {
 	glm::mat4 viewMatrix = glm::mat4(camera->GetViewMatrix());
-	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), 1200.0f / 900.0f, 0.1f, 200.0f);
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), 1200.0f / 900.0f, camera->GetNear(), camera->GetFar());
 
 	matStk.PushModelMatrix();
 	matStk.Translate(sceneRoot->GetPosition());
@@ -41,7 +41,7 @@ void SceneGraph::RenderSceneNode(SceneNode *sceneRoot, Frustum &frustum, Camera 
 
 void SceneGraph::RenderLowDetailSceneNode(SceneNode *sceneRoot, Frustum &frustum, Camera *camera, glm::mat4 view, glm::mat4 projection, CubeMap* skybox) {
 	glm::mat4 viewMatrix = glm::mat4(camera->GetViewMatrix());
-	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), 1200.0f / 900.0f, 0.1f, 200.0f);
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), 1200.0f / 900.0f, camera->GetNear(), camera->GetFar());
 
 	matStk.PushModelMatrix();
 	matStk.Translate(sceneRoot->GetPosition());
@@ -79,7 +79,7 @@ void SceneGraph::RenderDepthSceneNode(SceneNode *sceneRoot, Frustum &frustum, Ca
 	while (it != sceneRoot->ObjectEnd()) {
 		Object *object = *it;
 
-		object->RenderDepth(matStk.GetModelMatrix(), light->GetLightSpaceMatrix(camera->GetPosition(), camera->GetFront(), index));
+		object->RenderDepth(matStk.GetModelMatrix(), light->GetLightSpaceMatrix(camera, index));
 
 		it++;
 	}
@@ -171,35 +171,5 @@ void SceneGraph::RenderDepthSceneGraph(Frustum &frustum, Camera *camera, Light *
 	glCullFace(GL_FRONT);
 	RenderDepthSceneNode(rootSceneNode, frustum, camera, light, index);
 	glCullFace(GL_FRONT);
-}
-
-void SceneGraph::Render(Frustum &frustum, Camera *camera, CubeMap* skybox) {
-	objectList = GetSceneObjects();
-	lightList = GetSceneLights();
-
-	glm::mat4 viewMatrix = glm::mat4(camera->GetViewMatrix());
-	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), SCREEN_WDITH / SCREEN_HEIGHT, 0.1f, 100.0f);
-
-	// We're going through the lights here first, to calculate the shadow depth map
-	// This happens to every light so each one has their own calculations for each object
-	/*for (size_t i = 0; i < lightList.size(); i++) {
-	lightList[i]->BindSpaceMatrix();
-	for (size_t j = 0; j < objectList.size(); j++) {
-	objectList[j]->Render(lightList[i]->GetShader());
-	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
-
-	glViewport(0, 0, 1200, 900);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
-
-	// Now that the shadows for each light and their depth map have been calculated
-	// Continue like normal and pass the lights and their information to each object
-	for (size_t i = 0; i < objectList.size(); i++) {
-		skybox->BindTexture();
-		objectList[i]->PreRender();
-		objectList[i]->Render(camera, lightList, objectList[i]->GetModelMatrix(), viewMatrix, projectionMatrix);
-		objectList[i]->PostRender();
-	}
 }
 

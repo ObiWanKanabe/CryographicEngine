@@ -33,7 +33,6 @@ public:
 	void RenderSceneGraph(Frustum &frustum, Camera *camera, CubeMap* skybox);
 	void RenderLowDetailSceneGraph(Frustum &frustum, Camera *camera, glm::mat4 view, glm::mat4 projection, CubeMap* skybox);
 	void RenderDepthSceneGraph(Frustum &frustum, Camera *camera, Light *light, int index);
-	void Render(Frustum &frustum, Camera *camera, CubeMap* skybox);
 
 };
 #endif

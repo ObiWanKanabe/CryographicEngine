@@ -2,8 +2,9 @@
 #define LIGHT_H
 
 #include "ShaderManager.h"
-#include "Vertex.h"
-#include <gtc/matrix_transform.hpp>
+#include "Camera.h"
+#include <stdio.h>
+#include <limits>
 
 enum LIGHT_TYPE {
 	DIRECTIONAL_LIGHT,
@@ -44,6 +45,15 @@ public:
 	void SetQuadratic(float _quadratic);
 	void SetInnerCutoff(float _innerCutoff);
 	void SetOuterCutoff(float _outerCutoff);
+
+	// This will set the sizes of the frustums for the 4 cascading shadow maps
+	// These sizes out on top of each other and in front of the camera
+	// If you're unsure about what these values mean, I've already set them to a good looking value
+	void SetFrustumSizes(float _near, float _middleNear, float _middleFar, float _far);
+
+	// Lowering the number of cascades under 4 will cut out Shadow Maps, starting from the far frustum
+	// If you'd like to keep the same shadow rendering distance, frustum sizes will need to be updated
+	void SetNumberOfShadowCascades(int _cascades);
 	
 	glm::vec3 GetColour();
 	glm::vec3 GetAmbientColour();
@@ -60,9 +70,9 @@ public:
 	// Binding the uniforms of the shader
 	void BindUniforms(Shader* _shader, int pointIndex, int spotIndex);
 
-	glm::mat4 GetLightSpaceMatrix(glm::vec3 _pos, glm::vec3 front, int index);
+	glm::mat4 GetLightSpaceMatrix(Camera *camera, int index);
 
-	void ShadowSetup();
+	void DirectionalCascadeShadowSetup();
 
 	void PrepareShadow(int index);
 
@@ -72,19 +82,25 @@ private:
 
 	std::string shaderName;
 
-	unsigned int depthMapFBO[3];
+	unsigned int depthMapFBO[4];
 
 	const unsigned int shadowWidth = 1024, shadowHeight = 1024;
 
-	unsigned int depthMap[3];
+	unsigned int depthMap[4];
 
-	float near_plane[3], far_plane[3];
+	float near_plane[4], far_plane[4];
 
-	float frustum_size[3];
+	float frustum_size[4];
 
-	glm::vec3 frustum_pos[3];
+	glm::mat4 lightSpaceMatrix[4];
 
-	glm::mat4 lightSpaceMatrix[3];
+	int numCascades = 2;
+
+	//glm::vec3 frustum_pos[4];
+
+	//float cascade_end[4];
+
+	//float cascadeEndClipSpace[4];
 
 	// The type of light
 	LIGHT_TYPE type;

@@ -41,6 +41,9 @@ private:
 	float lastX = SCREEN_WDITH / 2.0f;
 	float lastY = SCREEN_HEIGHT / 2.0f;
 	bool firstMouse = true;
+
+	float near_plane;
+	float far_plane;
 public:
 	// Default Constructor using set default values
 	Camera();
@@ -70,6 +73,10 @@ public:
 
 	// Returns the FOV of the camera
 	float GetFOV();
+
+	// Returns the near and far values for the projection matrix
+	float GetNear();
+	float GetFar();
 
 	// Functions that process the movement of the camera using input
 	void ProcessKeyboard(CAMERA_DIRECTION _dir, float deltaTime);
