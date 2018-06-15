@@ -4,6 +4,9 @@
 #include "BoundingVolume.h"
 #include "EnvironmentMap.h"
 #include "Light.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
+#include "SpotLight.h"
 
 class Object {
 public:
@@ -12,6 +15,7 @@ public:
 	virtual BoundingVolume* GetBoundingVolume() = 0;
 	virtual Light* GetAttachedLight() = 0;
 	virtual EnvironmentMap* GetEnvironmentMap() = 0;
+	virtual bool CanCastShadows() = 0;
 	virtual void SetModelMatrix(glm::mat4 _model) = 0;
 	virtual glm::mat4 GetModelMatrix() = 0;
 	virtual void PreRender() = 0;

@@ -36,9 +36,9 @@ private:
 	SDL_Event events;
 	CubeMap* skybox;
 
-	Light* spotLight;
-	Light *dirLight;
-	Light *pointLight;
+	SpotLight* spotLight;
+	DirectionalLight *dirLight;
+	PointLight *pointLight;
 
 	GameObject* nanosuit;
 

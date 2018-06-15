@@ -9,12 +9,15 @@ GameObject::GameObject(std::string& _name) {
 	boundingVolume = nullptr;
 	DetachMesh();
 	DetachModel();
+	LOD = nullptr;
 	if (nameIndex == nullptr) {
 		nameIndex = new std::map<std::string, GameObject*>();
 	}
 	RegisterGameObject(_name, this);
 	light = nullptr;
 	environmentMap = nullptr;
+	castShadows = true;
+	highQualityShadows = false;
 }
 
 GameObject::GameObject(std::string& _name, Mesh *mesh) {
@@ -23,12 +26,15 @@ GameObject::GameObject(std::string& _name, Mesh *mesh) {
 	sceneNode->AddObject(this);
 	boundingVolume = new BoundingVolume(BOUNDING_SHAPE::AABB, mesh);
 	AttachMesh(mesh);
+	LOD = nullptr;
 	if (nameIndex == nullptr) {
 		nameIndex = new std::map<std::string, GameObject*>();
 	}
 	RegisterGameObject(_name, this);
 	light = nullptr;
 	environmentMap = nullptr;
+	castShadows = true;
+	highQualityShadows = false;
 }
 
 GameObject::GameObject(std::string& _name, GameObject* parent, Mesh* mesh) {
@@ -42,8 +48,11 @@ GameObject::GameObject(std::string& _name, GameObject* parent, Mesh* mesh) {
 	parent->AttachChild(this);
 	boundingVolume = new BoundingVolume(BOUNDING_SHAPE::AABB, mesh);
 	AttachMesh(mesh);
+	LOD = nullptr;
 	light = nullptr;
 	environmentMap = nullptr;
+	castShadows = true;
+	highQualityShadows = false;
 }
 
 GameObject::GameObject(std::string& _name, Model *model) {
@@ -52,12 +61,15 @@ GameObject::GameObject(std::string& _name, Model *model) {
 	sceneNode->AddObject(this);
 	boundingVolume = new BoundingVolume(BOUNDING_SHAPE::AABB, model);
 	AttachModel(model);
+	LOD = nullptr;
 	if (nameIndex == nullptr) {
 		nameIndex = new std::map<std::string, GameObject*>();
 	}
 	RegisterGameObject(_name, this);
 	light = nullptr;
 	environmentMap = nullptr;
+	castShadows = true;
+	highQualityShadows = false;
 }
 
 GameObject::GameObject(std::string& _name, GameObject* parent, Model* model) {
@@ -71,8 +83,61 @@ GameObject::GameObject(std::string& _name, GameObject* parent, Model* model) {
 	parent->AttachChild(this);
 	boundingVolume = new BoundingVolume(BOUNDING_SHAPE::AABB, model);
 	AttachModel(model);
+	LOD = new LevelOfDetail(model);
 	light = nullptr;
 	environmentMap = nullptr;
+	castShadows = true;
+	highQualityShadows = false;
+}
+
+GameObject::GameObject(std::string& _name, LevelOfDetail* LOD) {
+	name = _name;
+	sceneNode = new SceneNode();
+	sceneNode->AddObject(this);
+	this->LOD = LOD;
+	if (this->LOD->GetCurrentLODType(0.0f) == MESH_LOD) {
+		Mesh* mesh = MeshManager::GetInstance()->GetMesh(this->LOD->GetCurrentLODName(0.0f));
+		boundingVolume = new BoundingVolume(BOUNDING_SHAPE::AABB, mesh);
+	} else if (this->LOD->GetCurrentLODType(0.0f) == MODEL_LOD) {
+		Model* model = ModelManager::GetInstance()->GetModel(this->LOD->GetCurrentLODName(0.0f));
+		boundingVolume = new BoundingVolume(BOUNDING_SHAPE::AABB, model);
+	}
+	DetachMesh();
+	DetachModel();
+	if (nameIndex == nullptr) {
+		nameIndex = new std::map<std::string, GameObject*>();
+	}
+	RegisterGameObject(_name, this);
+	light = nullptr;
+	environmentMap = nullptr;
+	castShadows = true;
+	highQualityShadows = false;
+}
+
+GameObject::GameObject(std::string& _name, GameObject* parent, LevelOfDetail* LOD) {
+	name = _name;
+	if (nameIndex == nullptr)
+	{
+		nameIndex = new std::map<std::string, GameObject*>();
+	}
+	RegisterGameObject(name, this);
+
+	parent->AttachChild(this);
+	this->LOD = LOD;
+	if (this->LOD->GetCurrentLODType(0.0f) == MESH_LOD) {
+		Mesh* mesh = MeshManager::GetInstance()->GetMesh(this->LOD->GetCurrentLODName(0.0f));
+		boundingVolume = new BoundingVolume(BOUNDING_SHAPE::AABB, mesh);
+	}
+	else if (this->LOD->GetCurrentLODType(0.0f) == MODEL_LOD) {
+		Model* model = ModelManager::GetInstance()->GetModel(this->LOD->GetCurrentLODName(0.0f));
+		boundingVolume = new BoundingVolume(BOUNDING_SHAPE::AABB, model);
+	}
+	DetachMesh();
+	DetachModel();
+	light = nullptr;
+	environmentMap = nullptr;
+	castShadows = true;
+	highQualityShadows = false;
 }
 
 GameObject::GameObject(std::string& _name, Light* light) {
@@ -80,11 +145,14 @@ GameObject::GameObject(std::string& _name, Light* light) {
 	sceneNode = new SceneNode();
 	sceneNode->AddObject(this);
 	AttachLight(light);
+	LOD = nullptr;
 	if (nameIndex == nullptr) {
 		nameIndex = new std::map<std::string, GameObject*>();
 	}
 	RegisterGameObject(_name, this);
 	environmentMap = nullptr;
+	castShadows = true;
+	highQualityShadows = false;
 }
 
 GameObject::GameObject(std::string& _name, GameObject* parent, Light* light) {
@@ -97,7 +165,10 @@ GameObject::GameObject(std::string& _name, GameObject* parent, Light* light) {
 
 	parent->AttachChild(this);
 	AttachLight(light);
+	LOD = nullptr;
 	environmentMap = nullptr;
+	castShadows = true;
+	highQualityShadows = false;
 }
 
 GameObject::~GameObject() {
@@ -106,9 +177,11 @@ GameObject::~GameObject() {
 	delete light;
 	delete boundingVolume;
 	delete rigidBody;
+	delete LOD;
 	light = nullptr;
 	boundingVolume = nullptr;
 	rigidBody = nullptr;
+	LOD = nullptr;
 }
 
 void GameObject::RegisterGameObject(std::string& _name, GameObject* object) {
@@ -277,6 +350,18 @@ bool GameObject::HasLight() {
 	return light != nullptr;
 }
 
+void GameObject::SetCastShadows(bool _shadows) {
+	castShadows = _shadows;
+}
+
+bool GameObject::CanCastShadows() {
+	return castShadows;
+}
+
+void GameObject::HighQualityShadows(bool _bool) {
+	highQualityShadows = _bool;
+}
+
 void GameObject::EnableEnvironmentMap() {
 	environmentMap = new EnvironmentMap(128, GetPosition());
 }
@@ -334,6 +419,22 @@ void GameObject::Render(Camera *camera, std::vector<Light*> lights, glm::mat4 mo
 		model = ModelManager::GetInstance()->GetModel(modelName);
 		model->BindUniforms(camera, lights, modelMatrix, viewMatrix, projectionMatrix);
 		model->Render();
+	} else if (LOD != nullptr) {
+
+		float distance = glm::length(sceneNode->GetPosition() - camera->GetPosition());
+
+		if (LOD->GetCurrentLODType(distance) == MESH_LOD) {
+			Mesh* mesh;
+			mesh = MeshManager::GetInstance()->GetMesh(LOD->GetCurrentLODName(distance));
+			mesh->BindUniforms(camera, lights, modelMatrix, viewMatrix, projectionMatrix);
+			mesh->Render();
+		}
+		else if (LOD->GetCurrentLODType(distance) == MODEL_LOD) {
+			Model* model;
+			model = ModelManager::GetInstance()->GetModel(LOD->GetCurrentLODName(distance));
+			model->BindUniforms(camera, lights, modelMatrix, viewMatrix, projectionMatrix);
+			model->Render();
+		}
 	}
 }
 
@@ -349,6 +450,22 @@ void GameObject::RenderLowDetail(Camera *camera, glm::mat4 modelMatrix, glm::mat
 		model = ModelManager::GetInstance()->GetModel(modelName);
 		model->BindUniformsLowDetail(camera, modelMatrix, viewMatrix, projectionMatrix);
 		model->RenderLowDetail();
+	} else if (LOD != nullptr) {
+
+		float distance = glm::length(sceneNode->GetPosition() - camera->GetPosition());
+
+		if (LOD->GetCurrentLODType(distance) == MESH_LOD) {
+			Mesh* mesh;
+			mesh = MeshManager::GetInstance()->GetMesh(LOD->GetCurrentLODName(distance));
+			mesh->BindUniformsLowDetail(camera, modelMatrix, viewMatrix, projectionMatrix);
+			mesh->RenderLowDetail();
+		}
+		else if (LOD->GetCurrentLODType(distance) == MODEL_LOD) {
+			Model* model;
+			model = ModelManager::GetInstance()->GetModel(LOD->GetCurrentLODName(distance));
+			model->BindUniformsLowDetail(camera, modelMatrix, viewMatrix, projectionMatrix);
+			model->RenderLowDetail();
+		}
 	}
 }
 
@@ -362,6 +479,30 @@ void GameObject::RenderDepth(glm::mat4 modelMatrix, glm::mat4 lightSpaceMatrix) 
 	else if (modelName != "") {
 		Model* model;
 		model = ModelManager::GetInstance()->GetModel(modelName);
+		model->BindUniformsDepth(modelMatrix, lightSpaceMatrix);
+		model->RenderDepth();
+	}
+	else if (LOD != nullptr && highQualityShadows && LOD->GetFirstLODType() == MESH_LOD) {
+		Mesh* mesh;
+		mesh = MeshManager::GetInstance()->GetMesh(LOD->GetFirstLODName());
+		mesh->BindUniformsDepth(modelMatrix, lightSpaceMatrix);
+		mesh->RenderDepth();
+	}
+	else if (LOD != nullptr && highQualityShadows && LOD->GetFirstLODType() == MODEL_LOD) {
+		Model* model;
+		model = ModelManager::GetInstance()->GetModel(LOD->GetFirstLODName());
+		model->BindUniformsDepth(modelMatrix, lightSpaceMatrix);
+		model->RenderDepth();
+	}
+	else if (LOD != nullptr && !highQualityShadows && LOD->GetLastLODType() == MESH_LOD) {
+		Mesh* mesh;
+		mesh = MeshManager::GetInstance()->GetMesh(LOD->GetLastLODName());
+		mesh->BindUniformsDepth(modelMatrix, lightSpaceMatrix);
+		mesh->RenderDepth();
+	}
+	else if (LOD != nullptr && !highQualityShadows && LOD->GetLastLODType() == MODEL_LOD) {
+		Model* model;
+		model = ModelManager::GetInstance()->GetModel(LOD->GetLastLODName());
 		model->BindUniformsDepth(modelMatrix, lightSpaceMatrix);
 		model->RenderDepth();
 	}

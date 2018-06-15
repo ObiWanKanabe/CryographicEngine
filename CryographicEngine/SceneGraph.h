@@ -27,6 +27,8 @@ public:
 	SceneGraph();
 	~SceneGraph();
 
+	bool firstRender;
+
 	SceneNode* GetRootSceneNode();
 	std::vector<Light*> GetSceneLights();
 	std::vector<Object*> GetSceneObjects();

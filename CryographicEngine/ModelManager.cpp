@@ -15,21 +15,32 @@ ModelManager::~ModelManager() {
 	theInstance = nullptr;
 }
 
-ModelManager::HandleType ModelManager::StoreModel(std::string &name, Model* Model) {
+Model* ModelManager::LoadModel(std::string &name, std::string filePath) {
+	Model* model = new Model(name, filePath);
+	StoreModel(name, model);
+	return model;
+}
+
+Model* ModelManager::LoadModel(std::string &name, std::string filePath, Shader* shader) {
+	Model* model = new Model(name, filePath, shader);
+	StoreModel(name, model);
+	return model;
+}
+
+ModelManager::HandleType ModelManager::StoreModel(std::string &name, Model* model) {
 	ModelManager::HandleType output(-1);
 	output = models.Get(name);
 	if (!output.IsNull()) {
 		std::cerr << "ERROR : Model name: " << name << " is already in use." << std::endl;
 		return output;
 	}
-	Model->SetName(name);
-	for (size_t i = 0; i < Model->GetMeshes().size(); i++) {
-		MeshManager::GetInstance()->StoreMesh(name + std::string("_") + Model->GetMeshes().at(i)->GetName(), Model->GetMeshes().at(i));
-		Material* material = MaterialManager::GetInstance()->GetMaterial(Model->GetMeshes().at(i)->GetMaterialName());
-		material->SetName(name + std::string("_") + material->GetName());
-		material->SetShaderName(Model->GetShaderName());
+	for (size_t i = 0; i < model->GetMeshes().size(); i++) {
+		MeshManager::GetInstance()->StoreMesh(model->GetMeshes().at(i)->GetName(), model->GetMeshes().at(i));
+		Material* material = MaterialManager::GetInstance()->GetMaterial(model->GetMeshes().at(i)->GetMaterialName());
+		material->SetName(material->GetName());
+		material->SetShaderName(model->GetShaderName());
 	}
-	return models.Put(name, Model);
+	return models.Put(name, model);
 }
 
 Model* ModelManager::GetModel(ModelManager::HandleType &handle) {

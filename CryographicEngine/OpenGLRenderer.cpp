@@ -77,9 +77,11 @@ void OpenGLRenderer::Render(Window *window, Frustum &frustum, Camera *camera, Cu
 	lights = scenegraph->GetSceneLights();
 
 	// Rendering Shadow Maps to the one directional light in the scene
+
 	for (int i = 0; i < lights.size(); i++) {
-		if (lights[i]->GetType() == LIGHT_TYPE::DIRECTIONAL_LIGHT) {
-			for (int j = 0; j < 4; j++) {
+		if (lights[i]->HasShadows()) {
+			int renders = lights[i]->GetNumDepthMaps();
+			for (int j = 0; j < renders; j++) {
 				lights[i]->PrepareShadow(j);
 				scenegraph->RenderDepthSceneGraph(frustum, camera, lights[i], j);
 			}

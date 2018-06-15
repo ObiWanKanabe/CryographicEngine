@@ -535,12 +535,6 @@ void Mesh::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 mo
 			int spotNr = 0;
 			for (size_t i = 0; i < lights.size(); i++) {
 				lights[i]->BindUniforms(shader, pointNr, spotNr);
-				if (lights[i]->GetType() == LIGHT_TYPE::POINT_LIGHT) {
-					pointNr++;
-				}
-				else if (lights[i]->GetType() == LIGHT_TYPE::SPOT_LIGHT) {
-					spotNr++;
-				}
 			}
 			shader->SetMat4("model", model);
 			shader->SetMat4("view", viewMatrix);
@@ -560,12 +554,6 @@ void Mesh::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 mo
 			int spotNr = 0;
 			for (size_t i = 0; i < lights.size(); i++) {
 				lights[i]->BindUniforms(shader, pointNr, spotNr);
-				if (lights[i]->GetType() == LIGHT_TYPE::POINT_LIGHT) {
-					pointNr++;
-				}
-				else if (lights[i]->GetType() == LIGHT_TYPE::SPOT_LIGHT) {
-					spotNr++;
-				}
 			}
 			shader->SetMat4("model", model);
 			shader->SetMat4("view", viewMatrix);
@@ -582,12 +570,6 @@ void Mesh::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 mo
 		int spotNr = 0;
 		for (size_t i = 0; i < lights.size(); i++) {
 			lights[i]->BindUniforms(shader, pointNr, spotNr);
-			if (lights[i]->GetType() == LIGHT_TYPE::POINT_LIGHT) {
-				pointNr++;
-			}
-			else if (lights[i]->GetType() == LIGHT_TYPE::SPOT_LIGHT) {
-				spotNr++;
-			}
 		}
 		shader->SetMat4("model", modelMatrix);
 		shader->SetMat4("view", viewMatrix);
@@ -603,12 +585,6 @@ void Mesh::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 mo
 		int spotNr = 0;
 		for (size_t i = 0; i < lights.size(); i++) {
 			lights[i]->BindUniforms(shader, pointNr, spotNr);
-			if (lights[i]->GetType() == LIGHT_TYPE::POINT_LIGHT) {
-				pointNr++;
-			}
-			else if (lights[i]->GetType() == LIGHT_TYPE::SPOT_LIGHT) {
-				spotNr++;
-			}
 		}
 		shader->SetMat4("model", modelMatrix);
 		shader->SetMat4("view", viewMatrix);

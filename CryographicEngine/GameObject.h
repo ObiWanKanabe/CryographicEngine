@@ -6,6 +6,7 @@
 #include "ShaderManager.h"
 #include "SceneNode.h"
 #include "RigidBody.h"
+#include "LevelOfDetail.h"
 #include <map>
 
 // Taught in Game Engine Design Class @ Humber College
@@ -21,7 +22,10 @@ private:
 	BoundingVolume* boundingVolume;
 	EnvironmentMap* environmentMap;
 	RigidBody* rigidBody;
+	LevelOfDetail* LOD;
 	static std::map<std::string, GameObject*> *nameIndex;
+	bool castShadows;
+	bool highQualityShadows;
 
 	static void RegisterGameObject(std::string &_name, GameObject *object);
 	static void DeregisterGameObject(std::string &_name);
@@ -32,6 +36,8 @@ public:
 	GameObject(std::string& _name, GameObject* parent, Mesh* mesh);
 	GameObject(std::string& _name, Model* model);
 	GameObject(std::string& _name, GameObject* parent, Model* model);
+	GameObject(std::string& _name, LevelOfDetail* LOD);
+	GameObject(std::string& _name, GameObject* parent, LevelOfDetail* LOD);
 	GameObject(std::string& _name, Light* light);
 	GameObject(std::string& _name, GameObject* parent, Light* light);
 
@@ -75,6 +81,10 @@ public:
 	void AttachLight(Light* light);
 	void DetachLight();
 	bool HasLight();
+
+	void SetCastShadows(bool _shadows);
+	bool CanCastShadows();
+	void HighQualityShadows(bool _bool);
 
 	void EnableEnvironmentMap();
 	void DisableEnvironmentMap();

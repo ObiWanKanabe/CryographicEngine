@@ -140,27 +140,30 @@ void GameEngine::OnStart() {
 	MeshManager::GetInstance()->StoreMesh(std::string("brickBox"), brickBox);
 
 	// Models
-	Model *nanosuitModel = new Model(std::string("../Resources/nanosuit/nanosuit.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModel")));
-	ModelManager::GetInstance()->StoreModel(std::string("nanosuit"), nanosuitModel);
+	Model *nanosuitModel = ModelManager::GetInstance()->LoadModel(std::string("nanosuit"), std::string("../Resources/nanosuit/nanosuit.obj"));
 	nanosuitModel->SetShininess(256.0f);
 	nanosuitModel->SetReflectiveness(1.0f);
 
-	Model *cyborgModel = new Model(std::string("../Resources/cyborg/cyborg.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModelNormals")));
-	ModelManager::GetInstance()->StoreModel(std::string("cyborg"), cyborgModel);
+	Model *cyborgModel = ModelManager::GetInstance()->LoadModel(std::string("cyborg"), std::string("../Resources/cyborg/cyborg.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModelNormals")));
 	cyborgModel->SetReflectiveness(1.0f);
 
-	Model *gameLoftModel = new Model(std::string("../Resources/clay/gameloftLogo.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModelNormals")));
-	ModelManager::GetInstance()->StoreModel(std::string("clay"), gameLoftModel);
+	Model *cyborgModel01 = ModelManager::GetInstance()->LoadModel(std::string("cyborg01"), std::string("../Resources/cyborg01/cyborg01.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModelNormals")));
+	cyborgModel01->SetReflectiveness(1.0f);
+
+	Model *gameLoftModel = ModelManager::GetInstance()->LoadModel(std::string("clay"), std::string("../Resources/clay/gameloftLogo.obj"), ShaderManager::GetInstance()->GetShader(std::string("defaultModelNormals")));
 	gameLoftModel->SetShininess(256.0f);
 
-	Model *terrainModel = new Model(std::string("../Resources/terrain/terrain.obj"), ShaderManager::GetInstance()->GetShader(std::string("terrain")));
-	ModelManager::GetInstance()->StoreModel(std::string("terrain"), terrainModel);
+	Model *terrainModel = ModelManager::GetInstance()->LoadModel(std::string("terrain"), std::string("../Resources/terrain/terrain.obj"), ShaderManager::GetInstance()->GetShader(std::string("terrain")));
 	terrainModel->SetBackFaceCulling(false);
 
+	// LOD grouping
+	LevelOfDetail *cyborgLOD = new LevelOfDetail(cyborgModel);
+	cyborgLOD->AddNextLOD(cyborgModel01, 30.0f);
+
 	// Lights
-	pointLight = new Light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.014f, 0.0007f);
-	spotLight = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -0.2f, -1.0f), 0.014f, 0.0007f, 10.0f, 12.5f);
-	dirLight = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.8f, -0.6f, 0.2f));
+	pointLight = new PointLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.014f, 0.0007f);
+	spotLight = new SpotLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -0.2f, -1.0f), 0.014f, 0.0007f, 10.0f, 12.5f);
+	dirLight = new DirectionalLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.8f, -0.6f, 0.2f));
 
 	// GameObjects
 	GameObject *empty = new GameObject(std::string("emptyGameObject"));
@@ -181,15 +184,17 @@ void GameEngine::OnStart() {
 	terrain->SetScale(glm::vec3(0.02f));
 	terrain->SetPosition(glm::vec3(10.0f, 2.0f, -2.0f));
 
-	GameObject *cyborg = new GameObject(std::string("cyborg"), ModelManager::GetInstance()->GetModel(std::string("cyborg")));
+	GameObject *cyborg = new GameObject(std::string("cyborg"), cyborgLOD);
 	cyborg->SetPosition(glm::vec3(-10.0f, 0.0f, 0.0f));
 	cyborg->SetScale(glm::vec3(1.0f));
+	cyborg->HighQualityShadows(false);
 
 	GameObject *test = new GameObject(std::string("test"), MeshManager::GetInstance()->GetMesh(std::string("whiteBox")));
 	test->SetScale(glm::vec3(1.0f));
 	test->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	test->SetCastShadows(false);
 
-	nanosuit = new GameObject(std::string("nanosuit"), ModelManager::GetInstance()->GetModel(std::string("nanosuit")));
+	nanosuit = new GameObject(std::string("nanosuit"), nanosuitModel);
 	nanosuit->SetScale(glm::vec3(0.25f));
 	nanosuit->SetPosition(glm::vec3(20.0f, 0.0f, 0.0f));
 
@@ -218,6 +223,9 @@ void GameEngine::OnStart() {
 	float radius = 25.0f;
 	float angle = 0.0f;
 	float speed = 0.35f;
+
+	float timers = 0.0f;
+	int loops = 0;
 	
 	while (isRunning) {
 
@@ -225,11 +233,23 @@ void GameEngine::OnStart() {
 
 		// Circle for the point light
 		pointGameObject->SetPosition(glm::vec3(2.5f + (radius * glm::cos(angle)), pointGameObject->GetPosition().y, -2.0f + (radius * glm::sin(angle))));
-		angle += speed * Timer::GetInstance().GetDeltaTime();;
+
+		float deltaTime = Timer::GetInstance().GetDeltaTime();
+
+		angle += speed * deltaTime;
 
 		// Spot light follows the camera
 		spotgameObject->SetPosition(camera->GetPosition());
 		spotLight->SetDirection(camera->GetFront());
+
+		timers += deltaTime;
+		loops += 1;
+
+		if (timers >= 1.0f) {
+			std::cout << 1.0f / deltaTime << std::endl;
+			timers = 0.0f;
+			loops = 0;
+		}
 
 		PreRender();
 		Render();

@@ -20,10 +20,10 @@ public:
 	Model() = delete;
 
 	// Creates a model from the file path
-	Model(std::string filePath);
+	Model(std::string &_name, std::string &filePath);
 
 	// Creates a model from the file path using the provided shader
-	Model(std::string filePath, Shader* shader);
+	Model(std::string &_name, std::string &filePath, Shader* shader);
 
 	// Sets the name of the model in the manager
 	void SetName(std::string &_name);
@@ -102,13 +102,13 @@ private:
 	bool isBackCulled;
 
 	// Initial model loading method
-	void LoadModel(std::string filePath);
+	void LoadModel(std::string &_name, std::string &filePath);
 
 	// Processes the next node in the model, considering a parent-child relationship
-	void ProcessNode(aiNode *node, const aiScene *scene);
+	void ProcessNode(std::string &_name, aiNode *node, const aiScene *scene);
 	
 	// Returns a mesh with all the processed parameters from ASSIMP
-	Mesh* ProcessMesh(aiMesh *mesh, const aiScene *scene);
+	Mesh* ProcessMesh(std::string &_name, aiMesh *mesh, const aiScene *scene);
 
 	// Loads Textures for the model
 	std::vector<Texture> LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);

@@ -1,20 +1,30 @@
-﻿  SceneGraph.cpp
-  OpenGLRenderer.cpp
-c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\openglrenderer.cpp(80): warning C4018: '<': signed/unsigned mismatch
-  Light.cpp
+﻿  BoundingVolume.cpp
+  Generating Code...
+  Compiling...
+  CubeMap.cpp
+  Generating Code...
+  Compiling...
+  GameEngine.cpp
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\gameengine.cpp(237): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   Generating Code...
   Skipping... (no relevant changes detected)
-  SceneNode.cpp
-  PhysicsEngine.cpp
+  SpotLight.cpp
+  PointLight.cpp
   ModelManager.cpp
   Model.cpp
   MeshManager.cpp
   Mesh.cpp
+  MaterialManager.cpp
+  Material.cpp
+  Frustum.cpp
+  DirectionalLight.cpp
+  SceneNode.cpp
+  SceneGraph.cpp
+  PhysicsEngine.cpp
+  OpenGLRenderer.cpp
+  LevelOfDetail.cpp
   GameObject.cpp
   GameInterface.cpp
-  GameEngine.cpp
-  Frustum.cpp
-  BoundingVolume.cpp
 SDL2_image.lib(SDL2_image.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored
 SDL2_image.lib(SDL2_image.dll) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
 opengl32.lib(OPENGL32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored

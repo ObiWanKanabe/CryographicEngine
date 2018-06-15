@@ -20,6 +20,10 @@ public:
 
 	~ModelManager();
 
+	Model* LoadModel(std::string &name, std::string filePath);
+
+	Model* LoadModel(std::string &name, std::string filePath, Shader *shader);
+
 	ModelManager::HandleType StoreModel(std::string &name, Model *model);
 
 	Model* GetModel(ModelManager::HandleType &handle);

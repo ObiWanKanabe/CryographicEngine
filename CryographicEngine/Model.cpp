@@ -1,13 +1,14 @@
 #include "Model.h"
 
-Model::Model(std::string filePath) {
-	LoadModel(filePath);
+Model::Model(std::string &_name, std::string &filePath) {
+	LoadModel(_name, filePath);
 	shaderName = std::string("defaultModel");
 	isBackCulled = true;
+	name = _name;
 }
 
-Model::Model(std::string filePath, Shader* shader) {
-	LoadModel(filePath);
+Model::Model(std::string &_name, std::string &filePath, Shader* shader) {
+	LoadModel(_name,filePath);
 	name = "";
 	if (shader->GetName() == "" && name == "") {
 		std::cerr << "Shader provided for model is not in the shader manager and cannot be used" << std::endl;
@@ -17,6 +18,7 @@ Model::Model(std::string filePath, Shader* shader) {
 	}
 	shaderName = shader->GetName();
 	isBackCulled = true;
+	name = _name;
 }
 
 void Model::SetName(std::string& _name) {
@@ -66,12 +68,6 @@ void Model::BindUniforms(Camera *camera, std::vector<Light*> lights, glm::mat4 m
 	int spotNr = 0;
 	for (size_t i = 0; i < lights.size(); i++) {
 		lights[i]->BindUniforms(shader, pointNr, spotNr);
-		if (lights[i]->GetType() == LIGHT_TYPE::POINT_LIGHT) {
-			pointNr++;
-		}
-		else if (lights[i]->GetType() == LIGHT_TYPE::SPOT_LIGHT) {
-			spotNr++;
-		}
 	}
 	shader->SetMat4("model", model);
 	shader->SetMat4("view", viewMatrix);
@@ -132,9 +128,13 @@ void Model::RenderDepth() {
 	Shader* shader = ShaderManager::GetInstance()->GetShader(std::string("defaultShadowDepth"));
 	shader->Use();
 
+	glCullFace(GL_FRONT_FACE);
+
 	for (unsigned int i = 0; i < meshes.size(); i++) {
 		meshes[i]->RenderDepth();
 	}
+
+	glCullFace(GL_BACK);
 }
 
 void Model::Draw() {
@@ -152,7 +152,7 @@ void Model::PostRender() {
 		glEnable(GL_CULL_FACE);
 }
 
-void Model::LoadModel(std::string filePath) {
+void Model::LoadModel(std::string &_name, std::string &filePath) {
 	// We're setting up the assimp scene here
 	// Making sure the model uses only triangles and the UVs are flipped when necessary
 	Assimp::Importer import;
@@ -165,24 +165,24 @@ void Model::LoadModel(std::string filePath) {
 	}
 	directory = filePath.substr(0, filePath.find_last_of('/'));
 
-	ProcessNode(scene->mRootNode, scene);
+	ProcessNode(_name, scene->mRootNode, scene);
 }
 
-void Model::ProcessNode(aiNode *node, const aiScene *scene) {
+void Model::ProcessNode(std::string &_name, aiNode *node, const aiScene *scene) {
 	
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-		meshes.push_back(ProcessMesh(mesh, scene));
+		meshes.push_back(ProcessMesh(_name, mesh, scene));
 	}
 	
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		ProcessNode(node->mChildren[i], scene);
+		ProcessNode(_name, node->mChildren[i], scene);
 	}
 }
 
-Mesh* Model::ProcessMesh(aiMesh* _mesh, const aiScene *scene) {
+Mesh* Model::ProcessMesh(std::string &_name, aiMesh* _mesh, const aiScene *scene) {
 	std::vector<GLfloat> vertices;
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
@@ -268,7 +268,7 @@ Mesh* Model::ProcessMesh(aiMesh* _mesh, const aiScene *scene) {
 	position /= static_cast<float>(_mesh->mNumVertices);
 
 	// Create the mesh using our mesh class and pass in the imported values
-	Mesh *mesh = new Mesh(vertices, indices, textures, position, std::string(_mesh->mName.C_Str()), shaderName);
+	Mesh *mesh = new Mesh(vertices, indices, textures, position, _name + "_" + std::string(_mesh->mName.C_Str()), shaderName);
 	return mesh;
 }	
 
