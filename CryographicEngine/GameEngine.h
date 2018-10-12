@@ -40,8 +40,6 @@ private:
 	DirectionalLight *dirLight;
 	PointLight *pointLight;
 
-	GameObject* nanosuit;
-
 public:
 
 	// Default Deconstructor
