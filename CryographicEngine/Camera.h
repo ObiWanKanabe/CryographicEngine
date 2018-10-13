@@ -38,8 +38,8 @@ private:
 	float FOV;
 
 	// Utility Variables
-	float lastX = SCREEN_WDITH / 2.0f;
-	float lastY = SCREEN_HEIGHT / 2.0f;
+	float lastX = 1200.0f / 2.0f;
+	float lastY = 900.0f / 2.0f;
 	bool firstMouse = true;
 
 	float near_plane;

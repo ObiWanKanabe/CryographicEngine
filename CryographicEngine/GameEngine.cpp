@@ -35,13 +35,13 @@ SceneNode* GameEngine::GetRootSceneNode() {
 }
 
 void GameEngine::OnStart() {
-	window = new Window("Cryographic Engine", 1200, 900);
+	window = new Window("Cryographic Engine", 1280, 720);
 	renderer = new OpenGLRenderer(window);
 	sceneGraph = new SceneGraph();
 	frustum = new Frustum();
 	camera = new Camera();
-	frustum->WindowResize(camera->GetFOV(), static_cast<float>(window->GetWidth() / window->GetHeight()), 0.1f, 100.0f);
-	frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
+	//frustum->WindowResize(camera->GetFOV(), static_cast<float>(window->GetWidth() / window->GetHeight()), 0.1f, 100.0f);
+	//frustum->CameraMovement(camera->GetPosition(), -camera->GetFront(), camera->GetUp(), camera->GetRight());
 	
 	//Shaders
 	ShaderManager::GetInstance()->StoreShader(std::string("defaultImage"), "../Shaders/imgVertexShader.vs", "../Shaders/imgFragmentShader.fs");
@@ -296,6 +296,10 @@ void GameEngine::HandleInput() {
 					pointLight->SetColour(glm::vec3(1.0f));
 				else if (pointLight->GetDiffuseColour() == glm::vec3(1.0f))
 					pointLight->SetColour(glm::vec3(0.0f));
+				break;
+			case SDLK_F11:
+				window->ToggleFullScreen();
+				renderer->InitFrameBuffers(window);
 				break;
 			case SDLK_ESCAPE:
 				isRunning = false;

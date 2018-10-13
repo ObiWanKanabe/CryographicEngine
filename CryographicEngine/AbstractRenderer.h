@@ -13,6 +13,7 @@ public:
 	virtual ~AbstractRenderer() {};
 
 	virtual bool Init(Window *window) = 0;
+	virtual bool InitFrameBuffers(Window *window) = 0;
 
 	virtual void PreRender(Window *window, Camera *camera, CubeMap *skybox) = 0;
 	virtual void Render(Window *window, Frustum &frustum, Camera *camera, CubeMap *skybox, SceneGraph *scenegraph) = 0;

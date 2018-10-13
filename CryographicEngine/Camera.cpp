@@ -29,8 +29,8 @@ Camera::Camera(glm::vec3 _pos, float _yaw, float _pitch) : position(_pos), yaw(-
 	UpdateCameraVectors();
 }
 
-Camera::Camera(glm::vec3 _pos, float _yaw, float _pitch, float _speed, float _sensitivity, float _zoom) : 
-	position(_pos), yaw(-90.0f + _yaw), pitch(_pitch), movementSpeed(_speed), mouseSensitivity(_sensitivity), FOV(_zoom) {
+Camera::Camera(glm::vec3 _pos, float _yaw, float _pitch, float _speed, float _sensitivity, float _zoom) :
+	position(_pos), yaw(-90.0f + _yaw), pitch(_pitch), movementSpeed(_speed), mouseSensitivity(_sensitivity), FOV(_zoom) {	
 	front = glm::vec3(0.0f, 0.0f, -1.0f);
 	worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	FOV = 75.0f;
@@ -131,7 +131,6 @@ void Camera::ProcessMouseScroll(float offsetY) {
 		FOV = 10.0f;
 	if (FOV >= 75.0f)
 		FOV = 75.0f;
-
 }
 
 void Camera::UpdateCameraVectors() {

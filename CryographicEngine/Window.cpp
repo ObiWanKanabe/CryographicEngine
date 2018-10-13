@@ -78,6 +78,8 @@ void Window::SetAttributes() {
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
+	_isFullScreen = false;
+
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -85,7 +87,37 @@ void Window::SetAttributes() {
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CW);
 	glDepthFunc(GL_LESS);
+}
 
+void Window::SetFullScreen(bool fullscreen) {
+	SDL_SetWindowFullscreen(_window, fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_SHOWN);
+
+	_isFullScreen = fullscreen;
+
+	SDL_DisplayMode DM;
+	SDL_GetCurrentDisplayMode(0, &DM);
+
+	_width = DM.w;
+	_height = DM.h;
+}
+
+void Window::ToggleFullScreen() {
+	if (_isFullScreen) {
+		SetFullScreen(false);
+		Resize(_lastWidth, _lastHeight);
+	}
+	else if (!_isFullScreen) {
+		_lastWidth = _width;
+		_lastHeight = _height;
+		SetFullScreen(true);
+	}
+}
+
+void Window::Resize(int width, int height) {
+	SDL_SetWindowSize(_window, width, height);
+
+	_width = width;
+	_height = height;
 }
 
 void Window::Clear() const {

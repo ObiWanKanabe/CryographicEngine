@@ -6,9 +6,6 @@
 #include <SDL_image.h>
 #include <glew.h>
 
-#define SCREEN_WDITH 1200.0f
-#define SCREEN_HEIGHT 900.0f
-
 class Window {
 
 public:
@@ -29,6 +26,15 @@ public:
 
 	// Set SDL/OpenGL window attributes
 	void SetAttributes();
+
+	// Set Window fullscreen settings
+	void SetFullScreen(bool fullscreen);
+
+	// Toggles fullscreen on/off depending on current state
+	void ToggleFullScreen();
+
+	// Sets the Window properties to the resized window
+	void Resize(int width, int height);
 
 	// Returns if the window is closed
 	inline bool IsClosed() const { return _closed; }
@@ -51,6 +57,12 @@ private:
 
 	// Width and Height of the window in pixels
 	int _width, _height;
+
+	// Saved Width and Height of the window before fullscreen
+	int _lastWidth, _lastHeight;
+
+	// Bool if window is fullscreen or not
+	bool _isFullScreen;
 
 	// By default the window is not closed
 	bool _closed = false;

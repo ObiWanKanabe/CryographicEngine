@@ -39,6 +39,9 @@ public:
 	// Initialize all buffer objects, vertices and texture here
 	virtual bool Init(Window *window) override;
 
+	// Initialize the buffer objects here
+	virtual bool InitFrameBuffers(Window *window) override;
+
 	// Pre render here
 	virtual void PreRender(Window *window, Camera *camera, CubeMap *skybox) override;
 

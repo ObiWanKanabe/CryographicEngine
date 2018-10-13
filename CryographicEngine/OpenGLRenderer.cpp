@@ -15,6 +15,34 @@ bool OpenGLRenderer::Init(Window *window) {
 	shader = new Shader("../Shaders/screen.vs", "../Shaders/screen.fs");
 	//shader = new Shader("../Shaders/shadowDebug.vs", "../Shaders/shadowDebug.fs");
 
+	// Intialization of frame buffers here
+	InitFrameBuffers(window);
+
+	// The vertices of our quad, no transformations necessary since it's being place right at the screen
+	vertices = {
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		-1.0f, -1.0f,  0.0f, 0.0f,
+		1.0f, -1.0f,  1.0f, 0.0f,
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		1.0f, -1.0f,  1.0f, 0.0f,
+		1.0f,  1.0f,  1.0f, 1.0f
+	};
+
+	// Generating the VAOs and VBOs for our final screen quad
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), &vertices[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+
+	return true;
+}
+
+bool OpenGLRenderer::InitFrameBuffers(Window *window) {
 	// Initializing the final framebuffer object and putting it into a texture
 	// We're only going to put this coloured texture on the final screen quad
 	glGenFramebuffers(1, &FBO);
@@ -42,27 +70,6 @@ bool OpenGLRenderer::Init(Window *window) {
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	// The vertices of our quad, no transformations necessary since it's being place right at the screen
-	vertices = {
-		-1.0f,  1.0f,  0.0f, 1.0f,
-		-1.0f, -1.0f,  0.0f, 0.0f,
-		1.0f, -1.0f,  1.0f, 0.0f,
-		-1.0f,  1.0f,  0.0f, 1.0f,
-		1.0f, -1.0f,  1.0f, 0.0f,
-		1.0f,  1.0f,  1.0f, 1.0f
-	};
-
-	// Generating the VAOs and VBOs for our final screen quad
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), &vertices[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-
 	return true;
 }
 
@@ -72,7 +79,7 @@ void OpenGLRenderer::PreRender(Window *window, Camera *camera, CubeMap *skybox) 
 
 void OpenGLRenderer::Render(Window *window, Frustum &frustum, Camera *camera, CubeMap *skybox, SceneGraph *scenegraph) {
 	glm::mat4 viewMatrix = glm::mat4(camera->GetViewMatrix());
-	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), static_cast<float>(window->GetWidth() / window->GetHeight()), 0.1f, 100.0f);
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->GetFOV()), static_cast<float>(window->GetWidth()) / static_cast<float>(window->GetHeight()), 0.1f, 100.0f);
 
 	lights = scenegraph->GetSceneLights();
 
@@ -83,7 +90,7 @@ void OpenGLRenderer::Render(Window *window, Frustum &frustum, Camera *camera, Cu
 			int renders = lights[i]->GetNumDepthMaps();
 			for (int j = 0; j < renders; j++) {
 				lights[i]->PrepareShadow(j);
-				scenegraph->RenderDepthSceneGraph(frustum, camera, lights[i], j);
+				scenegraph->RenderDepthSceneGraph(frustum, window, camera, lights[i], j);
 			}
 		}
 	}
@@ -98,7 +105,7 @@ void OpenGLRenderer::Render(Window *window, Frustum &frustum, Camera *camera, Cu
 
 	skybox->PreRender();
 
-	scenegraph->RenderSceneGraph(frustum, camera, skybox);
+	scenegraph->RenderSceneGraph(frustum, window, camera, skybox);
 
 	skybox->BindUniforms(viewMatrix, projectionMatrix);
 	skybox->Render();
