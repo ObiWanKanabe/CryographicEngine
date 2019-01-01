@@ -21,6 +21,10 @@ public:
 
 	virtual void Clear() = 0;
 
+	virtual void SetMSAA(bool _MSAA, Window *window) = 0;
+	virtual void ToggleMSAA(Window *window) = 0;
+	virtual void SetMSAASamples(unsigned int _samples, Window *window) = 0;
+
 protected:
 	bool _closed = false;
 };

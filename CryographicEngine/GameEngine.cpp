@@ -301,6 +301,9 @@ void GameEngine::HandleInput() {
 				window->ToggleFullScreen();
 				renderer->InitFrameBuffers(window);
 				break;
+			case SDLK_g:
+				renderer->ToggleMSAA(window);
+				break;
 			case SDLK_ESCAPE:
 				isRunning = false;
 				break;

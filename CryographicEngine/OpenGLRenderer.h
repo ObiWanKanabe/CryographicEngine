@@ -10,7 +10,10 @@ private:
 	// VAOs and VBOs of the final screen quad
 	GLuint VAO, VBO;
 	
-	// The frame buffer object and colour output texture of the final screen quad
+	// The multisampled frame buffer object and colour output texture
+	GLuint MSFBO, MStextureColourBuffer;
+
+	// The non multisampled frame buffer object and colour output texture texture of the final screen quad
 	GLuint FBO, textureColourBuffer;
 
 	// Depth Map FBO and buffer texture for testing
@@ -22,9 +25,12 @@ private:
 	// Shader to be used when drawing the final screen quad
 	Shader* shader;
 
-	Light* shadowLight;
-
+	// Storing a list to all the lights in the scene
 	std::vector<Light*> lights;
+
+	// MSAA Properties
+	bool MSAA;
+	unsigned int samples;
 
 public:
 
@@ -53,6 +59,11 @@ public:
 
 	// Clear renderer here
 	virtual void Clear() override;
+
+	// MSAA functions
+	virtual void SetMSAA(bool _MSAA, Window *window) override;
+	virtual void ToggleMSAA(Window *window) override;
+	virtual void SetMSAASamples(unsigned int _samples, Window *window) override;
 };
 #endif
 
