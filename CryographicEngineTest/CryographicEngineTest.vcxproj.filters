@@ -52,5 +52,95 @@
     <None Include="..\Shaders\reflectVertexShader.vs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\Shaders\clay.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\clay.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\colourNoLight.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\colourNoLight.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\defaultImageNormals.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\defaultImageNormals.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\defaultShadow.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\defaultShadow.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\fragmentShaderSource.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\glslangValidator.exe">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\lowDetailImage">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\lowDetailImage.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\lowDetailImage.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\lowDetailModel.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\lowDetailModel.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\model.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\model.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\modelNormals.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\modelNormals.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\refract.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\refract.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\screen.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\screen.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\shadowDebug.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\shadowDebug.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\terrain.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\terrain.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\vertexShaderSource.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\screenHDRExposure.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\screenHDR.fs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

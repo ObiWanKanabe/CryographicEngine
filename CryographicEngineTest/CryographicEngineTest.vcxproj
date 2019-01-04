@@ -154,14 +154,44 @@
     <ClInclude Include="DemoApp.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Shaders\clay.fs" />
+    <None Include="..\Shaders\clay.vs" />
     <None Include="..\Shaders\colourFragmentShader.fs" />
+    <None Include="..\Shaders\colourNoLight.fs" />
+    <None Include="..\Shaders\colourNoLight.vs" />
     <None Include="..\Shaders\colourVertexShader.vs" />
     <None Include="..\Shaders\cubemapFragmentShader.fs" />
     <None Include="..\Shaders\cubemapVertexShader.vs" />
+    <None Include="..\Shaders\defaultImageNormals.fs" />
+    <None Include="..\Shaders\defaultImageNormals.vs" />
+    <None Include="..\Shaders\defaultShadow.fs" />
+    <None Include="..\Shaders\defaultShadow.vs" />
+    <None Include="..\Shaders\fragmentShaderSource.fs" />
+    <None Include="..\Shaders\glslangValidator.exe" />
     <None Include="..\Shaders\imgFragmentShader.fs" />
     <None Include="..\Shaders\imgVertexShader.vs" />
+    <None Include="..\Shaders\lowDetailImage" />
+    <None Include="..\Shaders\lowDetailImage.fs" />
+    <None Include="..\Shaders\lowDetailImage.vs" />
+    <None Include="..\Shaders\lowDetailModel.fs" />
+    <None Include="..\Shaders\lowDetailModel.vs" />
+    <None Include="..\Shaders\model.fs" />
+    <None Include="..\Shaders\model.vs" />
+    <None Include="..\Shaders\modelNormals.fs" />
+    <None Include="..\Shaders\modelNormals.vs" />
     <None Include="..\Shaders\reflectFragmentShader.fs" />
     <None Include="..\Shaders\reflectVertexShader.vs" />
+    <None Include="..\Shaders\refract.fs" />
+    <None Include="..\Shaders\refract.vs" />
+    <None Include="..\Shaders\screen.fs" />
+    <None Include="..\Shaders\screen.vs" />
+    <None Include="..\Shaders\screenHDR.fs" />
+    <None Include="..\Shaders\screenHDRExposure.fs" />
+    <None Include="..\Shaders\shadowDebug.fs" />
+    <None Include="..\Shaders\shadowDebug.vs" />
+    <None Include="..\Shaders\terrain.fs" />
+    <None Include="..\Shaders\terrain.vs" />
+    <None Include="..\Shaders\vertexShaderSource.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

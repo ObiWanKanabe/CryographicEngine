@@ -22,6 +22,14 @@ Spot light toggle with: UP ARROW
 
 Directional light toggle with: DOWN ARROW
 
+Toggle MSAA: G
+
+Toggle Lighting Exposure Mode: J
+
+Increase/Decrease Exposure: U/N
+
+Increase/Decrease Gamma: I/M
+
 Made in Visual Studio 2017, using learning materials and resources from Rob Robson (Humber College), 
 Scott Fielder (Humber College) and Joey de Vries (learnopengl.com).
 

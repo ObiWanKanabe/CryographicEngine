@@ -114,7 +114,7 @@ void GameEngine::OnStart() {
 	Material *woodBoxMat = new Material(ImageManager::GetInstance()->GetImage(std::string("wood_diff")), ShaderManager::GetInstance()->GetShader(std::string("defaultImage")));
 	woodBoxMat->AddImage(ImageManager::GetInstance()->GetImage(std::string("wood_spec")));
 	Material *reflectiveMat = new Material(MATERIAL_TYPE::REFLECTIVE, ShaderManager::GetInstance()->GetShader(std::string("defaultReflective")));
-	Material *whiteMat = new Material(glm::vec3(1.0f, 1.0f, 1.0f), ShaderManager::GetInstance()->GetShader(std::string("plainColour")));
+	Material *whiteMat = new Material(glm::vec3(10.0f, 10.0f, 4.0f), ShaderManager::GetInstance()->GetShader(std::string("plainColour")));
 	Material *woodPlankMat = new Material(ImageManager::GetInstance()->GetImage(std::string("wood")));
 	Material *brickMat = new Material(ImageManager::GetInstance()->GetImage(std::string("brickwall")));
 	brickMat->AddImage(ImageManager::GetInstance()->GetImage(std::string("brickwall_norm")));
@@ -303,6 +303,21 @@ void GameEngine::HandleInput() {
 				break;
 			case SDLK_g:
 				renderer->ToggleMSAA(window);
+				break;
+			case SDLK_j:
+				renderer->ToggleExposureMode();
+				break;
+			case SDLK_u:
+				renderer->SetExposure(renderer->GetExposure() + 0.1f);
+				break;
+			case SDLK_n:
+				renderer->SetExposure(renderer->GetExposure() - 0.1f);
+				break;
+			case SDLK_i:
+				renderer->SetGamma(renderer->GetGamma() + 0.1f);
+				break;
+			case SDLK_m:
+				renderer->SetGamma(renderer->GetGamma() - 0.1f);
 				break;
 			case SDLK_ESCAPE:
 				isRunning = false;

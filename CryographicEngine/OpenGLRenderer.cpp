@@ -12,12 +12,18 @@ OpenGLRenderer::~OpenGLRenderer() {
 
 bool OpenGLRenderer::Init(Window *window) {
 
-	shader = new Shader("../Shaders/screen.vs", "../Shaders/screen.fs");
+	shader = new Shader("../Shaders/screen.vs", "../Shaders/screenHDR.fs");
+	exposureShader = new Shader("../Shaders/screen.vs", "../Shaders/screenHDRExposure.fs");
 	//shader = new Shader("../Shaders/shadowDebug.vs", "../Shaders/shadowDebug.fs");
 	
 	// Default MSAA attributes
 	MSAA = true;
 	samples = 4;
+
+	// Default HDR attributes;
+	exposureMode = false;
+	exposure = 1.5f;
+	gamma = 1.1f;
 
 	// Intialization of frame buffers here
 	InitFrameBuffers(window);
@@ -55,7 +61,7 @@ bool OpenGLRenderer::InitFrameBuffers(Window *window) {
 		glBindFramebuffer(GL_FRAMEBUFFER, MSFBO);
 		glGenTextures(1, &MStextureColourBuffer);
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, MStextureColourBuffer);
-		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, window->GetWidth(), window->GetHeight(), GL_TRUE);
+		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGBA16F, window->GetWidth(), window->GetHeight(), GL_TRUE);
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, MStextureColourBuffer, 0);
 
@@ -82,7 +88,7 @@ bool OpenGLRenderer::InitFrameBuffers(Window *window) {
 		glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 		glGenTextures(1, &textureColourBuffer);
 		glBindTexture(GL_TEXTURE_2D, textureColourBuffer);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, window->GetWidth(), window->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, window->GetWidth(), window->GetHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColourBuffer, 0);
@@ -101,7 +107,7 @@ bool OpenGLRenderer::InitFrameBuffers(Window *window) {
 		glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 		glGenTextures(1, &textureColourBuffer);
 		glBindTexture(GL_TEXTURE_2D, textureColourBuffer);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, window->GetWidth(), window->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, window->GetWidth(), window->GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColourBuffer, 0);
@@ -191,7 +197,19 @@ void OpenGLRenderer::PostRender(Window *window, Camera *camera, CubeMap *skybox)
 
 
 	// Drawing the final screen quad
-	shader->Use();
+	// This Exposure mode option allows the developer to change the exposure of the scene
+	// based on the brightness of lights or due to other reasons
+	if (exposureMode) {
+		exposureShader->Use();
+		exposureShader->SetFloat("exposure", exposure);
+		exposureShader->SetFloat("gamma", gamma);
+	}
+	// Disabling exposure mode simplifies the developers lighting choices and still uses
+	// a simple HDR algorithm that can read lighting values outisde the 0 - 1 range
+	else {
+		shader->Use();
+		shader->SetFloat("gamma", gamma);
+	}
 	glBindVertexArray(VAO);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureColourBuffer);
@@ -225,4 +243,33 @@ void OpenGLRenderer::ToggleMSAA(Window *window) {
 void OpenGLRenderer::SetMSAASamples(unsigned int _samples, Window *window) {
 	samples = _samples;
 	InitFrameBuffers(window);
+}
+
+void OpenGLRenderer::SetExposureMode(bool _exposure) {
+	exposureMode = _exposure;
+}
+
+void OpenGLRenderer::ToggleExposureMode() {
+	if (exposureMode) {
+		SetExposureMode(false);
+	}
+	else if (!exposureMode) {
+		SetExposureMode(true);
+	}
+}
+
+void OpenGLRenderer::SetExposure(float _exposure) {
+	exposure = _exposure;
+}
+
+void OpenGLRenderer::SetGamma(float _gamma) {
+	gamma = _gamma;
+}
+
+float OpenGLRenderer::GetExposure() {
+	return exposure;
+}
+
+float OpenGLRenderer::GetGamma() {
+	return gamma;
 }
