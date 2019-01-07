@@ -1,5 +1,5 @@
 #version 330 core
-out vec4 Fragcolor;
+out vec4 FragColour;
 
 in vec3 ourColour;
 in vec3 FragPos;
@@ -41,5 +41,5 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
 vec3 specular = light.specular * (spec * material.specular);
 
 vec3 result = ambient + diffuse + specular;
-Fragcolor = vec4(result, 1.0f);
+FragColour = vec4(result, 1.0f);
 };

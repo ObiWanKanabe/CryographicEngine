@@ -17,11 +17,9 @@ bool OpenGLRenderer::Init(Window *window) {
 	//shader = new Shader("../Shaders/shadowDebug.vs", "../Shaders/shadowDebug.fs");
 	
 	// Default MSAA attributes
-	MSAA = true;
 	samples = 4;
 
 	// Default HDR attributes;
-	exposureMode = false;
 	exposure = 1.5f;
 	gamma = 1.1f;
 
@@ -54,7 +52,7 @@ bool OpenGLRenderer::Init(Window *window) {
 
 bool OpenGLRenderer::InitFrameBuffers(Window *window) {
 
-	if (MSAA) {
+	if (Settings::GetInstance()->GetVideoSettingState(MSAA)) {
 		// Initializing the final framebuffer object and putting it into a texture
 		// We're only going to put this coloured texture on the final screen quad
 		glGenFramebuffers(1, &MSFBO);
@@ -100,7 +98,7 @@ bool OpenGLRenderer::InitFrameBuffers(Window *window) {
 		}
 
 	}
-	else if (!MSAA) {
+	else if (!Settings::GetInstance()->GetVideoSettingState(MSAA)) {
 		// Initializing the final framebuffer object and putting it into a texture
 		// We're only going to put this coloured texture on the final screen quad
 		glGenFramebuffers(1, &FBO);
@@ -158,9 +156,9 @@ void OpenGLRenderer::Render(Window *window, Frustum &frustum, Camera *camera, Cu
 	glViewport(0, 0, window->GetWidth(), window->GetHeight());
 
 	// Switching to our final screen framebuffer and clearing the buffers
-	if (MSAA)
+	if (Settings::GetInstance()->GetVideoSettingState(MSAA))
 		glBindFramebuffer(GL_FRAMEBUFFER, MSFBO);
-	else if (!MSAA)
+	else if (!Settings::GetInstance()->GetVideoSettingState(MSAA))
 		glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 	glEnable(GL_DEPTH_TEST);
 	window->Clear();
@@ -179,7 +177,7 @@ void OpenGLRenderer::PostRender(Window *window, Camera *camera, CubeMap *skybox)
 
 	// Using the multisampled buffer and blitting the image to the non-multisampled buffer
 	// Doing this so we can apply post processing effects while using MSAA
-	if (MSAA) {
+	if (Settings::GetInstance()->GetVideoSettingState(MSAA)) {
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, MSFBO);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO);
 		glBlitFramebuffer(0, 0, window->GetWidth(), window->GetHeight(), 0, 0, window->GetWidth(), window->GetHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
@@ -199,7 +197,7 @@ void OpenGLRenderer::PostRender(Window *window, Camera *camera, CubeMap *skybox)
 	// Drawing the final screen quad
 	// This Exposure mode option allows the developer to change the exposure of the scene
 	// based on the brightness of lights or due to other reasons
-	if (exposureMode) {
+	if (Settings::GetInstance()->GetVideoSettingState(EXPOSURE)) {
 		exposureShader->Use();
 		exposureShader->SetFloat("exposure", exposure);
 		exposureShader->SetFloat("gamma", gamma);
@@ -227,15 +225,15 @@ void OpenGLRenderer::Clear() {
 }
 
 void OpenGLRenderer::SetMSAA(bool _MSAA, Window *window) {
-	MSAA = _MSAA;
+	Settings::GetInstance()->SetVideoSetting(MSAA, _MSAA);
 	InitFrameBuffers(window);
 }
 
 void OpenGLRenderer::ToggleMSAA(Window *window) {
-	if (MSAA) {
+	if (Settings::GetInstance()->GetVideoSettingState(MSAA)) {
 		SetMSAA(false, window);
 	}
-	else if (!MSAA) {
+	else if (!Settings::GetInstance()->GetVideoSettingState(MSAA)) {
 		SetMSAA(true, window);
 	}
 }
@@ -246,20 +244,21 @@ void OpenGLRenderer::SetMSAASamples(unsigned int _samples, Window *window) {
 }
 
 void OpenGLRenderer::SetExposureMode(bool _exposure) {
-	exposureMode = _exposure;
+	Settings::GetInstance()->SetVideoSetting(EXPOSURE, _exposure);
 }
 
 void OpenGLRenderer::ToggleExposureMode() {
-	if (exposureMode) {
+	if (Settings::GetInstance()->GetVideoSettingState(EXPOSURE)) {
 		SetExposureMode(false);
 	}
-	else if (!exposureMode) {
+	else if (!Settings::GetInstance()->GetVideoSettingState(EXPOSURE)) {
 		SetExposureMode(true);
 	}
 }
 
 void OpenGLRenderer::SetExposure(float _exposure) {
 	exposure = _exposure;
+	exposure = glm::clamp(exposure, 0.0f, 100.0f);
 }
 
 void OpenGLRenderer::SetGamma(float _gamma) {

@@ -1,5 +1,5 @@
 #version 330 core
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColour;
   
 in vec2 TexCoords;
 
@@ -13,10 +13,10 @@ void main()
     vec3 hdrColour = texture(screenTexture, TexCoords).rgb;
     
     // Tone mapping using reinhard technique
-    vec3 mapped = hdrColour / (hdrColour + vec3(1.0f));
+    vec3 mapped = hdrColour / (hdrColour + vec3(1.0));
     
     // Using gamma correction to base our final scene on
     mapped = pow(mapped, vec3(1.0 / gamma));
 
-    FragColor = vec4(mapped, 1.0);
+    FragColour = vec4(mapped, 1.0);
 }

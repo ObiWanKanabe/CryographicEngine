@@ -13,6 +13,10 @@ private:
 	// The multisampled frame buffer object and colour output texture
 	GLuint MSFBO, MStextureColourBuffer;
 
+	// The pingpong framebuffer object and colour output texture used in bloom effect
+	// This is used to blur the bright parts stored from the previous framebuffer
+	GLuint blurFBO[2], blurColourBuffer[2];
+
 	// The non multisampled frame buffer object and colour output texture texture of the final screen quad
 	GLuint FBO, textureColourBuffer;
 
@@ -30,11 +34,9 @@ private:
 	std::vector<Light*> lights;
 
 	// MSAA Properties
-	bool MSAA; // Wether MSAA is enabled or not
 	unsigned int samples; // Number of samples used in MSAA
 
 	// HDR Properties
-	bool exposureMode; // Wether different exposure mode is enabled or not
 	float exposure; // Exposure value
 	float gamma; // Gamma value to adjust for different display's brightness
 

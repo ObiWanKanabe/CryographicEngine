@@ -1,5 +1,5 @@
 #version 330 core
-out vec4 FragColor;
+out vec4 FragColour;
 
 in vec3 Normal;
 in vec3 Position;
@@ -11,5 +11,5 @@ void main()
 {             
     vec3 I = normalize(Position - cameraPos);
     vec3 R = refract(I, normalize(Normal), 0.95);
-    FragColor = vec4(texture(skybox, R).rgb, 1.0);
+    FragColour = vec4(texture(skybox, R).rgb, 1.0);
 }

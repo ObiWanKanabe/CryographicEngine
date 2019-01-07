@@ -1,5 +1,5 @@
 #version 330 core
-out vec4 FragColor;
+out vec4 FragColour;
 
 in vec2 TexCoords;
 in vec3 FragPos;
@@ -87,7 +87,7 @@ result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir, FragPosLightSpace
 }
 
 // The final result fragment colour
-FragColor = vec4(result, 1.0f);
+FragColour = vec4(result, 1.0f);
 }
 
 // Calculate shadows for the directional light

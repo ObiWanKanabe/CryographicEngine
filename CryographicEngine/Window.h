@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <glew.h>
+#include "Settings.h"
 
 class Window {
 
@@ -60,9 +61,6 @@ private:
 
 	// Saved Width and Height of the window before fullscreen
 	int _lastWidth, _lastHeight;
-
-	// Bool if window is fullscreen or not
-	bool _isFullScreen;
 
 	// By default the window is not closed
 	bool _closed = false;

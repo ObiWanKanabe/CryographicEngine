@@ -1,5 +1,5 @@
 #version 330 core
-out vec4 FragColor;
+out vec4 FragColour;
 
 in vec2 TexCoords;
 in vec3 FragPos;
@@ -104,7 +104,7 @@ if(reflect_intensity > 0.2)
     reflect_result = material.reflectiveness * vec3(texture(skybox, refl)) * reflect_intensity;
 
 // The final result fragment colour
-FragColor = vec4(result, 1.0) + vec4(reflect_result, 1.0);
+FragColour = vec4(result, 1.0) + vec4(reflect_result, 1.0);
 }
 
 // Calculate shadows for the directional light

@@ -1,5 +1,5 @@
 #version 330 core
-out vec4 FragColor;
+out vec4 FragColour;
 
 in vec3 Normal;
 in vec3 Position;
@@ -46,5 +46,5 @@ vec3 specular = light.specular * spec * vec3(texture(skybox, R));
 vec3 result = specular;
   
 
-    FragColor = vec4(result ,1.0f) + vec4(texture(skybox, R).rgb, 1.0);
+    FragColour = vec4(result ,1.0f) + vec4(texture(skybox, R).rgb, 1.0);
 }

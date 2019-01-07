@@ -78,8 +78,6 @@ void Window::SetAttributes() {
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
-	_isFullScreen = false;
-
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -92,8 +90,6 @@ void Window::SetAttributes() {
 void Window::SetFullScreen(bool fullscreen) {
 	SDL_SetWindowFullscreen(_window, fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_SHOWN);
 
-	_isFullScreen = fullscreen;
-
 	SDL_DisplayMode DM;
 	SDL_GetCurrentDisplayMode(0, &DM);
 
@@ -102,14 +98,16 @@ void Window::SetFullScreen(bool fullscreen) {
 }
 
 void Window::ToggleFullScreen() {
-	if (_isFullScreen) {
+	if (Settings::GetInstance()->GetVideoSettingState(FULLSCREEN)) {
 		SetFullScreen(false);
 		Resize(_lastWidth, _lastHeight);
+		Settings::GetInstance()->SetVideoSetting(FULLSCREEN, false);
 	}
-	else if (!_isFullScreen) {
+	else if (!Settings::GetInstance()->GetVideoSettingState(FULLSCREEN)) {
 		_lastWidth = _width;
 		_lastHeight = _height;
 		SetFullScreen(true);
+		Settings::GetInstance()->SetVideoSetting(FULLSCREEN, true);
 	}
 }
 
