@@ -35,6 +35,9 @@ SceneNode* GameEngine::GetRootSceneNode() {
 }
 
 void GameEngine::OnStart() {
+
+	Settings::GetInstance()->ReadFile();
+
 	window = new Window("Cryographic Engine", 1280, 720);
 	renderer = new OpenGLRenderer(window);
 	sceneGraph = new SceneGraph();
@@ -242,6 +245,7 @@ void GameEngine::OnStart() {
 }
 
 void GameEngine::OnEnd() {
+	Settings::GetInstance()->SaveToFile();
 	renderer->~OpenGLRenderer();
 	window->~Window();
 	sceneGraph->~SceneGraph();

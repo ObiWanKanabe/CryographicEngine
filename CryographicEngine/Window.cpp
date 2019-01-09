@@ -58,6 +58,13 @@ bool Window::Init() {
 	// Clear the window by default black(dark green for testing)
 	Clear();
 
+	// Check to see if Fullscreen has been set on in settings file
+	if (Settings::GetInstance()->GetVideoSettingState(FULLSCREEN)) {
+		_lastWidth = _width;
+		_lastHeight = _height;
+		SetFullScreen(true);
+	}
+
 	return true;
 }
 

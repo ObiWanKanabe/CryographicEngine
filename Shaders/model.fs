@@ -67,7 +67,7 @@ void main()
 {
 
 // All calculations of lighting will be added to this
-vec3 result = vec3(0.0f);
+vec3 result;
 
 // Reflection result will be added as well
 vec3 reflect_result;
@@ -96,8 +96,9 @@ for (int i = 0; i < NR_SPOT_LIGHTS; i++) {
 float reflect_intensity = texture(material.reflective1, TexCoords).r;
 
 // If reflection map is present, reflect the skybox texture
-if(reflect_intensity > 0.1f)
+if(reflect_intensity > 0.1f) {
     reflect_result = material.reflectiveness * vec3(texture(skybox, refl)) * reflect_intensity;
+    }
 
 // The final result fragment colour
 FragColour = vec4(result, 1.0f) + vec4(reflect_result, 1.0f);

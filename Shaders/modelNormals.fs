@@ -67,7 +67,7 @@ void main()
 {
 
 // All calculations of lighting will be added to this
-vec3 result = vec3(0,0,0);
+vec3 result;;
 
 // Reflection result will be added as well
 vec3 reflect_result;
