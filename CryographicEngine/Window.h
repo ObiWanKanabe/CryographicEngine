@@ -13,8 +13,8 @@ public:
 
 	Window() = delete;
 	
-	// Constructor takes a title, width & height
-	Window(const std::string &title, const int width, const int height);
+	// Constructor takes a title, and uses the width & height from the config file
+	Window(const std::string &title);
 
 	// Default Deconstructor
 	~Window();

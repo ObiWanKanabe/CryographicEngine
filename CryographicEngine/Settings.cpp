@@ -3,10 +3,20 @@
 Settings* Settings::theInstance = nullptr;
 
 Settings::Settings() {
+	Init();
+}
+
+void Settings::Init() {
+	videoSettingList.push_back(Video(WIDTH, "Width", 1280));
+	videoSettingList.push_back(Video(HEIGHT, "Height", 720));
 	videoSettingList.push_back(Video(FULLSCREEN, "FullScreen", false));
 	videoSettingList.push_back(Video(MSAA, "MSAA", true));
+	videoSettingList.push_back(Video(MSAA_SAMPLES, "MSAA_Samples", 4));
 	videoSettingList.push_back(Video(EXPOSURE, "Exposure", false));
+	videoSettingList.push_back(Video(EXPOSURE_VALUE, "Exposure_Value", 1.5f));
+	videoSettingList.push_back(Video(GAMMA, "Gamma", 1.1f));
 	videoSettingList.push_back(Video(BLOOM, "Bloom", false));
+	videoSettingList.push_back(Video(BLOOM_PASSES, "Bloom_Passes", 4));
 }
 
 
@@ -22,20 +32,39 @@ Settings* Settings::GetInstance() {
 }
 
 void Settings::ToggleVideoSetting(VideoSetting _setting) {
-	if (videoSettingList.at(_setting).state) {
-		SetVideoSetting(_setting, false);
+	if (videoSettingList.at(_setting).value) {
+		SetVideoSettingBool(_setting, false);
 	}
-	else if (!videoSettingList.at(_setting).state) {
-		SetVideoSetting(_setting, true);
+	else if (!videoSettingList.at(_setting).value) {
+		SetVideoSettingBool(_setting, true);
 	}
 }
 
-void Settings::SetVideoSetting(VideoSetting _setting, bool _result) {
-	videoSettingList.at(_setting).state = _result;
+void Settings::SetVideoSettingBool(VideoSetting _setting, bool _result) {
+	videoSettingList.at(_setting).value = static_cast<float>(_result);
 }
 
-const bool Settings::GetVideoSettingState(VideoSetting _setting) {
-	return videoSettingList.at(_setting).state;
+void Settings::SetVideoSettingInt(VideoSetting _setting, int _result) {
+	videoSettingList.at(_setting).value = static_cast<float>(_result);
+}
+
+void Settings::SetVideoSettingFloat(VideoSetting _setting, float _result) {
+	videoSettingList.at(_setting).value = _result;
+}
+
+const bool Settings::GetVideoSettingBool(VideoSetting _setting) {
+	if (videoSettingList.at(_setting).value > 0.0f)
+		return true;
+	else
+		return false;
+}
+
+const int Settings::GetVideoSettingInt(VideoSetting _setting) {
+	return static_cast<int>(videoSettingList.at(_setting).value);
+}
+
+const float Settings::GetVideoSettingFloat(VideoSetting _setting) {
+	return videoSettingList.at(_setting).value;
 }
 
 VideoPreset Settings::GetVideoPreset() {
@@ -50,7 +79,7 @@ void Settings::ReadFile() {
 	std::ifstream configFile; // Variable to store the config file
 	std::string setting; // The setting we're evaluating
 	std::string evaluation; // The equal sign temporarily stored for ease of use
-	int value; // The value of the setting currently being read
+	float value; // The value of the setting currently being read
 
 	configFile.open("../config.txt");
 
@@ -79,14 +108,14 @@ void Settings::ReadFile() {
 				ResetDefaultSettings();
 				configFile.close();
 				return;
-			} else if (setting != videoSettingList.at(i).name || evaluation != "=" || value < 0 || value > 1) {
+			} else if (setting != videoSettingList.at(i).name || evaluation != "=" || value < 0.0f || i >= videoSettingList.size()) {
 				std::cout << "Incorrect formatting of the config file was found. Default settings set.\n";
 				ResetDefaultSettings();
 				configFile.close();
 				return;
 			}
 			// Applying config files setting changes
-			videoSettingList.at(i).state = value;	
+			videoSettingList.at(i).value = value;
 			i++;
 		}
 		configFile.close();
@@ -98,7 +127,7 @@ void Settings::CheckFile() {
 	std::ifstream configFile; // Variable to store the config file and read from
 	std::string setting; // The setting we're evaluating
 	std::string evaluation; // The equal sign temporarily stored for ease of use
-	int value; // The value of the setting currently being read
+	float value; // The value of the setting currently being read
 
 	configFile.open("../config.txt");
 
@@ -128,7 +157,7 @@ void Settings::CheckFile() {
 				configFile.close();
 				return;
 			}
-			else if (setting != videoSettingList.at(i).name || evaluation != "=" || value < 0 || value > 1 || i >= videoSettingList.size()) {
+			else if (setting != videoSettingList.at(i).name || evaluation != "=" || value < 0.0f || i >= videoSettingList.size()) {
 				std::cout << "Incorrect formatting of the config file was found. Default settings set.\n";
 				ResetDefaultSettings();
 				configFile.close();
@@ -151,7 +180,7 @@ void Settings::SaveToFile() {
 	int i = 0;
 
 	while (i < videoSettingList.size()) {
-		configFile << videoSettingList.at(i).name << " = " << videoSettingList.at(i).state << '\n';
+		configFile << videoSettingList.at(i).name << " = " << videoSettingList.at(i).value << '\n';
 		i++;
 	}
 	return;
@@ -161,10 +190,17 @@ void Settings::ResetDefaultSettings() {
 	std::ofstream configFile;
 
 	configFile.open("../config.txt");
+	
+	// Clear the file and current settings
 	configFile.clear();
+	videoSettingList.clear();
 
+	// Apply initial chosen settings
+	Init();
+
+	// Write to the file
 	for (int i = 0; i < videoSettingList.size(); i++) {
-		configFile << videoSettingList.at(i).name << " = " << videoSettingList.at(i).state << "\n";
+		configFile << videoSettingList.at(i).name << " = " << videoSettingList.at(i).value << "\n";
 	}
 
 	configFile.close();

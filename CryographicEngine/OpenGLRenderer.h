@@ -33,13 +33,6 @@ private:
 	// Storing a list to all the lights in the scene
 	std::vector<Light*> lights;
 
-	// MSAA Properties
-	unsigned int samples; // Number of samples used in MSAA
-
-	// HDR Properties
-	float exposure; // Exposure value
-	float gamma; // Gamma value to adjust for different display's brightness
-
 public:
 
 	OpenGLRenderer() = delete;
@@ -69,15 +62,18 @@ public:
 	virtual void Clear() override;
 
 	// MSAA Functions
-	virtual void SetMSAA(bool _MSAA, Window *window) override;
 	virtual void ToggleMSAA(Window *window) override;
+	virtual void SetMSAA(bool _MSAA, Window *window) override;
 	virtual void SetMSAASamples(unsigned int _samples, Window *window) override;
+	virtual bool GetMSAAState() override;
+	virtual int GetMSAASamples() override;
 
 	// HDR Functions
-	virtual void SetExposureMode(bool _exposure) override;
 	virtual void ToggleExposureMode() override;
+	virtual void SetExposureMode(bool _exposure) override;
 	virtual void SetExposure(float _exposure) override;
 	virtual void SetGamma(float _gamma) override;
+	virtual bool GetExposureState() override;
 	virtual float GetExposure() override;
 	virtual float GetGamma() override;
 };

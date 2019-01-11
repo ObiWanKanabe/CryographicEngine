@@ -1,9 +1,10 @@
 ﻿  Settings.cpp
-c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\settings.cpp(77): warning C4018: '>=': signed/unsigned mismatch
-c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\settings.cpp(125): warning C4018: '>=': signed/unsigned mismatch
-c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\settings.cpp(131): warning C4018: '>=': signed/unsigned mismatch
-c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\settings.cpp(153): warning C4018: '<': signed/unsigned mismatch
-c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\settings.cpp(166): warning C4018: '<': signed/unsigned mismatch
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\settings.cpp(106): warning C4018: '>=': signed/unsigned mismatch
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\settings.cpp(111): warning C4018: '>=': signed/unsigned mismatch
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\settings.cpp(154): warning C4018: '>=': signed/unsigned mismatch
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\settings.cpp(160): warning C4018: '>=': signed/unsigned mismatch
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\settings.cpp(182): warning C4018: '<': signed/unsigned mismatch
+c:\gamedev\year3\gameengine\cryographicengine\cryographicengine\settings.cpp(202): warning C4018: '<': signed/unsigned mismatch
 SDL2_image.lib(SDL2_image.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored
 SDL2_image.lib(SDL2_image.dll) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
 opengl32.lib(OPENGL32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored

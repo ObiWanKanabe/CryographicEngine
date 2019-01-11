@@ -1,7 +1,7 @@
 #include "Window.h"
 #include <iostream>
 
-Window::Window(const std::string &title, const int width, const int height) : _title(title), _width(width), _height(height) {
+Window::Window(const std::string &title) : _title(title) {
 	_closed = !Init();
 }
 
@@ -27,6 +27,9 @@ bool Window::Init() {
 		std::cerr << "Failed to initialize SDL_image.\n";
 		return false;
 	}
+
+	_width = Settings::GetInstance()->GetVideoSettingInt(WIDTH);
+	_height = Settings::GetInstance()->GetVideoSettingInt(HEIGHT);
 
 
 	// Create the window and store it 
@@ -59,7 +62,7 @@ bool Window::Init() {
 	Clear();
 
 	// Check to see if Fullscreen has been set on in settings file
-	if (Settings::GetInstance()->GetVideoSettingState(FULLSCREEN)) {
+	if (Settings::GetInstance()->GetVideoSettingBool(FULLSCREEN)) {
 		_lastWidth = _width;
 		_lastHeight = _height;
 		SetFullScreen(true);
@@ -105,16 +108,16 @@ void Window::SetFullScreen(bool fullscreen) {
 }
 
 void Window::ToggleFullScreen() {
-	if (Settings::GetInstance()->GetVideoSettingState(FULLSCREEN)) {
+	if (Settings::GetInstance()->GetVideoSettingBool(FULLSCREEN)) {
 		SetFullScreen(false);
 		Resize(_lastWidth, _lastHeight);
-		Settings::GetInstance()->SetVideoSetting(FULLSCREEN, false);
+		Settings::GetInstance()->SetVideoSettingBool(FULLSCREEN, false);
 	}
-	else if (!Settings::GetInstance()->GetVideoSettingState(FULLSCREEN)) {
+	else if (!Settings::GetInstance()->GetVideoSettingBool(FULLSCREEN)) {
 		_lastWidth = _width;
 		_lastHeight = _height;
 		SetFullScreen(true);
-		Settings::GetInstance()->SetVideoSetting(FULLSCREEN, true);
+		Settings::GetInstance()->SetVideoSettingBool(FULLSCREEN, true);
 	}
 }
 

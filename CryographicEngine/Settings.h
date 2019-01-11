@@ -11,7 +11,9 @@
 // It will also save the last used settings for the next time
 // The format for the settings file can be seen below
 
-// Name = 1 or 0 (Enabled or Disabled)
+// Name = Value
+// If the value is meant to be true or false, 0 is false, and everything else is true
+// FLoat values where there is supposed to be an int will be cast as an int
 // Ex: FullScreen = 0
 
 // Any new settings added to the enum list and the videoSettingList vector on initialization 
@@ -21,10 +23,16 @@
 // Their position in the list of settings is 0 indexed
 // Currently only has true or false values
 enum VideoSetting {
-	FULLSCREEN, // 0
-	MSAA, // 1
-	EXPOSURE, // 2
-	BLOOM, // 3
+	WIDTH, // 0
+	HEIGHT, // 1
+	FULLSCREEN, // 2
+	MSAA, // 3
+	MSAA_SAMPLES, //4
+	EXPOSURE, // 5
+	EXPOSURE_VALUE, // 6
+	GAMMA, // 7
+	BLOOM, // 8
+	BLOOM_PASSES // 9
 };
 
 // Easy presets for the user to chose from
@@ -41,20 +49,23 @@ private:
 
 	struct Video {
 
-		Video(VideoSetting _setting, std::string _name, bool _state) {
+		Video(VideoSetting _setting, std::string _name, float _value) {
 			setting = _setting;
 			name = _name;
-			state = _state;
+			value = _value;
 			
 		}
 
 		VideoSetting setting;
 		std::string name;
-		bool state;
+		float value;
 	};
 
 	// Private constructor because the settings class is a singleton
 	Settings();
+
+	// Initializes the default settings
+	void Init();
 
 	// Single instance of the Timer
 	static Settings* theInstance;
@@ -70,9 +81,13 @@ public:
 	static Settings* GetInstance();
 
 	void ToggleVideoSetting(VideoSetting _setting);
-	void SetVideoSetting(VideoSetting _setting, bool _result);
+	void SetVideoSettingBool(VideoSetting _setting, bool _result);
+	void SetVideoSettingInt(VideoSetting _setting, int _result);
+	void SetVideoSettingFloat(VideoSetting _settings, float _result);
 
-	const bool GetVideoSettingState(VideoSetting _setting);
+	const bool GetVideoSettingBool(VideoSetting _setting);
+	const int GetVideoSettingInt(VideoSetting _setting);
+	const float GetVideoSettingFloat(VideoSetting _setting);
 
 	VideoPreset GetVideoPreset();
 	void SetVideoPreset(VideoPreset _preset);

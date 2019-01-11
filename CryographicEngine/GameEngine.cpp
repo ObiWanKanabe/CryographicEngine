@@ -38,7 +38,7 @@ void GameEngine::OnStart() {
 
 	Settings::GetInstance()->ReadFile();
 
-	window = new Window("Cryographic Engine", 1280, 720);
+	window = new Window("Cryographic Engine");
 	renderer = new OpenGLRenderer(window);
 	sceneGraph = new SceneGraph();
 	frustum = new Frustum();
@@ -271,6 +271,8 @@ void GameEngine::PostRender() {
 
 void GameEngine::HandleInput() {
 	while (SDL_PollEvent(&events)) {
+
+		float temp = 0;
 
 		const Uint8 *state = SDL_GetKeyboardState(NULL);
 

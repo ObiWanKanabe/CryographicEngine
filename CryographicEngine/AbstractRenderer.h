@@ -24,11 +24,14 @@ public:
 	virtual void SetMSAA(bool _MSAA, Window *window) = 0;
 	virtual void ToggleMSAA(Window *window) = 0;
 	virtual void SetMSAASamples(unsigned int _samples, Window *window) = 0;
+	virtual bool GetMSAAState() = 0;
+	virtual int GetMSAASamples() = 0;
 
-	virtual void SetExposureMode(bool _exposure) = 0;
 	virtual void ToggleExposureMode() = 0;
+	virtual void SetExposureMode(bool _exposure) = 0;
 	virtual void SetExposure(float _exposure) = 0;
 	virtual void SetGamma(float _gamma) = 0;
+	virtual bool GetExposureState() = 0;
 	virtual float GetExposure() = 0;
 	virtual float GetGamma() = 0;
 
