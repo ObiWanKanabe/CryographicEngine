@@ -1,5 +1,6 @@
 #version 330 core
-out vec4 FragColour;
+layout (location = 0) out vec4 FragColour;
+layout (location = 1) out vec4 BloomColour;
 
 in vec2 TexCoords;
 in vec3 FragPos;
@@ -16,10 +17,10 @@ float shininess;
 
 // Three Light types available
 struct DirectionalLight {
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
-	vec3 direction;
+vec3 ambient;
+vec3 diffuse;
+vec3 specular;
+vec3 direction;
 };
 
 struct PointLight {
@@ -87,6 +88,13 @@ result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir, FragPosLightSpace
 
 // The final result fragment colour
 FragColour = vec4(result, 1.0f);
+
+// Extracting bloom colour output to be blurred
+float bloom = dot(FragColour.rgb, vec3(0.2126, 0.7152, 0.0722));
+    if(bloom > 1.0)
+        BloomColour = vec4(FragColour.rgb, 1.0);
+    else
+        BloomColour = vec4(0.0, 0.0, 0.0, 1.0);
 }
 
 // Calculate shadows for the directional light
@@ -122,7 +130,7 @@ shadow /= 9.0;
 // Checking to see if the projected coordinates are outside of the orthographic frustum
 // Don't apply shadows if it is
 if (projCoords.z > 1.0)
-	shadow = 0.0;
+    shadow = 0.0;
 
 return shadow;
 }

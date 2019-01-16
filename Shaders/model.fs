@@ -1,5 +1,6 @@
 #version 330 core
-out vec4 FragColour;
+layout (location = 0) out vec4 FragColour;
+layout (location = 1) out vec4 BloomColour;
 
 in vec2 TexCoords;
 in vec3 FragPos;

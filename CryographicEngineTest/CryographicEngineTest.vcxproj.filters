@@ -142,5 +142,11 @@
     <None Include="..\Shaders\screenHDR.fs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\Shaders\gaussianBlur.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\gaussianBlur.fs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,0 +1,10 @@
+Width = 1280
+Height = 720
+FullScreen = 0
+MSAA = 0
+MSAA_Samples = 4
+Exposure = 0
+Exposure_Value = 1.5
+Gamma = 1.1
+Bloom = 1
+Bloom_Passes = 8

@@ -10,13 +10,13 @@ void Settings::Init() {
 	videoSettingList.push_back(Video(WIDTH, "Width", 1280));
 	videoSettingList.push_back(Video(HEIGHT, "Height", 720));
 	videoSettingList.push_back(Video(FULLSCREEN, "FullScreen", false));
-	videoSettingList.push_back(Video(MSAA, "MSAA", true));
+	videoSettingList.push_back(Video(MSAA, "MSAA", false));
 	videoSettingList.push_back(Video(MSAA_SAMPLES, "MSAA_Samples", 4));
 	videoSettingList.push_back(Video(EXPOSURE, "Exposure", false));
 	videoSettingList.push_back(Video(EXPOSURE_VALUE, "Exposure_Value", 1.5f));
 	videoSettingList.push_back(Video(GAMMA, "Gamma", 1.1f));
-	videoSettingList.push_back(Video(BLOOM, "Bloom", false));
-	videoSettingList.push_back(Video(BLOOM_PASSES, "Bloom_Passes", 4));
+	videoSettingList.push_back(Video(BLOOM, "Bloom", true));
+	videoSettingList.push_back(Video(BLOOM_PASSES, "Bloom_Passes", 8));
 }
 
 

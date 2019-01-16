@@ -14,10 +14,14 @@ public:
 
 	virtual bool Init(Window *window) = 0;
 	virtual bool InitFrameBuffers(Window *window) = 0;
+	virtual void SetUpTextureBuffer(GLuint _FBO, GLuint _texture, unsigned int _totalTextures, unsigned int _index, bool _multisampled, bool _firstTexture, Window *window) = 0;
+	virtual void SetUpRenderBuffer(bool _multisampled, Window *window) = 0;
 
 	virtual void PreRender(Window *window, Camera *camera, CubeMap *skybox) = 0;
 	virtual void Render(Window *window, Frustum &frustum, Camera *camera, CubeMap *skybox, SceneGraph *scenegraph) = 0;
 	virtual void PostRender(Window *window, Camera *camera, CubeMap *skybox) = 0;
+
+	virtual void RenderQuad() = 0;
 
 	virtual void Clear() = 0;
 
@@ -34,6 +38,12 @@ public:
 	virtual bool GetExposureState() = 0;
 	virtual float GetExposure() = 0;
 	virtual float GetGamma() = 0;
+
+	virtual void ToggleBloom(Window *window) = 0;
+	virtual void SetBloom(bool _bloom, Window *window) = 0;
+	virtual void SetBloomPasses(float _passes) = 0;
+	virtual bool GetBloomState() = 0;
+	virtual int GetBloomPasses() = 0;
 
 protected:
 	bool _closed = false;

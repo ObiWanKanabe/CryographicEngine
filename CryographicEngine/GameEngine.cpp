@@ -158,7 +158,7 @@ void GameEngine::OnStart() {
 	cyborgLOD->AddNextLOD(cyborgModel01, 30.0f);
 
 	// Lights
-	pointLight = new PointLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.014f, 0.0007f);
+	pointLight = new PointLight(glm::vec3(1.5f, 1.5f, 1.5f), glm::vec3(0.0f, 0.0f, 0.0f), 0.014f, 0.0007f);
 	spotLight = new SpotLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -0.2f, -1.0f), 0.014f, 0.0007f, 10.0f, 12.5f);
 	dirLight = new DirectionalLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.8f, -0.6f, 0.2f));
 
@@ -218,7 +218,7 @@ void GameEngine::OnStart() {
 		Timer::GetInstance().Update();
 
 		// Circle for the point light
-		pointGameObject->SetPosition(glm::vec3(2.5f + (radius * glm::cos(angle)), pointGameObject->GetPosition().y, -2.0f + (radius * glm::sin(angle))));
+		//pointGameObject->SetPosition(glm::vec3(2.5f + (radius * glm::cos(angle)), pointGameObject->GetPosition().y, -2.0f + (radius * glm::sin(angle))));
 
 		float deltaTime = Timer::GetInstance().GetDeltaTime();
 
@@ -282,21 +282,18 @@ void GameEngine::HandleInput() {
 			break;
 		case SDL_KEYDOWN:
 			switch (events.key.keysym.sym) {
-				// Turn off/on spot light with up arrow
 			case SDLK_UP:
 				if (spotLight->GetDiffuseColour() == glm::vec3(0.0f))
 					spotLight->SetColour(glm::vec3(0.75f));
 				else if (spotLight->GetDiffuseColour() == glm::vec3(0.75f))
 					spotLight->SetColour(glm::vec3(0.0f));
 				break;
-				// Turn off/on directional light with down arrow
 			case SDLK_DOWN:
 				if (dirLight->GetDiffuseColour() == glm::vec3(0.0f))
 					dirLight->SetColour(glm::vec3(0.75f));
 				else if (dirLight->GetDiffuseColour() == glm::vec3(0.75f))
 					dirLight->SetColour(glm::vec3(0.0f));
 				break;
-				// Turn off/on point light with spacebar
 			case SDLK_SPACE:
 				if (pointLight->GetDiffuseColour() == glm::vec3(0.0f))
 					pointLight->SetColour(glm::vec3(1.0f));
@@ -319,10 +316,10 @@ void GameEngine::HandleInput() {
 			case SDLK_n:
 				renderer->SetExposure(renderer->GetExposure() - 0.1f);
 				break;
-			case SDLK_i:
+			case SDLK_y:
 				renderer->SetGamma(renderer->GetGamma() + 0.1f);
 				break;
-			case SDLK_m:
+			case SDLK_b:
 				renderer->SetGamma(renderer->GetGamma() - 0.1f);
 				break;
 			case SDLK_ESCAPE:

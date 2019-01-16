@@ -167,6 +167,8 @@
     <None Include="..\Shaders\defaultShadow.fs" />
     <None Include="..\Shaders\defaultShadow.vs" />
     <None Include="..\Shaders\fragmentShaderSource.fs" />
+    <None Include="..\Shaders\gaussianBlur.fs" />
+    <None Include="..\Shaders\gaussianBlur.vs" />
     <None Include="..\Shaders\glslangValidator.exe" />
     <None Include="..\Shaders\imgFragmentShader.fs" />
     <None Include="..\Shaders\imgVertexShader.vs" />

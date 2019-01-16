@@ -1,5 +1,6 @@
 #version 330 core
-out vec4 FragColour;
+layout (location = 0) out vec4 FragColour;
+layout (location = 1) out vec4 BloomColour;
 
 in vec2 TexCoords;
 in vec3 FragPos;
@@ -15,10 +16,10 @@ float shininess;
 
 // Three Light types available
 struct DirectionalLight {
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
-	vec3 direction;
+vec3 ambient;
+vec3 diffuse;
+vec3 specular;
+vec3 direction;
 };
 
 struct PointLight {
@@ -88,6 +89,13 @@ result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir, FragPosLightSpace
 
 // The final result fragment colour
 FragColour = vec4(result, 1.0f);
+
+// Extracting bloom colour output to be blurred
+float bloom = dot(FragColour.rgb, vec3(0.2126, 0.7152, 0.0722));
+    if(bloom > 1.0)
+        BloomColour = vec4(FragColour.rgb, 1.0);
+    else
+        BloomColour = vec4(0.0, 0.0, 0.0, 1.0);
 }
 
 // Calculate shadows for the directional light
@@ -97,20 +105,20 @@ float ShadowCalculation(vec4 fragPosLightSpace[NR_CASCADES], vec3 normal, vec3 l
 vec3 projCoords[NR_CASCADES];
 
 for (int i = 0; i < NR_CASCADES; i++) {
-	projCoords[i] = fragPosLightSpace[i].xyz / fragPosLightSpace[i].w;
-	projCoords[i] = projCoords[i] * 0.5 + 0.5;
+    projCoords[i] = fragPosLightSpace[i].xyz / fragPosLightSpace[i].w;
+    projCoords[i] = projCoords[i] * 0.5 + 0.5;
 }
 
 // The closest depth value to the camera in the shadowMap
 float closestDepth[NR_CASCADES];
 for (int i = 0; i < NR_CASCADES; i++) {
-	closestDepth[i] = texture(shadowMap[i], projCoords[i].xy).r;   
+    closestDepth[i] = texture(shadowMap[i], projCoords[i].xy).r;   
 }
 
 // The depth value of the current fragment from the light's point of view
 float currentDepth[NR_CASCADES];
 for (int i = 0; i < NR_CASCADES; i++) {
-	currentDepth[i] = projCoords[i].z;   
+    currentDepth[i] = projCoords[i].z;   
 }
 
 // Giving a small bias to prevent shadow acne and darkening surrounding fragments
@@ -123,13 +131,13 @@ float shadow;
 // We are roughly checking which depth is being taken for use in the shadow map
 // This is only an estimation in this iteration, merely to show the concept of CSM
 if (currentDepth[1] + 0.025 <= closestDepth[0] && texture(shadowMap[1], projCoords[1].xy).r > 0.1) {
-	s = 1;
-	if (currentDepth[2] + 0.05 <= closestDepth[1] && texture(shadowMap[2], projCoords[2].xy).r > 0.1) {
-		s = 2;
-		if (currentDepth[3] + 0.1 <= closestDepth[2] && texture(shadowMap[3], projCoords[3].xy).r > 0.1) {
-			s = 3;
-		} 
-	}
+    s = 1;
+    if (currentDepth[2] + 0.05 <= closestDepth[1] && texture(shadowMap[2], projCoords[2].xy).r > 0.1) {
+        s = 2;
+        if (currentDepth[3] + 0.1 <= closestDepth[2] && texture(shadowMap[3], projCoords[3].xy).r > 0.1) {
+            s = 3;
+        } 
+    }
 }
 
 // Using PCF to sample numerous times from the shadow depth map
@@ -147,8 +155,8 @@ shadow /= 9.0;
 
 // Checking to see if the projected coordinates are outside of the orthographic frustum
 // Don't apply shadows if it is
-	if(projCoords[s].z > 1.0)
-        shadow = 0.0;
+if(projCoords[s].z > 1.0)
+    shadow = 0.0;
 
 return shadow;
 }
@@ -158,32 +166,32 @@ int ShadowDebug(vec4 fragPosLightSpace[4]) {
 // Convert from our orthographic projection space to perspective and transform to [0, 1] range to match our texture
 vec3 projCoords[4];
 for (int i = 0; i < 4; i++) {
-	projCoords[i] = fragPosLightSpace[i].xyz / fragPosLightSpace[i].w;
-	projCoords[i] = projCoords[i] * 0.5 + 0.5;
+    projCoords[i] = fragPosLightSpace[i].xyz / fragPosLightSpace[i].w;
+    projCoords[i] = projCoords[i] * 0.5 + 0.5;
 }
 
 // The closest depth value to the camera in the shadowMap
 float closestDepth[4];
 for (int i = 0; i < 4; i++) {
-	closestDepth[i] = texture(shadowMap[i], projCoords[i].xy).r;   
+    closestDepth[i] = texture(shadowMap[i], projCoords[i].xy).r;   
 }
 
 // The depth value of the current fragment from the light's point of view
 float currentDepth[4];
 for (int i = 0; i < 4; i++) {
-	currentDepth[i] = projCoords[i].z;   
+    currentDepth[i] = projCoords[i].z;   
 }
 
 // Debugging to see which shadowMap we are taking the depth value
 int s = 0;
 if (currentDepth[1] + 0.025 <= closestDepth[0]) {
-	s = 1;
-	if (currentDepth[2] + 0.05 <= closestDepth[1]) {
-		s = 2;
-		if (currentDepth[3] + 0.1 <= closestDepth[2]) {
-			s = 3;
-		} 
-	}
+    s = 1;
+    if (currentDepth[2] + 0.05 <= closestDepth[1]) {
+        s = 2;
+        if (currentDepth[3] + 0.1 <= closestDepth[2]) {
+            s = 3;
+        } 
+    }
 }
 return s;
 }
