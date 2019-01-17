@@ -94,7 +94,7 @@ public:
 	// Bloom Functions
 	virtual void ToggleBloom(Window *window) override;
 	virtual void SetBloom(bool _bloom, Window *window) override;
-	virtual void SetBloomPasses(float _passes) override;
+	virtual void SetBloomPasses(int _passes) override;
 	virtual bool GetBloomState() override;
 	virtual int GetBloomPasses() override;
 };

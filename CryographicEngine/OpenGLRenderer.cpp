@@ -324,7 +324,7 @@ void OpenGLRenderer::Render(Window *window, Frustum &frustum, Camera *camera, Cu
 
 	// Rendering Shadow Maps to the one directional light in the scene
 
-	for (int i = 0; i < lights.size(); i++) {
+	for (unsigned int i = 0; i < lights.size(); i++) {
 		if (lights[i]->HasShadows()) {
 			int renders = lights[i]->GetNumDepthMaps();
 			for (int j = 0; j < renders; j++) {
@@ -370,7 +370,7 @@ void OpenGLRenderer::PostRender(Window *window, Camera *camera, CubeMap *skybox)
 	if (Settings::GetInstance()->GetVideoSettingBool(BLOOM)) {
 		bool horizontal = true;
 		bool first_iteration = true;
-		unsigned int passes = 10;
+		unsigned int passes = Settings::GetInstance()->GetVideoSettingInt(BLOOM_PASSES);
 		blurShader->Use();
 		for (unsigned int i = 0; i < passes; i++)
 		{
@@ -471,7 +471,7 @@ void OpenGLRenderer::SetMSAA(bool _MSAA, Window *window) {
 
 void OpenGLRenderer::SetMSAASamples(unsigned int _samples, Window *window) {
 	int samples = glm::clamp(static_cast<int>(_samples), 0, 16);
-	Settings::GetInstance()->SetVideoSettingFloat(MSAA_SAMPLES, _samples);
+	Settings::GetInstance()->SetVideoSettingInt(MSAA_SAMPLES, _samples);
 	InitFrameBuffers(window);
 }
 
@@ -531,7 +531,7 @@ void OpenGLRenderer::SetBloom(bool _bloom, Window *window) {
 	InitFrameBuffers(window);
 }
 
-void OpenGLRenderer::SetBloomPasses(float _passes) {
+void OpenGLRenderer::SetBloomPasses(int _passes) {
 	Settings::GetInstance()->SetVideoSettingInt(BLOOM_PASSES, _passes);
 }
 

@@ -23,6 +23,9 @@ public:
 	// Utility function to be able to set matrices in the shader
 	void SetMat4(const std::string &name, const glm::mat4 &mat);
 
+	// Utility function to be able to set ints in the shader
+	void Setint(const std::string &name, const int _int);
+
 	// Generation of the material(texture) on the GPU
 	void SetUp();
 

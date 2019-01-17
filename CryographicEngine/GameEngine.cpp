@@ -218,9 +218,9 @@ void GameEngine::OnStart() {
 		Timer::GetInstance().Update();
 
 		// Circle for the point light
-		//pointGameObject->SetPosition(glm::vec3(2.5f + (radius * glm::cos(angle)), pointGameObject->GetPosition().y, -2.0f + (radius * glm::sin(angle))));
+		pointGameObject->SetPosition(glm::vec3(2.5f + (radius * glm::cos(angle)), pointGameObject->GetPosition().y, -2.0f + (radius * glm::sin(angle))));
 
-		float deltaTime = Timer::GetInstance().GetDeltaTime();
+		float deltaTime = static_cast<float>(Timer::GetInstance().GetDeltaTime());
 
 		angle += speed * deltaTime;
 

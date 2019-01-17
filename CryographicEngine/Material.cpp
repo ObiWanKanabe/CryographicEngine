@@ -309,11 +309,9 @@ void Material::BindUniforms() {
 			shader->SetInt("texture_specular1", 0);
 			shader->SetInt("texture_normal1", 0);
 		}
-
-		shader->SetInt("skybox", 0);
 	}
 	else if (type == MATERIAL_TYPE::REFLECTIVE) {
-		shader->SetInt("skybox", 0);
+		shader->SetInt("skybox", 5);
 	}
 	shader->SetVec3("material.ambient", ambient);
 	shader->SetVec3("material.diffuse", diffuse);
@@ -329,12 +327,12 @@ void Material::BindUniforms(Shader *shader) {
 		glActiveTexture(GL_TEXTURE0 + i);
 
 		shader->SetInt(textureNames[i], i);
+		shader->SetInt("skybox", 5);
 	}
 	if (textureNames.size() == 1) {
 		shader->SetInt("texture_specular1", 0);
 		shader->SetInt("texture_normal1", 0);
 	}
-	shader->SetInt("skybox", 0);
 	shader->SetVec3("material.ambient", ambient);
 	shader->SetVec3("material.diffuse", diffuse);
 	shader->SetVec3("material.specular", specular);

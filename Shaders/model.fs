@@ -97,12 +97,19 @@ for (int i = 0; i < NR_SPOT_LIGHTS; i++) {
 float reflect_intensity = texture(material.reflective1, TexCoords).r;
 
 // If reflection map is present, reflect the skybox texture
-if(reflect_intensity > 0.1f) {
+if(reflect_intensity > 0.2f) {
     reflect_result = material.reflectiveness * vec3(texture(skybox, refl)) * reflect_intensity;
     }
 
 // The final result fragment colour
 FragColour = vec4(result, 1.0f) + vec4(reflect_result, 1.0f);
+
+// Extracting bloom colour output to be blurred
+float bloom = dot(FragColour.rgb, vec3(0.2126, 0.7152, 0.0722));
+    if(bloom > 1.0)
+        BloomColour = vec4(FragColour.rgb, 1.0);
+    else
+        BloomColour = vec4(0.0, 0.0, 0.0, 1.0);
 }
 
 // Calculate shadows for the directional light

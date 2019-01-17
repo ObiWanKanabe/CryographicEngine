@@ -21,19 +21,30 @@
 
 // These are the types of settings that can be enabled or disabled
 // Their position in the list of settings is 0 indexed
-// Currently only has true or false values
 enum VideoSetting {
 	WIDTH, // 0
 	HEIGHT, // 1
-	FULLSCREEN, // 2
-	MSAA, // 3
-	MSAA_SAMPLES, //4
-	EXPOSURE, // 5
+	FULLSCREEN, // 2 // 1
+	MSAA, // 3 // 10
+	MSAA_SAMPLES, //4 
+	EXPOSURE, // 5 // 100
 	EXPOSURE_VALUE, // 6
 	GAMMA, // 7
-	BLOOM, // 8
+	BLOOM, // 8 // 1000
 	BLOOM_PASSES // 9
 };
+
+//// WORK IN PROGRESS MAY NOT CONTINUE
+//enum VideoResult {
+//	FULLSCREEN, // 1
+//	FULLSCREEN_MSAA, // 11
+//	FULLSCREEN_MSAA_EXPOSURE, // 111
+//	FULLSCREEN_MSAA_EXPOSURE_BLOOM, // 1111
+//	FULLSCREEN_MSAA_BLOOM, // 1011
+//	FULLSCREEN_EXPOSURE_BLOOM, // 1101
+//	FULLSCREEN_EXPOSURE, // 101
+//	FULLSCREEN_BLOOM, // 1001
+//};
 
 // Easy presets for the user to chose from
 enum VideoPreset {

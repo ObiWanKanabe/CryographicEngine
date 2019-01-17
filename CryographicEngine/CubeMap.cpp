@@ -110,6 +110,10 @@ void CubeMap::SetMat4(const std::string &name, const glm::mat4 &mat) {
 	ShaderManager::GetInstance()->GetShader(shaderName)->SetMat4(name, mat);
 }
 
+void CubeMap::Setint(const std::string &name, const int _int) {
+	ShaderManager::GetInstance()->GetShader(shaderName)->SetInt(name, _int);
+}
+
 void CubeMap::SetUp() {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -144,7 +148,9 @@ void CubeMap::SetUp() {
 }
 
 void CubeMap::BindTexture() {
-	glActiveTexture(GL_TEXTURE0);
+	// All our current models only have 4 textures so we're temporarily 
+	// putting the skybox on texture unit 5 until environment mapping is finished
+	glActiveTexture(GL_TEXTURE5);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 }
 
@@ -152,6 +158,7 @@ void CubeMap::BindUniforms(glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
 	Shader* shader = ShaderManager::GetInstance()->GetShader(shaderName);
 	shader->Use();
 	viewMatrix = glm::mat4(glm::mat3(viewMatrix));
+	Setint("skybox", 0);
 	SetMat4("view", viewMatrix);
 	SetMat4("projection", projectionMatrix);
 }

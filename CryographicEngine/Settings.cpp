@@ -16,7 +16,7 @@ void Settings::Init() {
 	videoSettingList.push_back(Video(EXPOSURE_VALUE, "Exposure_Value", 1.5f));
 	videoSettingList.push_back(Video(GAMMA, "Gamma", 1.1f));
 	videoSettingList.push_back(Video(BLOOM, "Bloom", true));
-	videoSettingList.push_back(Video(BLOOM_PASSES, "Bloom_Passes", 8));
+	videoSettingList.push_back(Video(BLOOM_PASSES, "Bloom_Passes", 6));
 }
 
 
@@ -98,7 +98,7 @@ void Settings::ReadFile() {
 		}
 
 		// Reading the file and saving the three strings into the seperate variables
-		int i = 0;
+		unsigned int i = 0;
 
 		while (configFile >> setting >> evaluation >> value) {
 			// Checking to see if all adjustable settings are properly formatted in the file
@@ -146,7 +146,7 @@ void Settings::CheckFile() {
 		}
 
 		// Reading the file and saving the three strings into the seperate variables
-		int i = 0;
+		unsigned int i = 0;
 
 		while (configFile >> setting >> evaluation >> value) {
 			// Checking to see if all adjustable settings are properly formatted in the file
@@ -177,7 +177,7 @@ void Settings::SaveToFile() {
 	
 	// Clearing the config file and then saving all the current settings
 	configFile.clear();
-	int i = 0;
+	unsigned int i = 0;
 
 	while (i < videoSettingList.size()) {
 		configFile << videoSettingList.at(i).name << " = " << videoSettingList.at(i).value << '\n';
@@ -199,7 +199,7 @@ void Settings::ResetDefaultSettings() {
 	Init();
 
 	// Write to the file
-	for (int i = 0; i < videoSettingList.size(); i++) {
+	for (unsigned int i = 0; i < videoSettingList.size(); i++) {
 		configFile << videoSettingList.at(i).name << " = " << videoSettingList.at(i).value << "\n";
 	}
 

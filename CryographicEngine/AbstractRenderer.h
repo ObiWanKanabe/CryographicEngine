@@ -41,7 +41,7 @@ public:
 
 	virtual void ToggleBloom(Window *window) = 0;
 	virtual void SetBloom(bool _bloom, Window *window) = 0;
-	virtual void SetBloomPasses(float _passes) = 0;
+	virtual void SetBloomPasses(int _passes) = 0;
 	virtual bool GetBloomState() = 0;
 	virtual int GetBloomPasses() = 0;
 
