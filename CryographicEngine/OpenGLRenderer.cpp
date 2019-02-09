@@ -46,8 +46,6 @@ bool OpenGLRenderer::Init(Window *window) {
 
 bool OpenGLRenderer::InitFrameBuffers(Window *window) {
 
-	// MSAA AND BLOOM CURRENTLY DO NOT WORK TOGETHER
-	// WORK IN PROGRESS
 	if (Settings::GetInstance()->GetVideoSettingBool(MSAA) && Settings::GetInstance()->GetVideoSettingBool(BLOOM)) {
 		// Initializing the multi-sampled framebuffer object and putting it into a texture
 		// This will be blitted into another framebuffer and texture for post-processing
@@ -58,7 +56,7 @@ bool OpenGLRenderer::InitFrameBuffers(Window *window) {
 		glGenTextures(2, MStextureColourBuffer);
 		for (int i = 0; i < 2; i++)
 		{
-			glBindTexture(GL_TEXTURE_2D, MStextureColourBuffer[i]);
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, MStextureColourBuffer[i]);
 			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, Settings::GetInstance()->GetVideoSettingInt(MSAA_SAMPLES), GL_RGBA16F, window->GetWidth(), window->GetHeight(), GL_TRUE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -359,7 +357,19 @@ void OpenGLRenderer::PostRender(Window *window, Camera *camera, CubeMap *skybox)
 
 	// Using the multisampled buffer and blitting the image to the non-multisampled buffer
 	// Doing this so we can apply post processing effects while using MSAA
-	if (Settings::GetInstance()->GetVideoSettingBool(MSAA)) {
+	// For bloom we have to blit it twice for two different texture components
+	if (Settings::GetInstance()->GetVideoSettingBool(MSAA) && Settings::GetInstance()->GetVideoSettingBool(BLOOM)) {
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, MSFBO);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO);
+		for (unsigned int i = 0; i < 2; i++) {
+			glReadBuffer(GL_COLOR_ATTACHMENT0 + i);
+			glDrawBuffer(GL_COLOR_ATTACHMENT0 + i);
+			glBlitFramebuffer(0, 0, window->GetWidth(), window->GetHeight(), 0, 0, window->GetWidth(), window->GetHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		}
+	}
+	// Using the multisampled buffer and blitting the image to the non-multisampled buffer
+	// Doing this so we can apply post processing effects while using MSAA
+	else if (Settings::GetInstance()->GetVideoSettingBool(MSAA)) {
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, MSFBO);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO);
 		glBlitFramebuffer(0, 0, window->GetWidth(), window->GetHeight(), 0, 0, window->GetWidth(), window->GetHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);

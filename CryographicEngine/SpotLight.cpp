@@ -27,6 +27,10 @@ void SpotLight::BindUniforms(Shader* _shader, int pointIndex, int spotIndex) {
 glm::mat4 SpotLight::GetLightSpaceMatrix(Camera* camera, int index) {
 	// Progress Ongoings
 
+	// Creating our lightSpace matrix based on the frustum size given and the position
+	//glm::mat4 lightProjection = glm::ortho(-frustum_size[index], frustum_size[index], -frustum_size[index], frustum_size[index], near_plane[index], far_plane[index]);
+	glm::mat4 lightView = glm::lookAt(position, position + direction, glm::vec3(0.0f, 1.0f, 0.0f));
+
 	return lightSpaceMatrix;
 }
 
