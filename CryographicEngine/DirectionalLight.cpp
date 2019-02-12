@@ -12,10 +12,9 @@ void DirectionalLight::BindUniforms(Shader* _shader, int pointIndex, int spotInd
 	_shader->SetVec3("directionalLight.specular", specular);
 	_shader->SetVec3("directionalLight.direction", direction);
 
-	_shader->SetMat4("lightSpaceMatrix[0]", lightSpaceMatrix[0]);
-	_shader->SetMat4("lightSpaceMatrix[1]", lightSpaceMatrix[1]);
-	_shader->SetMat4("lightSpaceMatrix[2]", lightSpaceMatrix[2]);
-	_shader->SetMat4("lightSpaceMatrix[3]", lightSpaceMatrix[3]);
+	for (unsigned int i = 0; i < numCascades; i++) {
+		_shader->SetMat4("lightSpaceMatrix[" + std::to_string(i) + "]", lightSpaceMatrix[i]);
+	}
 
 	for (int i = 0; i < 4; i++) {
 		_shader->SetInt("shadowMap[" + std::to_string(i) + "]", i + 2);
@@ -27,7 +26,7 @@ void DirectionalLight::BindUniforms(Shader* _shader, int pointIndex, int spotInd
 	}
 }
 
-glm::mat4 DirectionalLight::GetLightSpaceMatrix(Camera* camera, int index) {
+glm::mat4 DirectionalLight::GetLightSpaceMatrix(Camera* camera, Window* window, int index) {
 	// Working version - First Implementation
 
 	// Setting the position of the orthographic position from the camera's facing position

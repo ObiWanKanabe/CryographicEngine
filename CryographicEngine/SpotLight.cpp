@@ -21,22 +21,24 @@ void SpotLight::BindUniforms(Shader* _shader, int pointIndex, int spotIndex) {
 	_shader->SetFloat("spotLights[" + std::to_string(spotIndex) + "].quadratic", quadratic);
 	_shader->SetFloat("spotLights[" + std::to_string(spotIndex) + "].innerCutOff", innerCutOff);
 	_shader->SetFloat("spotLights[" + std::to_string(spotIndex) + "].outerCutOff", outerCutOff);
+	_shader->SetMat4("lightSpaceMatrixSpot[" + std::to_string(spotIndex) + "]" , lightSpaceMatrix);
 	spotIndex++;
 }
 
-glm::mat4 SpotLight::GetLightSpaceMatrix(Camera* camera, int index) {
+glm::mat4 SpotLight::GetLightSpaceMatrix(Camera* camera, Window* window, int index) {
 	// Progress Ongoings
 
 	// Creating our lightSpace matrix based on the frustum size given and the position
-	//glm::mat4 lightProjection = glm::ortho(-frustum_size[index], frustum_size[index], -frustum_size[index], frustum_size[index], near_plane[index], far_plane[index]);
+	glm::mat4 lightProjection = glm::perspective(outerCutOff, static_cast<float>(window->GetWidth()/window->GetHeight()), 2.0f, 50.0f);
 	glm::mat4 lightView = glm::lookAt(position, position + direction, glm::vec3(0.0f, 1.0f, 0.0f));
+	lightSpaceMatrix = lightProjection * lightView;
 
 	return lightSpaceMatrix;
 }
 
 void SpotLight::ShadowSetup() {
 
-	updateShadows = false; // for now
+	updateShadows = true; // for now
 
 	near_plane = 1.0f;
 	far_plane = 25.0f;

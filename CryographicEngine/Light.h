@@ -16,7 +16,7 @@ public:
 	virtual void BindUniforms(Shader* _shader, int pointIndex, int spotIndex) = 0;
 
 	// Returns the light space matrix to be used when rendering objects to the lights depth map
-	virtual glm::mat4 GetLightSpaceMatrix(Camera *camera, int index) = 0;
+	virtual glm::mat4 GetLightSpaceMatrix(Camera *camera, Window* window, int index) = 0;
 
 	// Setting up each lights shadow configuration on creation
 	virtual void ShadowSetup() = 0;

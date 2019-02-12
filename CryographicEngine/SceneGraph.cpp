@@ -80,7 +80,7 @@ void SceneGraph::RenderDepthSceneNode(SceneNode *sceneRoot, Frustum &frustum, Wi
 		Object *object = *it;
 
 		if (object->CanCastShadows()) {
-			object->RenderDepth(matStk.GetModelMatrix(), light->GetLightSpaceMatrix(camera, index));
+			object->RenderDepth(matStk.GetModelMatrix(), light->GetLightSpaceMatrix(camera, window, index));
 		}
 
 		it++;

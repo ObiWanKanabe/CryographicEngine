@@ -5,6 +5,7 @@ layout (location = 2) in vec3 normal;
 
 // Defining how the max amount of shadow maps we can have in our cascade
 #define NR_CASCADES 4
+#define NR_SPOTLIGHTS 4
 
 out vec2 TexCoords;
 out vec3 FragPos;
@@ -24,9 +25,6 @@ void main()
 	FragPos = vec3(model * vec4(aPos, 1.0));
     Normal = mat3(normalMatrix) * normal;
     for (int i = 0; i < NR_CASCADES; i++) {
-    	FragPosLightSpace[0] = lightSpaceMatrix[0] * vec4(FragPos, 1.0);
-    	FragPosLightSpace[1] = lightSpaceMatrix[1] * vec4(FragPos, 1.0);
-    	FragPosLightSpace[2] = lightSpaceMatrix[2] * vec4(FragPos, 1.0);
-    	FragPosLightSpace[3] = lightSpaceMatrix[3] * vec4(FragPos, 1.0);
+    	FragPosLightSpace[i] = lightSpaceMatrix[i] * vec4(FragPos, 1.0);
     }
 }
